@@ -1,0 +1,25 @@
+<div mat-subheader>
+    <mat-icon>directions_car</mat-icon>&nbsp;Vehicle 
+</div>
+<mat-card class="settings-card">
+    <mat-list-item>
+        Year
+        <span style="flex: 1 1 auto"></span>
+        <input matInput class="settings-input" [(ngModel)]="vehicle.year" placeholder="None"/>
+    </mat-list-item>
+    <mat-list-item>
+        Make
+        <span style="flex: 1 1 auto"></span>
+        <input matInput class="settings-input" [(ngModel)]="vehicle.make" placeholder="None"/>
+    </mat-list-item>
+    <mat-list-item>
+        Model
+        <span style="flex: 1 1 auto"></span>
+        <input matInput class="settings-input" [(ngModel)]="vehicle.model" placeholder="None"/>
+    </mat-list-item>
+    <mat-list-item>
+        VIN#
+        <span style="flex: 1 1 auto"></span>
+        <input matInput class="settings-input" [(ngModel)]="vehicle.vin" placeholder="None"/>
+    </mat-list-item>
+</mat-card>

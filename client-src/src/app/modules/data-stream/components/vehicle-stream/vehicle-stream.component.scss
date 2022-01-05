@@ -1,0 +1,24 @@
+.mat-subheader {
+    padding: 5px
+}
+
+.cmd-filter {
+    margin-bottom: -15px;
+    margin-right: 0px;
+    font-size: 11px;
+    max-width: 120px;
+}
+
+:host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-infix {
+    padding: 5px;
+    padding-bottom: 10px;
+}
+
+:host ::ng-deep .mat-form-field-outline-start {
+    border-radius: 28px 0 0 28px !important;
+    min-width: 28px !important;
+  }
+
+:host ::ng-deep .mat-form-field-outline-end {
+    border-radius: 0 28px 28px 0 !important;
+}

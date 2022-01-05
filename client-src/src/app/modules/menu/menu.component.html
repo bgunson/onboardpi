@@ -1,0 +1,13 @@
+<mat-selection-list [multiple]="false">
+    <mat-list-option *ngFor="let route of routes" [routerLink]="route.link">
+        <mat-icon mat-list-icon>{{ route.icon }}</mat-icon>
+        {{ route.name }}
+        <!-- <div style="display: flex;">
+            {{ route.name }}
+            <span style="flex: 1 1 auto;"></span>
+            <mat-icon>chevron_right</mat-icon>
+        </div> -->
+    </mat-list-option>
+</mat-selection-list>
+
+<!-- <menu-connection class="car"></menu-connection> -->

@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>
+    Maintenance Record
+    <button style="float: right; top: -5px" mat-icon-button mat-dialog-close><mat-icon>close</mat-icon></button>
+</h2>
+<form #recordForm="ngForm" (ngSubmit)="onSubmit()">
+    <mat-dialog-content>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Date</mat-label>
+                <input matInput [matDatepicker]="picker" [(ngModel)]="record.date" name="date" required>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <br>
+            <mat-form-field appearance="outline">
+                <mat-label>Job Description</mat-label>
+                <input matInput placeholder="Ex. Oil Change" [(ngModel)]="record.description" name="description" required>
+            </mat-form-field>
+            <br>
+            <mat-form-field appearance="outline">
+                <mat-label>Odometer</mat-label>
+                <input matInput type="number" [(ngModel)]="record.odometer" name="odometer" required>
+            </mat-form-field>
+            <br>
+            <mat-form-field appearance="outline">
+                <mat-label>Notes</mat-label>
+                <textarea matInput placeholder="Ex. It makes me feel..." [(ngModel)]="record.notes" name="notes"></textarea>
+            </mat-form-field>
+
+    </mat-dialog-content>
+
+
+    <mat-dialog-actions align="end">
+        <button mat-button [mat-dialog-close]="true" type="submit" cdkFocusInitial [disabled]="!recordForm.valid">{{ isUpdate ? 'Update' : 'Create' }}</button>
+    </mat-dialog-actions>
+</form>

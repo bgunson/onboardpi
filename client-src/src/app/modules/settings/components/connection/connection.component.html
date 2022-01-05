@@ -1,0 +1,39 @@
+<div mat-subheader>
+    <mat-icon>link</mat-icon>&nbsp;OBD Connection
+    <span style="flex: 1 1 auto"></span>
+    <!-- <button mat-button color="primary" *ngIf="settings?.vehicle !== settingsEdit?.vehicle">Save</button> -->
+</div>
+<mat-card class="settings-card">
+    <mat-list-item>
+        Automatic
+        <span style="flex: 1 1 auto"></span>
+        <mat-slide-toggle [(ngModel)]="connection.auto"></mat-slide-toggle>
+    </mat-list-item>
+    <ng-container *ngIf="!connection.auto">
+        <mat-list-item>
+            Serial Port
+            <span style="flex: 1 1 auto"></span>
+            <input matInput class="settings-input" [(ngModel)]="connection.parameters.portstr" placeholder="None"/>
+        </mat-list-item>
+        <mat-list-item>
+            Baudrate
+            <span style="flex: 1 1 auto"></span>
+            <input matInput class="settings-input" [(ngModel)]="connection.parameters.baudrate" placeholder="None"/>
+        </mat-list-item>
+        <mat-list-item>
+            Protocol
+            <span style="flex: 1 1 auto"></span>
+            <mat-form-field>
+                <mat-select [(ngModel)]="connection.parameters.protocol">
+                    <mat-option [value]="null">
+                        NONE
+                      </mat-option>
+                  <mat-option *ngFor="let p of protocols | keyvalue" [value]="p.key">
+                    {{ p.value }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>  
+            <!-- <input matInput class="settings-input" [(ngModel)]="connection.parameters.protocol"/> -->
+        </mat-list-item>
+    </ng-container>
+</mat-card>

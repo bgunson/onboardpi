@@ -1,0 +1,128 @@
+.title {
+    font-family:monospace;
+    letter-spacing: 2px;
+}
+
+::ng-deep .reading-block {
+    overflow: visible !important;
+    height: max-content !important;
+}
+
+::ng-deep .reading-label {
+    overflow: visible !important;
+    height: max-content !important;
+    font-weight: 300 !important;
+    // font-size: 2vh !important;
+}
+
+.unit {
+    font-weight: 200;
+    font-size: 5vw;
+    font-stretch: expanded;
+}
+
+.info {
+    color: darkgrey;
+    padding: 0px 5px;
+}
+  
+.info > span {
+    color: darkgray;
+}
+
+::ng-deep mat-menu-item {
+    height: 10px !important;
+}
+
+
+.card {
+    position: absolute;
+    inset: 1px;
+    border-radius: 0px;
+    padding: 2px;
+}
+
+.card-title {
+    overflow: hidden;
+    font-size: small;
+    font-weight: 300;
+    width: 100%;
+    // margin-right: 60px;
+    padding-left: 3px;
+    // margin-bottom: 4px;
+}
+
+.gauge {
+    display: block;
+    margin: 0 auto;
+    padding-top: 0px !important;
+}
+
+.value {
+    font-size: 7vw;
+    font-weight: 300;
+}
+
+.card-content {
+    position: absolute;
+    top: 40%;
+    left: 5px;
+}
+
+.card-footer {
+    font-size: small;
+    font-weight: 300;
+    position: absolute;
+    bottom: 40px;
+    left: 20px;
+}
+
+
+// .cdk-drag-preview {
+//     background: inherit;
+//     box-sizing: border-box;
+//     border-radius: 4px;
+//     box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+//                 0 8px 10px 1px rgba(0, 0, 0, 0.14),
+//                 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+//   }
+  
+//   .cdk-drag-placeholder {
+//     // opacity: 0;
+//   }
+  
+.drag-handle {
+    color: grey;
+    position: absolute;
+    top: 2px;
+    right: -6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+.curve {
+    position: absolute;
+    right: 0px;
+    bottom: -30px
+}
+
+.curve-live {
+    float: right;
+    margin-top: 0.5vw;
+    margin-right: 20px;
+    text-align: right;
+}
+
+.curve-live-value {
+    font-size: 4vh;
+}
+
+@media screen and (max-width: 600px) {
+    .value {
+        font-size: 9vw;
+    }
+}

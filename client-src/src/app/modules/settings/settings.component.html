@@ -1,0 +1,27 @@
+<!-- <span class="mat-h2 title">Settings</span> -->
+
+<mat-list *ngIf="settings else loading">
+    <div mat-subheader><mat-icon>palette</mat-icon>&nbsp;Theme</div>
+    <mat-card class="settings-card">
+        <mat-list-item>
+            Appearance
+            <span style="flex: 1 1 auto"></span>
+            <div>
+                <mat-icon class="theme icon">light_mode</mat-icon>
+                <mat-slide-toggle class="theme" [(ngModel)]="isDarkTheme" (ngModelChange)="switchTheme()"></mat-slide-toggle>
+                <mat-icon class="theme icon">bedtime</mat-icon>
+            </div>
+        </mat-list-item>
+    </mat-card>
+    <br>
+    <settings-vehicle [vehicle]="settings.vehicle"></settings-vehicle>
+    <br>
+    <settings-connection [connection]="settings.connection"></settings-connection>
+    
+</mat-list>
+
+<ng-template #loading>
+    <mat-spinner style="margin: 25vh auto;" color="accent"></mat-spinner>
+</ng-template>
+
+

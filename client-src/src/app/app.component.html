@@ -1,0 +1,46 @@
+<!-- <app-nav [ngClass]="theme.current + '-theme'"></app-nav> -->
+<main [ngClass]="display.theme + '-theme'" class="main">
+
+    <mat-toolbar class="portrait-toolbar" color="primary" *ngIf="display.isPortrait$ | async">
+        <button
+            (click)="!route ? refresh(): null"
+            routerLink="/"
+            type="button"
+            aria-label="Toggle sidenav"
+            mat-icon-button>
+            <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>
+        <span style="flex: 1 1 auto"></span>
+        <button mat-icon-button *ngIf="action.icon | async as icon" (click)="action.click()">
+            <mat-icon>{{ icon }}</mat-icon>
+        </button>
+    </mat-toolbar>
+
+    <mat-sidenav-container class="sidenav-container" [ngClass]="{ 'mobile-container': (display.isPortrait$ | async) }">
+        <mat-sidenav #drawer
+            autosize 
+            color="primary" 
+            class="sidenav" 
+            [attr.role]="(display.isHandset$ | async) ? 'dialog' : 'navigation'"
+            mode="side"
+            [opened]="!(display.isPortrait$ | async)">
+
+            <mat-nav-list style="overflow-x: hidden;">
+                <mat-list-item routerLink="/" (click)="!route ? refresh(): null">
+                    <mat-icon mat-list-icon >menu</mat-icon>
+                </mat-list-item>
+                <mat-list-item class="bottom" *ngIf="action.icon | async as icon" (click)="action.click()">
+                    <mat-icon mat-list-icon>{{ icon }}</mat-icon>
+                </mat-list-item>
+            </mat-nav-list>
+
+        </mat-sidenav>
+
+        
+        <mat-sidenav-content class="content" [ngClass]="{ 'portrait-content': (display.isPortrait$ | async) }">
+            <router-outlet></router-outlet>
+            <div style="height: 20px;"></div>
+        </mat-sidenav-content>
+
+    </mat-sidenav-container>
+</main>

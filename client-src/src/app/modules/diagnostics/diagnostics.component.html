@@ -1,0 +1,93 @@
+<!-- <ng-container *ngIf="dtcs$ | async as dtcs">
+    <pre *ngFor="let cmd of diagnosticCmds">
+        {{ (dtcs$ | async)[cmd] | json }}
+    </pre>
+</ng-container>
+
+<ng-container *ngFor="let cmd of commands$">
+    <pre>{{ cmd | json }}</pre>
+</ng-container> -->
+
+
+
+<ng-container *ngIf="carConnected$ | async else waiting">
+
+    <ng-container *ngIf="dtcs$ | async as dtcs">
+        <mat-list>
+            <ng-container *ngIf="dtcs.GET_DTC?.value as dtcs">
+                <div mat-subheader><mat-icon>archive</mat-icon>&nbsp;Stored Codes</div>
+                <mat-card class="code-card">
+                    <mat-list-item *ngIf="!dtcs.length">None</mat-list-item>
+                    <mat-list-item *ngFor="let dtc of dtcs">
+                        <div mat-line>{{ dtc[0] }}</div>
+                        <div mat-line>{{ dtc[1] || "Unknown Code" }}</div>
+                    </mat-list-item>
+                </mat-card>
+            </ng-container>
+
+            <ng-container *ngIf="dtcs.GET_CURRENT_DTC?.value as dtcs">
+                <div mat-subheader><mat-icon>downloading</mat-icon>&nbsp;Pending Codes</div>
+                <mat-card class="code-card">
+                    <mat-list-item *ngIf="!dtcs.length">None</mat-list-item>
+                    <mat-list-item *ngFor="let dtc of dtcs">
+                        <div mat-line>{{ dtc[0] }}</div>
+                        <div mat-line>{{ dtc[1] || "Unknown Code" }}</div>
+                    </mat-list-item>
+                </mat-card>
+            </ng-container>
+
+            <ng-container *ngIf="dtcs.FREEZE_DTC?.value as dtcs">
+                <div mat-subheader><mat-icon>ac_unit</mat-icon>&nbsp;Freeze Codes</div>
+                <mat-card class="code-card">
+                    <mat-list-item *ngIf="!dtcs.length">None</mat-list-item>
+                    <mat-list-item *ngFor="let dtc of dtcs">
+                        <div mat-line>{{ dtc[0] }}</div>
+                        <div mat-line>{{ dtc[1] || "Unknown Code" }}</div>
+                    </mat-list-item>
+                </mat-card>
+            </ng-container>
+            <div mat-subheader><mat-icon>online_prediction</mat-icon>&nbsp;Status</div>
+            <ng-container *ngIf="dtcs.STATUS?.value as status; else notSupported">
+                <mat-card class="code-card">
+                    <mat-list-item>
+                        Check Engine Light
+                        <span style="flex: 1 1 auto"></span>
+                        <span style="color: grey;">{{ status.MIL ? 'On' : 'Off' }}</span>
+                    </mat-list-item>
+                    <mat-list-item>
+                        DTCs Present
+                        <span style="flex: 1 1 auto"></span>
+                        <span style="color: grey;">{{ status.DTC_COUNT }}</span>
+                    </mat-list-item>
+                    <mat-list-item>
+                        Ignition Type
+                        <span style="flex: 1 1 auto"></span>
+                        <span style="color: grey;">{{ status.ignition_type }}</span>
+                    </mat-list-item>
+                </mat-card>
+            </ng-container>
+
+            <div mat-subheader><mat-icon>local_gas_station</mat-icon>&nbsp;Fuel Status</div>
+            <mat-card class="code-card">
+                <mat-list-item>
+                    <span *ngIf="dtcs.FUEL_STATUS?.value as fuelStatus; else notApplicable">{{ fuelStatus[0] }}</span>
+                </mat-list-item>
+            </mat-card>
+        </mat-list>
+        <ng-template #notSupported><p>Not Supported</p></ng-template>
+        <ng-template #notApplicable>N/A</ng-template>
+        <ng-template #noCodes><p>No trouble codes detected</p></ng-template>
+    
+    </ng-container>
+
+</ng-container>
+
+<ng-template #waiting>
+    <div style="text-align: center; margin-top: 25vh;">
+        <mat-spinner style="margin: 0 auto;" color="accent"></mat-spinner>
+        <div style="margin-top: 10px;">Waiting for vehicle</div>
+    </div>
+</ng-template>
+
+
+
