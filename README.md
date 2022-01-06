@@ -79,7 +79,7 @@ This project is intended to be cost effective, while you do not need the most ex
 Once your Pi is physically ready to be installed in your car there are a few things that need to be worked out. Since OnBoardPi uses a web-server to push OBD data to connected devices, you will need some sort of LAN within your car. We have a few options:
 
 1. You have an Android car stereo or a vehicle with a WiFi hotspot. This method does not take any more setup than the Pi and the software itself, just connect your Pi to the existing network and you are good to go.
-2. Use your phone's cellular hotspot. At the moment, OnBoardPi does not require any internet connection so it will not use your data plan. Set up your personal hotspot on your phone and connect the Pi, you will need to know the IP address of the Pi for this method to work so use an app like [Network Analyzer](https://techet.net/netanalyzer/) to scan for devices connected to the hotspot. Further you can configure the Pi to have a static IP on ths hotspot so you do not have to scan for it each time. This option will be handy in the future when OnBoardPi supports cloud backups so it can use a cellular plan to make backups.
+2. Use your phone's cellular hotspot. At the moment, OnBoardPi does not require any internet connection so it will not use your data plan. Set up your personal hotspot on your phone and connect the Pi, you will need to know the IP address of the Pi for this method to work so use an app like [Network Analyzer](https://techet.net/netanalyzer/) to scan for devices connected to the hotspot. Further you can configure the Pi to have a static IP on ths hotspot so you do not have to scan for it each time. This option will be handy in the future when OnBoardPi supports cloud backups so it can use a cellular plan for internet access.
 3. Use the Pi itself as a wireless hotspot. I use [Autohotspot](https://www.raspberryconnect.com/projects/65-raspberrypi-hotspot-accesspoints/183-raspberry-pi-automatic-hotspot-and-static-hotspot-installer) which allows you to configure the Pi to connect to any known network within range and fallback to being a hotspot. So when you are parked at home in your router's range, the Pi can have internet access, but if you are driving around the Pi will create its own network allowing you to access the OnBoardPi web page.
 
 #### Using Docker
@@ -89,13 +89,12 @@ docker pull bgunson/onboardpi:latest
 ```
 To run the image:
 ```
-docker run -d -p 8080:8080 -p 60000:60000 -v /etc/obpi:/etc/obpi -v /dev:/dev --name OBPI bgunson/onboardpi:latest
+docker run -d --network host -v /etc/obpi:/etc/obpi -v /dev:/dev --name OBPI bgunson/onboardpi:latest
 ```
-- `-p 8080:8080` makes the main web server accessble on the Pi's port 8080. To use any other port do `80:8080` for example but do not change the container port from 8080 unless you set enviroment variable `PORT`.
-- `-p 60000:60000` is the port mapping for the OBD server, DO NOT alter this option.
 - `-v /etc/obpi:/etc/obpi` mounts the location for the databse and settings, thus all data will be on the Pi @ `/etc/obpi` locally.
     - You may also use a regular docker volume if desired.
 - `-v /dev:/dev` makes the serial port for (OBD adapter) accessble within the container, DO NOT remove or alter.
+- IF you want to use a ort other than `8080` you must use the docker bridge network. To do this remove `--network host` from the options and replace it with `-p PORT:8080 -p 60000:60000` where `PORT` ia your desired host port and `60000` is the mapping for the OBD server. Note when using the bridge network in place of the host, the IP and MAC addresses on the data stream will be of the container as seen [here](https://github.com/bgunson/onboardpi/blob/main/_img/screenshots/sys_stream_bridge.PNG).
 
 #### From the Source
 
