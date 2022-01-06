@@ -15,13 +15,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 
   isDarkTheme: boolean;
-  settings$: Observable<Settings>;
-  settings: Settings;
+  settings$: Promise<Settings>;
 
   constructor(
     private display: DisplayService,
-    private settingsService: SettingsService,
-    private action: ActionService
+    private settingsService: SettingsService
   ) { }
 
   switchTheme() {
@@ -29,16 +27,16 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   saveSettings = () => {
-    console.log("Settings action invoked", this.settings);
+    console.log("Settings action invoked", this.settings$);
   }
 
   ngOnInit(): void {
-    this.settingsService.getSettings().pipe(take(1)).subscribe(s => this.settings = s);
+    this.settings$ = this.settingsService.getSettings();
     this.isDarkTheme = this.display.theme == 'dark';
   }
 
   ngOnDestroy() {
-    this.settingsService.updateSettings(this.settings);
+    this.settings$.then(s => this.settingsService.updateSettings(s));
   }
 
 }

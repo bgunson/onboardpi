@@ -1,6 +1,4 @@
-<!-- <span class="mat-h2 title">Settings</span> -->
-
-<mat-list *ngIf="settings else loading">
+<mat-list *ngIf="settings$ | async as settings; else loading">
     <div mat-subheader><mat-icon>palette</mat-icon>&nbsp;Theme</div>
     <mat-card class="settings-card">
         <mat-list-item>
@@ -13,11 +11,37 @@
             </div>
         </mat-list-item>
     </mat-card>
-    <br>
-    <settings-vehicle [vehicle]="settings.vehicle"></settings-vehicle>
-    <br>
-    <settings-connection [connection]="settings.connection"></settings-connection>
-    
+    <div mat-subheader><mat-icon>directions_car</mat-icon>&nbsp;Vehicle </div>
+    <mat-card class="settings-card">
+        <mat-list-item>
+            Year
+            <span style="flex: 1 1 auto"></span>
+            <input matInput class="settings-input" [(ngModel)]="settings.vehicle.year" placeholder="None"/>
+        </mat-list-item>
+        <mat-list-item>
+            Make
+            <span style="flex: 1 1 auto"></span>
+            <input matInput class="settings-input" [(ngModel)]="settings.vehicle.make" placeholder="None"/>
+        </mat-list-item>
+        <mat-list-item>
+            Model
+            <span style="flex: 1 1 auto"></span>
+            <input matInput class="settings-input" [(ngModel)]="settings.vehicle.model" placeholder="None"/>
+        </mat-list-item>
+        <mat-list-item>
+            VIN#
+            <span style="flex: 1 1 auto"></span>
+            <input matInput class="settings-input" [(ngModel)]="settings.vehicle.vin" placeholder="None"/>
+        </mat-list-item>
+    </mat-card>
+    <div mat-subheader><mat-icon>link</mat-icon>&nbsp;OBD Connection</div>
+    <mat-card class="settings-card">
+        <mat-list-item routerLink="connection-params" matRipple style="cursor: pointer;">
+            Parameters
+            <span style="flex: 1 1 auto"></span>
+            <span style="color:grey">{{ settings.connection.auto ? 'Automatic' : 'Manual' }}<mat-icon style="vertical-align: middle;">chevron_right</mat-icon></span>
+        </mat-list-item>
+    </mat-card>    
 </mat-list>
 
 <ng-template #loading>

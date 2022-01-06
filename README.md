@@ -94,7 +94,7 @@ docker run --rm --network host -v /etc/obpi:/etc/obpi -v /dev:/dev --name OBPI b
 - `-v /etc/obpi:/etc/obpi` mounts the location for the databse and settings, thus all data will be on the Pi @ `/etc/obpi` locally.
     - You may also use a regular docker volume if desired.
 - `-v /dev:/dev` makes the serial port for (OBD adapter) accessble within the container, DO NOT remove or alter.
-- If you want to use a port other than `8080` you must use the docker bridge network. To do this remove `--network host` from the options and replace it with `-p PORT:8080 -p 60000:60000` where `PORT` is your desired host port and `60000` is the mapping for the OBD server. Note when using the bridge network in place of the host, the IP and MAC addresses on the data stream will be of the container as seen [here](https://github.com/bgunson/onboardpi/blob/main/_img/screenshots/sys_stream_bridge.PNG).
+- If you want to use a port other than `8080` use `-e PORT=<port>`when running the container.
 
 #### From the Source
 

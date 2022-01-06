@@ -3,14 +3,21 @@
 
     <mat-toolbar class="portrait-toolbar" color="primary" *ngIf="display.isPortrait$ | async">
         <button
-            (click)="!route ? refresh(): null"
-            routerLink="/"
+            *ngIf="route"
+            (click)="back()"
             type="button"
             aria-label="Toggle sidenav"
             mat-icon-button>
-            <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+            <mat-icon aria-label="Side nav toggle icon">chevron_left</mat-icon>
         </button>
         <span style="flex: 1 1 auto"></span>
+        <button
+            *ngIf="display.isHandset$"
+            (click)="refresh()"
+            type="button"
+            mat-icon-button>
+            <mat-icon aria-label="Side nav toggle icon">refresh</mat-icon>
+        </button>
         <button mat-icon-button *ngIf="action.icon | async as icon" (click)="action.click()">
             <mat-icon>{{ icon }}</mat-icon>
         </button>
@@ -26,8 +33,8 @@
             [opened]="!(display.isPortrait$ | async)">
 
             <mat-nav-list style="overflow-x: hidden;">
-                <mat-list-item routerLink="/" (click)="!route ? refresh(): null">
-                    <mat-icon mat-list-icon >menu</mat-icon>
+                <mat-list-item *ngIf="route" (click)="back()">
+                    <mat-icon mat-list-icon >{{ route ? 'chevron_left' : 'refresh' }}</mat-icon>
                 </mat-list-item>
                 <mat-list-item class="bottom" *ngIf="action.icon | async as icon" (click)="action.click()">
                     <mat-icon mat-list-icon>{{ icon }}</mat-icon>

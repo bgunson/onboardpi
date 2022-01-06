@@ -51,8 +51,8 @@ export class OBDService {
       ).subscribe(
         () => {},
         () => {
+          this.connectingNow.next(false);
           alert("Unable to connect to the vehicle. Please check your connection your OBD adapter and connection parameters in settings.")
-          this.connectingNow.next(false)
         },
         () => this.connectingNow.next(false)
       );

@@ -56,8 +56,8 @@ database.configure((config) => {
         process.exit();
     });
     
-    // process.on('uncaughtException', () => {
-    //     obdServer.close();
-    // });
+    process.on('uncaughtException', () => {
+        obdServer.close();
+    });
 
 });

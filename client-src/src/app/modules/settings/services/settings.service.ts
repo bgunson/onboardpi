@@ -10,16 +10,11 @@ import { Settings } from '../models/settings.model';
 })
 export class SettingsService {
 
-  private _settings$: Observable<Settings>;
-
   constructor(private crud: CrudService, private socket: AppSocket) { }
 
   getSettings() {
     this.crud.read<Settings>('settings');
-    if (!this._settings$) {
-      this._settings$ = this.socket.fromEvent<Settings>('settings:response').pipe(share());
-    }
-    return this._settings$;
+    return this.socket.fromOneTimeEvent<Settings>('settings:response');
   }
 
   updateSettings(updated: Settings) {

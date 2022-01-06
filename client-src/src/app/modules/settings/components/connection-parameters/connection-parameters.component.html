@@ -1,0 +1,43 @@
+<mat-list *ngIf="connection$ | async as connection">
+
+    <mat-card class="settings-card">
+        <mat-list-item>
+            Automatic
+            <span style="flex: 1 1 auto"></span>
+            <mat-radio-button [checked]="connection.auto" (change)="connection.auto = $event.value" [value]="true"></mat-radio-button>
+        </mat-list-item>
+        <mat-divider style="margin-left: 10px;"></mat-divider>
+        <mat-list-item>
+            Manual
+            <span style="flex: 1 1 auto"></span>
+            <mat-radio-button [checked]="!connection.auto" (change)="connection.auto = $event.value" [value]="false"></mat-radio-button>
+        </mat-list-item>
+    </mat-card>
+    <br>
+    <mat-card class="settings-card" *ngIf="!connection.auto">
+        <mat-list-item>
+            Serial Port
+            <span style="flex: 1 1 auto"></span>
+            <input matInput class="settings-input" [(ngModel)]="connection.parameters.portstr" placeholder="None"/>
+        </mat-list-item>
+        <mat-list-item>
+            Baudrate
+            <span style="flex: 1 1 auto"></span>
+            <input matInput class="settings-input" [(ngModel)]="connection.parameters.baudrate" placeholder="None"/>
+        </mat-list-item>
+        <mat-list-item>
+            Protocol
+            <span style="flex: 1 1 auto"></span>
+            <mat-form-field>
+                <mat-select [(ngModel)]="connection.parameters.protocol">
+                    <mat-option [value]="null">
+                        NONE
+                    </mat-option>
+                <mat-option *ngFor="let p of protocols | keyvalue" [value]="p.key">
+                    {{ p.value }}
+                </mat-option>
+                </mat-select>
+            </mat-form-field>  
+        </mat-list-item>
+    </mat-card>
+</mat-list>

@@ -17,7 +17,7 @@
     // position: fixed;
     top: 0;
     z-index: 1000;
-    padding-top: env(safe-area-inset-top);
+    padding-top: calc(env(safe-area-inset-top) + 10px);
     padding-bottom: env(safe-area-inset-bottom);
 }
 

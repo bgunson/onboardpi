@@ -6,6 +6,7 @@ import { DiagnosticsComponent } from './modules/diagnostics/diagnostics.componen
 import { MaintenanceComponent } from './modules/maintenance/maintenance.component';
 import { MenuComponent } from './modules/menu/menu.component';
 import { RealtimeCurvesComponent } from './modules/realtime-curves/realtime-curves.component';
+import { ConnectionParametersComponent } from './modules/settings/components/connection-parameters/connection-parameters.component';
 import { SettingsComponent } from './modules/settings/settings.component';
 
 const routes: Routes = [
@@ -25,7 +26,15 @@ const routes: Routes = [
     path: 'maintenance', component: MaintenanceComponent
   },
   {
-    path: 'settings', component: SettingsComponent
+    path: 'settings',
+    children: [
+      {
+        path: '', component: SettingsComponent
+      },
+      {
+        path: 'connection-params', component: ConnectionParametersComponent
+      }
+    ]
   },
   {
     path: '', component: MenuComponent

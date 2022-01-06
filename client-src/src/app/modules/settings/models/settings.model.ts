@@ -1,7 +1,7 @@
 
 export interface Settings {
     vehicle: Vehicle;
-    connection: Connection
+    connection: ConnectionParameters
 }
 
 export interface Vehicle {
@@ -11,7 +11,7 @@ export interface Vehicle {
     vin: string;
 }
 
-export interface Connection {
+export interface ConnectionParameters {
     auto: boolean;
     parameters: {
         portstr: string | null;
