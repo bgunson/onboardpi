@@ -3,9 +3,7 @@ import { AppSocket } from './app.module';
 import { DisplayService } from './services/display.service';
 import { ActionService } from './services/action.service';
 import { OBDService } from './services/socket/obd.service';
-import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
-import { Route } from '@angular/compiler/src/core';
-import { map, skip, startWith } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -18,15 +16,6 @@ export class AppComponent implements OnInit {
   title = 'carpi-client';
 
   route$: Observable<string | undefined>;
-
-  // isPortrait: boolean;
-
-  // isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
-  //   .pipe(
-  //     map(result => result.matches),
-  //     shareReplay()
-  //   );
-
   obdConnected: Promise<boolean>;
 
   constructor(

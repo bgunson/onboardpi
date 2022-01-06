@@ -20,7 +20,7 @@ Thanks to [MockuPhone](https://mockuphone.com/) for the device mock-ups.
 - Choose from any Mode 1 OBDII PID.
 - Reorder dashboard cards
 <div align="center">
-    <img src="_img/mocks/dashboard_dark_ios_iphone12miniblack_portrait.png" width="250"><img src="_img/mocks/dashboard_light_iphone12miniblack_portrait.png" width="250">
+    <img src="_img/mocks/dashboard_dark_ios_iphone12miniblack_portrait.png" width="300"><img src="_img/mocks/dashboard_light_iphone12miniblack_portrait.png" width="300">
 </div>
 
 
@@ -30,7 +30,7 @@ Thanks to [MockuPhone](https://mockuphone.com/) for the device mock-ups.
 - View current status and fuel status, if supported.
 
 <div align="center">
-    <img src="_img/mocks/diagnostics_dark_ios_iphone12miniblack_portrait.png" width="250">
+    <img src="_img/mocks/diagnostics_dark_ios_iphone12miniblack_portrait.png" width="300">
 </div>
 
 *Clearing codes not supported yet*
@@ -40,14 +40,14 @@ Thanks to [MockuPhone](https://mockuphone.com/) for the device mock-ups.
 - View realtime system parameters including CPU, RAM and disk usage. Screenshots below were not from a Raspberry Pi.
 
 <div align="center">
-    <img src="_img/mocks/vehicle_stream_dark_ios_iphone12miniblack_portrait.png" width="250"><img src="_img/mocks/sys_stream_dark_ios_iphone12miniblack_portrait.png" width="250">
+    <img src="_img/mocks/vehicle_stream_dark_ios_iphone12miniblack_portrait.png" width="300"><img src="_img/mocks/sys_stream_dark_ios_iphone12miniblack_portrait.png" width="300">
 </div>
 
 ### Realtime Curves
 - Fullscreen real time depiction of any supported OBDII commands
 
 <div align="center">
-    <img src="_img/mocks/curves_dark_ios_iphone12miniblack_portrait.png" width="250"><img src="_img/mocks/curves_light_ios_iphone12miniblack_portrait.png" width="250">
+    <img src="_img/mocks/curves_dark_ios_iphone12miniblack_portrait.png" width="300"><img src="_img/mocks/curves_light_ios_iphone12miniblack_portrait.png" width="300">
 
 </div>
 
@@ -83,18 +83,18 @@ Once your Pi is physically ready to be installed in your car there are a few thi
 3. Use the Pi itself as a wireless hotspot. I use [Autohotspot](https://www.raspberryconnect.com/projects/65-raspberrypi-hotspot-accesspoints/183-raspberry-pi-automatic-hotspot-and-static-hotspot-installer) which allows you to configure the Pi to connect to any known network within range and fallback to being a hotspot. So when you are parked at home in your router's range, the Pi can have internet access, but if you are driving around the Pi will create its own network allowing you to access the OnBoardPi web page.
 
 #### Using Docker
-If you like and use Docker you can pull the latest OnBoardPi image from DockerHub. Then run it as a systemd service like [this](https://gist.github.com/bgunson/690b5024fcc11d8f824196950ebb0609).
+If you like and use Docker you can pull the latest [OnBoardPi image from DockerHub](https://hub.docker.com/repository/docker/bgunson/onboardpi). Then run it as a systemd service like [this](https://gist.github.com/bgunson/690b5024fcc11d8f824196950ebb0609).
 ```
 docker pull bgunson/onboardpi:latest
 ```
 To run the image:
 ```
-docker run -d --network host -v /etc/obpi:/etc/obpi -v /dev:/dev --name OBPI bgunson/onboardpi:latest
+docker run --rm --network host -v /etc/obpi:/etc/obpi -v /dev:/dev --name OBPI bgunson/onboardpi:latest
 ```
 - `-v /etc/obpi:/etc/obpi` mounts the location for the databse and settings, thus all data will be on the Pi @ `/etc/obpi` locally.
     - You may also use a regular docker volume if desired.
 - `-v /dev:/dev` makes the serial port for (OBD adapter) accessble within the container, DO NOT remove or alter.
-- IF you want to use a ort other than `8080` you must use the docker bridge network. To do this remove `--network host` from the options and replace it with `-p PORT:8080 -p 60000:60000` where `PORT` ia your desired host port and `60000` is the mapping for the OBD server. Note when using the bridge network in place of the host, the IP and MAC addresses on the data stream will be of the container as seen [here](https://github.com/bgunson/onboardpi/blob/main/_img/screenshots/sys_stream_bridge.PNG).
+- If you want to use a port other than `8080` you must use the docker bridge network. To do this remove `--network host` from the options and replace it with `-p PORT:8080 -p 60000:60000` where `PORT` is your desired host port and `60000` is the mapping for the OBD server. Note when using the bridge network in place of the host, the IP and MAC addresses on the data stream will be of the container as seen [here](https://github.com/bgunson/onboardpi/blob/main/_img/screenshots/sys_stream_bridge.PNG).
 
 #### From the Source
 
@@ -123,7 +123,7 @@ node app.js
 ```
 From there you can define a systemd service to run OnBoardPi as a service.
 
-When running, determine the IP address of the Pi once connected to the same network it is on and navigate to the web page in  abrowser by inputting the Pi's IP address and port of the web server, such as `192.168.1.101:8080`. From there you can connect to the car via OBDII.
+When running, determine the IP address of the Pi once connected to the same network it is on and navigate to the web page in  a browser by inputting the Pi's IP address and port of the web server, such as `192.168.1.101:8080`. From there you can connect to the car via OBDII.
 
 Tip: after successfully navigating to the web page bookmark the site to your home screen which caches the site and opens it as a standalone PWA (progressive web app).
 
