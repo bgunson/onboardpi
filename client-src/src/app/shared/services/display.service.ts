@@ -10,7 +10,7 @@ import { map, shareReplay } from 'rxjs/operators';
 })
 export class DisplayService {
 
-  palette: ThemePalette;  // this is 'primary' | 'accent' | 'warn'
+  palette: ThemePalette;  // this is 'primary' | 'accent' 
 
   theme: string;
   defaultColor: string;
@@ -24,14 +24,17 @@ export class DisplayService {
   isPortrait$: Observable<boolean> = this.breakpointObserver.observe([
     '(orientation: portrait)',
     '(orientation: landscape)',
-  ]).pipe(map(result => result.breakpoints['(orientation: portrait)']));
+  ]).pipe(
+    map(result => result.breakpoints['(orientation: portrait)']), 
+    shareReplay()
+  );
 
   constructor(
     private breakpointObserver: BreakpointObserver,
     private overlay: OverlayContainer
   ) { }
 
-  setTheme(theme: string) {
+  setTheme(theme: string) : void {
     this.overlay.getContainerElement().classList.remove('dark-theme');
     this.overlay.getContainerElement().classList.add(theme + '-theme');
     this.theme = theme;
@@ -39,12 +42,14 @@ export class DisplayService {
 
     if (this.theme === 'light') {
       this.defaultColor = '#00796b';
+      this.palette = 'primary';
     } else {
       this.defaultColor = '#ffc107';
+      this.palette = 'accent';
     }
   }
 
-  checkTheme() {
+  checkTheme(): void {
     let existing = localStorage.getItem('theme');
     if (existing) {
       this.setTheme(existing);

@@ -2,21 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 
 /**
- * When a module (route) is activated it can use the action service to spawn icons buttons on the app sidenav with their own respective function.
- * 
- * For example using the Maintenance Module: 
- *  let actions = [
- *   {
- *      icon: 'post_add',
- *      func: () => this.add()
- *    },
- *    {
- *      icon: 'save',
- *      func: () => this.save()
- *    }
- *  ];
- * 
- * The Maintenance component should subscrbe to the actionClick subject which emits the index of the click where the respective func can be invoke.
+ * When a module (route) is activated it can use the action service to spawn an icon button on the app sidenav with their own respective function.
  */
 @Injectable({
   providedIn: 'root'

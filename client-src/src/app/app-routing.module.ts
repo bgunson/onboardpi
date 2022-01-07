@@ -24,7 +24,7 @@ const routes: Routes = [
     path: 'realtime-curves', component: RealtimeCurvesComponent
   },
   {
-    path: 'maintenance', component: MaintenanceComponent
+    path: 'maintenance', loadChildren: () => import('./features/maintenance/maintenance.module').then(m => m.MaintenanceModule)
   },
   {
     path: 'settings',

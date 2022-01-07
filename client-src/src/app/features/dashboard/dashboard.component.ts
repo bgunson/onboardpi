@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { DisplayService } from 'src/app/services/display.service';
-import { ActionService } from 'src/app/services/action.service';
-import { OBDService } from 'src/app/services/socket/obd.service';
+import { DisplayService } from 'src/app/shared/services/display.service';
+import { ActionService } from 'src/app/shared/services/action.service';
+import { OBDService } from 'src/app/shared/services/obd.service';
 import { DashboardCard } from './models/dashboard.model';
 import { DashboardService } from './services/dashboard.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     private obd: OBDService, 
     public dashboardService: DashboardService,
     private action: ActionService,
-    private display: DisplayService,
+    public display: DisplayService,
     private dialog: MatDialog
   ) { }
 

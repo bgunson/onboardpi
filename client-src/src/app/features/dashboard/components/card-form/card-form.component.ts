@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { OBDCommand } from 'src/app/shared/models/obd.model';
-import { OBDService } from 'src/app/services/socket/obd.service';
+import { OBDService } from 'src/app/shared/services/obd.service';
 import { DashboardCard } from '../../models/dashboard.model';
 import { DashboardService } from '../../services/dashboard.service';
 

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { share, takeWhile, timeout } from 'rxjs/operators';
 import { OBDSocket } from 'src/app/app.module';
-import { OBDCommand, OBDResponse, ResponseSet } from '../../shared/models/obd.model';
+import { OBDCommand, OBDResponse, ResponseSet } from '../models/obd.model';
 
 
 /**

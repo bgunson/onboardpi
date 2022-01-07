@@ -8,12 +8,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
-import { BrowserModule } from '@angular/platform-browser';
 import { GaugeComponent } from './components/gauge/gauge.component';
 import { NumericComponent } from './components/numeric/numeric.component';
 import { CurveComponent } from './components/curve/curve.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CardFormComponent } from './components/card-form/card-form.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -30,8 +28,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
   imports: [
     CommonModule,
     SharedModule,
-    BrowserModule,
-    BrowserAnimationsModule,
     MatCardModule,
     NgxGaugeModule,
     MatButtonModule,

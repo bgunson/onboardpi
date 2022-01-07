@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RealtimeChartData } from 'ngx-graph';
-import { OBDService } from 'src/app/services/socket/obd.service';
+import { OBDService } from 'src/app/shared/services/obd.service';
 
 interface Curves {
   [cmd: string]: RealtimeChartData[];

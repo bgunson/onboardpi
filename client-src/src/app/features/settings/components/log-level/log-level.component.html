@@ -3,7 +3,7 @@
         <mat-list-item *ngFor="let level of levels; let last = last">
             {{ level | titlecase }}
             <span style="flex: 1 1 auto;"></span>
-            <mat-radio-button [checked]="connection.log_level === level" [value]="level" (change)="connection.log_level = $event.value"></mat-radio-button>
+            <mat-radio-button [color]="display.palette" [checked]="connection.log_level === level" [value]="level" (change)="connection.log_level = $event.value"></mat-radio-button>
             <mat-divider class="settings-divider" *ngIf="!last"></mat-divider>
         </mat-list-item>
     </mat-card>

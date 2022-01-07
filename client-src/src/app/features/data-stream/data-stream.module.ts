@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {MatTabsModule} from '@angular/material/tabs';
-import { BrowserModule } from '@angular/platform-browser';
 import { DataStreamComponent } from './data-stream.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatListModule } from '@angular/material/list';
@@ -25,7 +24,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
   imports: [
     CommonModule,
     SharedModule,
-    BrowserModule,
     MatTabsModule,
     MatProgressSpinnerModule,
     MatListModule,

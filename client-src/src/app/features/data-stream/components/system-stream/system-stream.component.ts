@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AppSocket } from 'src/app/app.module';
-import { OBDService } from 'src/app/services/socket/obd.service';
+import { DisplayService } from 'src/app/shared/services/display.service';
+import { OBDService } from 'src/app/shared/services/obd.service';
 
 @Component({
   selector: 'data-stream-system',
@@ -16,6 +17,7 @@ export class SystemStreamComponent implements OnInit {
   constructor(
     private appSocket: AppSocket, 
     public obd: OBDService,
+    public display: DisplayService
   ) { }
 
   ngOnInit(): void {

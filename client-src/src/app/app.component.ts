@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AppSocket } from './app.module';
-import { DisplayService } from './services/display.service';
-import { ActionService } from './services/action.service';
-import { OBDService } from './services/socket/obd.service';
+import { DisplayService } from './shared/services/display.service';
+import { ActionService } from './shared/services/action.service';
+import { OBDService } from './shared/services/obd.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';

@@ -4,7 +4,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable, Subscription } from 'rxjs';
-import { ActionService } from 'src/app/services/action.service';
+import { ActionService } from 'src/app/shared/services/action.service';
+import { DisplayService } from 'src/app/shared/services/display.service';
 import { RecordFormComponent } from './components/record-form/record-form.component';
 import { MaintenanceRecord } from './models/maintenance.model';
 import { MaintenanceService } from './services/maintenance.service';
@@ -18,8 +19,6 @@ export class MaintenanceComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatSort) sort: MatSort;
 
-
-  // dataSource = new MaintenanceDataSource(this.maintenanceService.getRecords());
   dataSource = new MatTableDataSource<MaintenanceRecord>();
   displayedColumns: string[] = ['date', 'description', 'odometer', 'notes', 'action'];
 
@@ -28,7 +27,8 @@ export class MaintenanceComponent implements OnInit, OnDestroy {
   constructor(
     private maintenanceService: MaintenanceService, 
     private action: ActionService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public display: DisplayService
   ) { }
 
   edit(record: MaintenanceRecord) {

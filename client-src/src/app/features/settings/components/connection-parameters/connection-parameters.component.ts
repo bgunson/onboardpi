@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
+import { DisplayService } from 'src/app/shared/services/display.service';
 import { ConnectionParameters, Settings } from '../../models/settings.model';
 import { SettingsService } from '../../services/settings.service';
 
@@ -23,14 +24,10 @@ export class ConnectionParametersComponent implements OnInit, OnDestroy {
     'A': 'SAE J1939 (CAN 29/250)'
   }
 
-  check(e: MatRadioChange) {
-    console.log(e);
-  }
-
   connection$: Promise<ConnectionParameters>;
   settings$: Promise<Settings>;
 
-  constructor(private settingsService: SettingsService) { }
+  constructor(private settingsService: SettingsService, public display: DisplayService) { }
 
   ngOnInit(): void {
     this.settings$ = this.settingsService.getSettings();

@@ -1,5 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+
+/**
+ * Format a given number of bytes to its largest unit as string
+ */
 @Pipe({
   name: 'bytes'
 })
@@ -18,29 +22,36 @@ export class BytesPipe implements PipeTransform {
   }
 }
 
-const Units: {[key: string]: string} = {
-    'percent': '%',
-    'kph': 'km/h',
-    'revolutions_per_minute': 'RPM',
-    'volt': 'V',
-    'degC': '°C',
-    'degree': '°',
-    'gps': 'g/s',
-    'kilopascal': 'kPa'
-}
 
+/**
+ * Transform unit from python-OBD to prettier version
+ */
 @Pipe({
     name: 'prettyUnit'
 })
 export class PrettyUnitPipe implements PipeTransform {
-  
+
+    prettyUnits: {[key: string]: string} = {
+      'percent': '%',
+      'kph': 'km/h',
+      'revolutions_per_minute': 'RPM',
+      'volt': 'V',
+      'degC': '°C',
+      'degree': '°',
+      'gps': 'g/s',
+      'kilopascal': 'kPa'
+    }
+    
     transform(value: string, ...args: unknown[]): string {
-      return Units[value] ? Units[value] : value;
+      return this.prettyUnits[value] ? this.prettyUnits[value] : value;
     }
   
 }
   
 
+/**
+ * Round number -> number
+ */
 @Pipe({
     name: 'round'
 })

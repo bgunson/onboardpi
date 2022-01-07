@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { share } from 'rxjs/operators';
 import { AppSocket } from 'src/app/app.module';
-import { CrudService } from 'src/app/services/socket/crud.service';
+import { CrudService } from 'src/app/shared/services/crud.service';
 import { Settings } from '../models/settings.model';
 
 @Injectable({

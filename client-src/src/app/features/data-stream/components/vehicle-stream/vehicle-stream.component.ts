@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
 import { OBDCommand, ResponseSet } from 'src/app/shared/models/obd.model';
-import { OBDService } from 'src/app/services/socket/obd.service';
+import { DisplayService } from 'src/app/shared/services/display.service';
+import { OBDService } from 'src/app/shared/services/obd.service';
 
 @Component({
   selector: 'data-stream-vehicle',
@@ -27,7 +28,7 @@ export class VehicleStreamComponent implements OnInit, OnDestroy {
   protocolName$: Promise<string>;
   portName$: Promise<string>;
 
-  constructor(private obd: OBDService) { }
+  constructor(private obd: OBDService, public display: DisplayService) { }
 
   isNumber(value: any): boolean {
     return !isNaN(value);

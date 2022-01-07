@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
+import { DisplayService } from 'src/app/shared/services/display.service';
 import { ConnectionParameters, Settings } from '../../models/settings.model';
 import { SettingsService } from '../../services/settings.service';
 
@@ -25,7 +26,7 @@ export class LogLevelComponent implements OnInit, OnDestroy {
   settings$: Promise<Settings>;
   connection$: Promise<ConnectionParameters>
 
-  constructor(private settingsService: SettingsService) { }
+  constructor(private settingsService: SettingsService, public display: DisplayService) { }
 
   set(event: MatRadioChange) {
     console.log(event)

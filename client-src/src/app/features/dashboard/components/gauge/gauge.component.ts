@@ -3,7 +3,7 @@ import { NgxGaugeType } from 'ngx-gauge/gauge/gauge';
 import { Observable } from 'rxjs';
 import { pluck } from 'rxjs/operators';
 import { OBDResponse } from 'src/app/shared/models/obd.model';
-import { OBDService } from 'src/app/services/socket/obd.service';
+import { OBDService } from 'src/app/shared/services/obd.service';
 import { DashboardCard } from '../../models/dashboard.model';
 import { DashboardService } from '../../services/dashboard.service';
 

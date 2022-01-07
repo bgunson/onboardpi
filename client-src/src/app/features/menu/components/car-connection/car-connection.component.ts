@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AppSocket } from 'src/app/app.module';
-import { DisplayService } from 'src/app/services/display.service';
-import { OBDService } from 'src/app/services/socket/obd.service';
+import { DisplayService } from 'src/app/shared/services/display.service';
+import { OBDService } from 'src/app/shared/services/obd.service';
 
 @Component({
   selector: 'app-car-connection',

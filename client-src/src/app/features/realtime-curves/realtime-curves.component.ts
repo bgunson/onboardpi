@@ -3,8 +3,8 @@ import { RealtimeChartData, RealtimeChartOptions} from 'ngx-graph';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { pluck, throttleTime } from 'rxjs/operators';
 import { OBDCommand, OBDResponse } from 'src/app/shared/models/obd.model';
-import { DisplayService } from 'src/app/services/display.service';
-import { OBDService } from 'src/app/services/socket/obd.service';
+import { DisplayService } from 'src/app/shared/services/display.service';
+import { OBDService } from 'src/app/shared/services/obd.service';
 import { CurveDataService } from './services/curve-data.service';
 
 @Component({
@@ -43,7 +43,7 @@ export class RealtimeCurvesComponent implements OnInit, OnDestroy {
   constructor(
     private curveDataService: CurveDataService,
     private obd: OBDService, 
-    private display: DisplayService,
+    public display: DisplayService,
   ) { }
 
 

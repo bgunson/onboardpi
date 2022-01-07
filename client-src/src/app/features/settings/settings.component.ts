@@ -1,8 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
-import { DisplayService } from 'src/app/services/display.service';
-import { ActionService } from 'src/app/services/action.service';
+import { DisplayService } from 'src/app/shared/services/display.service';
 import { Settings } from './models/settings.model';
 import { SettingsService } from './services/settings.service';
 
@@ -18,7 +15,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   settings$: Promise<Settings>;
 
   constructor(
-    private display: DisplayService,
+    public display: DisplayService,
     private settingsService: SettingsService
   ) { }
 

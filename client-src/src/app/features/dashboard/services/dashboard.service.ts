@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { AppSocket } from 'src/app/app.module';
-import { CrudService } from 'src/app/services/socket/crud.service';
+import { CrudService } from 'src/app/shared/services/crud.service';
 import { CardFormComponent } from '../components/card-form/card-form.component';
 import { DashboardCard } from '../models/dashboard.model';
 

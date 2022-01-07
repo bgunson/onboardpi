@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { OBDCommand } from 'src/app/shared/models/obd.model';
-import { ActionService } from 'src/app/services/action.service';
-import { OBDService } from 'src/app/services/socket/obd.service';
+import { ActionService } from 'src/app/shared/services/action.service';
+import { DisplayService } from 'src/app/shared/services/display.service';
+import { OBDService } from 'src/app/shared/services/obd.service';
 
 
 @Component({
@@ -26,11 +27,12 @@ export class DiagnosticsComponent implements OnInit, OnDestroy {
   carConnected$: Observable<boolean>;
   unwatchSub: Subscription = new Subscription();
 
-  constructor(private obd: OBDService, private action: ActionService) { }
+  constructor(
+    private obd: OBDService, 
+    private action: ActionService, 
+    public display: DisplayService
+  ) { }
 
-  scan() {
-    // this.obd.switchObd('dtc');
-  }
 
   ngOnInit(): void {
     // this.action.setActionBtn('delete_sweep');

@@ -20,7 +20,7 @@
 
 <ng-container *ngIf="!(vehicleConnected$ | async)">
     <div style="text-align: center; margin-top: 25vh;">
-        <mat-spinner style="margin: 0 auto;" color="accent"></mat-spinner>
+        <mat-spinner style="margin: 0 auto;" [color]="display.palette"></mat-spinner>
         <div style="margin-top: 10px;">Waiting for vehicle</div>
     </div>
 </ng-container>
