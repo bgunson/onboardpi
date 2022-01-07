@@ -8,13 +8,12 @@ const port = process.env.PORT || 8080;
 // Lib modules
 const SysInfo = require('./lib/sys-info');
 const OBDServer = require('./lib/obd-server');
+const Settings = require('./lib/crud/settings');
+const Dashboard = require('./lib/crud/dashboard');
+const Crud = require('./lib/crud');
 
 // Database 
 const database = require('./db/config');
-const Settings = require('./lib/crud/settings');
-const Dashboard = require('./lib/crud/dashboard');
-const KnexCrud = require('./lib/crud/knex-crud');
-
 
 // Middleware
 app.use(express.static(__dirname + '/public'));
@@ -40,8 +39,7 @@ database.configure((config) => {
     const settings = new Settings(io, config.path);
     socketAPIs.push(settings);
     socketAPIs.push(new Dashboard(io, config.knex));
-    socketAPIs.push(new KnexCrud('commands', io, config.knex));
-    socketAPIs.push(new KnexCrud('maintenance', io, config.knex));
+    socketAPIs.push(new Crud('maintenance', io, config.knex));
     socketAPIs.push(new SysInfo(io));
 
     const obdServer = new OBDServer(io, settings);

@@ -1,0 +1,86 @@
+<ng-container *ngIf="info$ | async as info; else loading">
+    <mat-list>
+        <div mat-subheader><mat-icon>developer_board</mat-icon>&nbsp;CPU</div>
+        <mat-card class="info-card">
+            <mat-list-item>
+                <!-- <mat-icon mat-list-icon>thermostat</mat-icon> -->
+                Temperature<span style="flex: 1 1 auto"></span>{{ (info.cpu.temp | number:'1.1-2') ?? 'N/A'}} °C
+            </mat-list-item>
+            <mat-list-item>
+                Clock Rate<span style="flex: 1 1 auto"></span>{{ info.cpu.speed ?? 'N/A'}} GHz
+            </mat-list-item>
+            <mat-list-item>
+                Load<span style="flex: 1 1 auto"></span>{{ (info.cpu.load | number:'1.1-2') ?? 'N/A'}} %
+            </mat-list-item>
+        </mat-card>
+    
+
+        <div mat-subheader><mat-icon>memory</mat-icon>&nbsp;Memory</div>
+        <mat-card class="info-card">
+            <mat-list-item>
+                Used<span style="flex: 1 1 auto"></span>{{ info.mem.active / 1000000000 | number:'1.1-1' }} GB ({{ ((info.mem.active / info.mem.total)*100 | number:'1.1-1') ?? 'N/A'}} %)
+            </mat-list-item>
+            <mat-list-item>
+                Total<span style="flex: 1 1 auto"></span>{{ (info.mem.total / 1000000000 | number:'1.1-1') ?? 'N/A'}} GB
+            </mat-list-item>
+        </mat-card>
+      
+        <div mat-subheader><mat-icon>router</mat-icon>&nbsp;Network</div>
+        <mat-card class="info-card">
+            <mat-list-item *ngFor="let iface of info.network; let last = last">
+                <div mat-line style="margin-bottom: 5px;">
+                    {{ iface.iface }}
+                </div>
+                <div mat-line>
+                    <span class="sub-line-title">IPv4</span>
+                    <span class="network" style="float: right;">
+                        {{ iface.ip4 }}
+                    </span>
+                </div>
+                <div mat-line>
+                    <span class="sub-line-title">MAC</span>
+                    <span class="network" style="float: right;">
+                        {{ iface.mac | uppercase }}
+                    </span>
+                </div>
+                <div mat-line>
+                    <span class="sub-line-title">Send</span>
+                    <span class="network" style="float: right;">
+                        {{ iface.tx_sec | bytes }}/s
+                        ({{ iface.tx_bytes | bytes }} Total) 
+                    </span>
+                </div>
+                <div mat-line>
+                    <span class="sub-line-title">Receive</span>
+                    <span class="network" style="float: right;">
+                        {{ iface.rx_sec | bytes }}/s
+                        ({{ iface.rx_bytes | bytes }} Total)
+                    </span>
+                </div>
+                <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
+            </mat-list-item>
+        </mat-card>
+
+        <ng-container *ngIf="info.storage.length">
+            <div mat-subheader><mat-icon>storage</mat-icon>&nbsp;Storage</div>
+            <mat-card class="info-card margin">
+                <mat-list-item *ngFor="let disk of info.storage; let last = last">
+                    <div mat-line>
+                        {{ disk.fs }}<span style="float: right;">{{ disk.used | bytes }} of {{ disk.size | bytes }}</span>
+                    </div>
+                    <div mat-line>
+                        <span style="float: right;">{{ (disk.use | number:'1.1-2') ?? 'N/A'}} %</span>
+                    </div>
+                    <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
+                </mat-list-item>
+            </mat-card>
+        </ng-container>
+
+    </mat-list>
+</ng-container>
+
+<ng-template #loading>
+    <mat-spinner style="margin: 25vh auto;" color="accent"></mat-spinner>
+</ng-template>
+
+

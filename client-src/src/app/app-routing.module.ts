@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from './modules/dashboard/dashboard.component';
-import { DataStreamComponent } from './modules/data-stream/data-stream.component';
-import { DiagnosticsComponent } from './modules/diagnostics/diagnostics.component';
-import { MaintenanceComponent } from './modules/maintenance/maintenance.component';
-import { MenuComponent } from './modules/menu/menu.component';
-import { RealtimeCurvesComponent } from './modules/realtime-curves/realtime-curves.component';
-import { ConnectionParametersComponent } from './modules/settings/components/connection-parameters/connection-parameters.component';
-import { LogLevelComponent } from './modules/settings/components/log-level/log-level.component';
-import { SettingsComponent } from './modules/settings/settings.component';
+import { DashboardComponent } from './features/dashboard/dashboard.component';
+import { DataStreamComponent } from './features/data-stream/data-stream.component';
+import { DiagnosticsComponent } from './features/diagnostics/diagnostics.component';
+import { MaintenanceComponent } from './features/maintenance/maintenance.component';
+import { MenuComponent } from './features/menu/menu.component';
+import { RealtimeCurvesComponent } from './features/realtime-curves/realtime-curves.component';
+import { ConnectionParametersComponent } from './features/settings/components/connection-parameters/connection-parameters.component';
+import { LogLevelComponent } from './features/settings/components/log-level/log-level.component';
+import { SettingsComponent } from './features/settings/settings.component';
 
 const routes: Routes = [
   {
