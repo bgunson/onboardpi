@@ -13,13 +13,18 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatRippleModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ConnectionParametersComponent } from './components/connection-parameters/connection-parameters.component';
 import {MatRadioModule} from '@angular/material/radio';
+import { ConnectionParametersComponent } from './components/connection-parameters/connection-parameters.component';
+import { LogLevelComponent } from './components/log-level/log-level.component';
 
 
 
 @NgModule({
-  declarations: [SettingsComponent, ConnectionParametersComponent ],
+  declarations: [
+    SettingsComponent,
+    ConnectionParametersComponent,
+    LogLevelComponent
+  ],
   imports: [
     CommonModule,
     MatSlideToggleModule,

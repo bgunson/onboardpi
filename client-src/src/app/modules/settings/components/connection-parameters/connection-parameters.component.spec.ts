@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ConnectionParametersComponent } from './connection-parameters.component';
 
-describe('ConnectionParametersComponent', () => {
+
+describe('ParametersComponent', () => {
   let component: ConnectionParametersComponent;
   let fixture: ComponentFixture<ConnectionParametersComponent>;
 

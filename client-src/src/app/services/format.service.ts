@@ -29,4 +29,15 @@ export class FormatService {
   round(value: number) {
     return Math.round(value);
   }
+
+  bytesToString(bytes: number): string {
+    if (bytes > 1000000) {  // To MB
+      return Math.round(bytes / 1000000) + ' MB';
+    } else if (bytes > 1000) {
+      return Math.round(bytes / 1000) + ' KB';
+    } else {
+      return Math.round(bytes) + ' bytes';
+    }
+  }
+
 }

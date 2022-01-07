@@ -11,14 +11,22 @@ const OBDServer = require('./lib/obd-server');
 
 // Database 
 const database = require('./db/config');
-const Settings = require('./db/crud/settings');
-const Dashboard = require('./db/crud/dashboard');
-const KnexCrud = require('./db/crud/knex-crud');
+const Settings = require('./lib/crud/settings');
+const Dashboard = require('./lib/crud/dashboard');
+const KnexCrud = require('./lib/crud/knex-crud');
 
 
 // Middleware
 app.use(express.static(__dirname + '/public'));
 app.use(express.json());
+
+app.get('/view-obd-log', (req, res) => {
+    res.sendFile(__dirname + '/obd.log');
+});
+
+app.get('/download-obd-log', (req, res) => {
+    res.download(__dirname + '/obd.log');
+});
 
 
 database.configure((config) => {
@@ -27,22 +35,22 @@ database.configure((config) => {
         console.log("Server lisenting on port: " + port);
     });
 
-    const settingsCrud = new Settings(io, config.path);
-    const dashboardCrud = new Dashboard(io, config.knex);
-    const commandsCrud = new KnexCrud('commands', io, config.knex);
-    const maintenanceCrud = new KnexCrud('maintenance', io, config.knex);
+    const socketAPIs = [];
 
-    const sysInfo = new SysInfo(io);
-    const obdServer = new OBDServer(io, settingsCrud);
+    const settings = new Settings(io, config.path);
+    socketAPIs.push(settings);
+    socketAPIs.push(new Dashboard(io, config.knex));
+    socketAPIs.push(new KnexCrud('commands', io, config.knex));
+    socketAPIs.push(new KnexCrud('maintenance', io, config.knex));
+    socketAPIs.push(new SysInfo(io));
+
+    const obdServer = new OBDServer(io, settings);
+    socketAPIs.push(obdServer);   // OBD server needs settings for parameters, log_level
 
     io.on("connection", (socket) => {
         console.log("Client connected.");
-        sysInfo.connect(socket);
-        maintenanceCrud.connect(socket);
-        settingsCrud.connect(socket);
-        commandsCrud.connect(socket);
-        dashboardCrud.connect(socket);
-        obdServer.connect(socket);
+        // Connect new clients to each api
+        socketAPIs.forEach(api => api.connect(socket));
     });
 
     process.on('SIGINT', () => {

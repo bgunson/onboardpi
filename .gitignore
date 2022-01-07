@@ -1,6 +1,8 @@
 dev
 data/dev
 
+obd.log
+
 # compiled output
 /public
 /dist

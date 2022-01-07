@@ -17,5 +17,6 @@ export interface ConnectionParameters {
         portstr: string | null;
         baudrate: number | null;
         protocol: string | null;
-    } 
+    },
+    log_level: string; 
 }

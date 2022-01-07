@@ -7,6 +7,7 @@ import { MaintenanceComponent } from './modules/maintenance/maintenance.componen
 import { MenuComponent } from './modules/menu/menu.component';
 import { RealtimeCurvesComponent } from './modules/realtime-curves/realtime-curves.component';
 import { ConnectionParametersComponent } from './modules/settings/components/connection-parameters/connection-parameters.component';
+import { LogLevelComponent } from './modules/settings/components/log-level/log-level.component';
 import { SettingsComponent } from './modules/settings/settings.component';
 
 const routes: Routes = [
@@ -32,7 +33,10 @@ const routes: Routes = [
         path: '', component: SettingsComponent
       },
       {
-        path: 'connection-params', component: ConnectionParametersComponent
+        path: 'connection-parameters', component: ConnectionParametersComponent
+      },
+      {
+        path: 'log-level', component: LogLevelComponent
       }
     ]
   },

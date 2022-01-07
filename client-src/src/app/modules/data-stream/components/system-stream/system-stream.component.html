@@ -46,15 +46,15 @@
                 <div mat-line>
                     <span class="sub-line-title">Send</span>
                     <span class="network" style="float: right;">
-                        {{ iface.tx_sec | number:'1.0-0' }} bytes/s
-                        ({{ (iface.tx_bytes / 1000000) | number:'1.0-0' }} MB Total) 
+                        {{ format.bytesToString(iface.tx_sec) }}/s
+                        ({{ format.bytesToString(iface.tx_bytes) }} Total) 
                     </span>
                 </div>
                 <div mat-line>
                     <span class="sub-line-title">Receive</span>
                     <span class="network" style="float: right;">
-                        {{ iface.rx_sec | number:'1.0-0' }} bytes/s
-                        ({{ (iface.rx_bytes / 1000000) | number:'1.0-0' }} MB Total)
+                        {{ format.bytesToString(iface.rx_sec) }}/s
+                        ({{ format.bytesToString(iface.rx_bytes) }} Total)
                     </span>
                 </div>
                 <mat-divider [inset]="true" *ngIf="!last"></mat-divider>

@@ -22,8 +22,18 @@
     border: none;
     text-align: right;
     font-size: 16px;
+    color: grey;
 }
 
 ::ng-deep .mat-form-field-underline {
     display: none !important;
+}
+
+.settings-divider {
+    margin-left: 10px;
+}
+
+.settings-chevron {
+    vertical-align: middle;
+    color: grey;
 }

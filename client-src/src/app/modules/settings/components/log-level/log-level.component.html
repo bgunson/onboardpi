@@ -1,0 +1,28 @@
+<mat-list *ngIf="connection$ | async as connection">
+    <mat-card class="settings-card">
+        <mat-list-item *ngFor="let level of levels; let last = last">
+            {{ level | titlecase }}
+            <span style="flex: 1 1 auto;"></span>
+            <mat-radio-button [checked]="connection.log_level === level" [value]="level" (change)="connection.log_level = $event.value"></mat-radio-button>
+            <mat-divider class="settings-divider" *ngIf="!last"></mat-divider>
+        </mat-list-item>
+    </mat-card>
+</mat-list>
+
+<mat-nav-list>
+    <mat-card class="settings-card">
+        <mat-list-item>
+            <a href="/view-obd-log" target="_blank" style="width: 100%;">
+                View Log<span style="float: right;"><mat-icon class="settings-chevron">chevron_right</mat-icon></span>
+            </a>
+        </mat-list-item>
+        <mat-divider [inset]="true" class="settings-divider"></mat-divider>
+        <mat-list-item>
+            <a href="/download-obd-log" target="_blank" style="width: 100%;">
+                Download Log<span style="float: right;"><mat-icon class="settings-chevron">chevron_right</mat-icon></span>
+            </a>
+        </mat-list-item>
+    </mat-card>
+
+</mat-nav-list>
+    

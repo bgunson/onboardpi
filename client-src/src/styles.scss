@@ -25,15 +25,10 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-
-
 .title {
     color: darkgrey;
 }
 
-// .container {
-//     padding: 20px;
-// }
 
 .sidenav {
     background-color: mat-color($theme-primary);
@@ -52,12 +47,4 @@ body {
 ::-webkit-scrollbar-thumb {
     background: mat-color($theme-primary);
     border-radius: 10px;
-}
-
-.settings-input {
-    color: #a4a4a4
-}
-
-.dark-theme .settings-input {
-    color: #9e9e9e
 }

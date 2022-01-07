@@ -4,8 +4,10 @@ import sys
 import asyncio
 import time
 
-if len(sys.argv) == 2:
-    params = obdio.loads(sys.argv[1])
+obd.logger.setLevel(sys.argv[1])
+
+if len(sys.argv) == 3:
+    params = obdio.loads(sys.argv[2])
 else: 
     params = {}
 

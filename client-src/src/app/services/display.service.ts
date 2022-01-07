@@ -1,6 +1,7 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Injectable } from '@angular/core';
+import { ThemePalette } from '@angular/material/core';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 
@@ -8,6 +9,8 @@ import { map, shareReplay } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class DisplayService {
+
+  palette: ThemePalette;  // this is 'primary' | 'accent' | 'warn'
 
   theme: string;
   defaultColor: string;
