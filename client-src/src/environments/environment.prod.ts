@@ -1,3 +1,6 @@
+import { Socket } from "ngx-socket-io";
+
 export const environment = {
-  production: true
+  production: true,
+  socketClass: Socket
 };
