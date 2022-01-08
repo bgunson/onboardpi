@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "carpi-client": {
+    "onboardpi-client": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -36,6 +36,14 @@
             "scripts": []
           },
           "configurations": {
+            "demo":{
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.demo.ts"
+                }
+              ]
+            },
             "production": {
               "budgets": [
                 {
@@ -73,10 +81,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "carpi-client:build:production"
+              "browserTarget": "onboardpi-client:build:production"
             },
             "development": {
-              "browserTarget": "carpi-client:build:development"
+              "browserTarget": "onboardpi-client:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -84,7 +92,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "carpi-client:build"
+            "browserTarget": "onboardpi-client:build"
           }
         },
         "test": {
@@ -108,5 +116,5 @@
       }
     }
   },
-  "defaultProject": "carpi-client"
+  "defaultProject": "onboardpi-client"
 }

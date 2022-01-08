@@ -16,9 +16,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { DataStreamModule } from './features/data-stream/data-stream.module';
 import { MenuModule } from './features/menu/menu.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { environment } from 'src/environments/environment';
+import { HttpClientModule } from '@angular/common/http';
+
+
 
 @Injectable()
-export class OBDSocket extends Socket {
+export class OBDSocket extends environment.socketClass {
   constructor() {
     super({ 
       url: 'http://' + window.location.hostname + ':60000',
@@ -30,7 +34,7 @@ export class OBDSocket extends Socket {
 }
 
 @Injectable()
-export class AppSocket extends Socket {
+export class AppSocket extends environment.socketClass {
   constructor() {
     super({
       url: window.origin,
@@ -65,7 +69,9 @@ export class AppSocket extends Socket {
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
-    MatButtonModule
+    MatButtonModule,
+
+    HttpClientModule
     
   ],
   providers: [OBDSocket, AppSocket],
