@@ -1,8 +1,22 @@
+import { HttpClient, HttpHandler, HttpXhrBackend } from "@angular/common/http";
+import { Injector } from "@angular/core";
 import { interval, Observable, of } from "rxjs";
 import { map } from "rxjs/operators";
-import { ResponseSet } from "../shared/models/obd.model";
+import { environment } from "src/environments/environment";
+import { OBDCommand, ResponseSet } from "../shared/models/obd.model";
+
+const injector = Injector.create({
+    providers: [
+        { provide: HttpClient, deps: [HttpHandler] },
+        { provide: HttpHandler, useValue: new HttpXhrBackend({ build: () => new XMLHttpRequest }) },
+    ]
+})
 
 export class DemoOBDSocket {
+
+    private _http: HttpClient = injector.get(HttpClient);
+
+    private _allCommands$: Observable<OBDCommand[]>;
 
     private _watchList: Set<string> = new Set<string>();
     watch$: Observable<ResponseSet> = interval(500).pipe(
@@ -26,6 +40,8 @@ export class DemoOBDSocket {
     oneTimeEvents: { [event: string]: Promise<any> } = {
         'port_name': new Promise<string>(resolve => resolve('/dev/demo/port')),
         'protocol_name': new Promise<string>(resolve => resolve('DEMO')),
+        'all_commands': this._http.get<OBDCommand[]>(environment.dataURL + '/obd/all_commands.json').toPromise(),
+        'supported_commands': this._http.get(environment.dataURL + '/obd/supported_commands.json').toPromise()
     }
 
     fromEvents: { [event: string]: Observable<any> } = {

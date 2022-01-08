@@ -13,7 +13,7 @@ const Dashboard = require('./lib/crud/dashboard');
 const Crud = require('./lib/crud');
 
 // Database 
-const database = require('./db/config');
+const database = require('./data/config');
 
 // Middleware
 app.use(express.static(__dirname + '/public'));

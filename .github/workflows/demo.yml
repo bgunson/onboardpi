@@ -17,6 +17,7 @@ jobs:
     - 
       name: Angular Deploy gh-pages Actions
       uses: AhsanAyaz/angular-deploy-gh-pages-actions@v1.3.2
+      working-directory: ./client-src
       with:
         # github_access_token: ${{ secrets.ACCESS_TOKEN }} # see the Configuration section for how you can create secrets
         build_configuration: demo # The build environment for the app. please look configurations in your angular.json

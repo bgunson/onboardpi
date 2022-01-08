@@ -4,13 +4,13 @@ module.exports = {
   development: {
     client: 'sqlite3',
     connection: {
-      filename: './db/dev/dev.db'
+      filename: './data/dev/dev.db'
     },
     seeds: {
-      directory: './db/seeds'
+      directory: './data/seeds'
     },
     migrations: {
-      directory: './db/migrations'
+      directory: './data/migrations'
     },
     useNullAsDefault: true
   },
@@ -21,10 +21,10 @@ module.exports = {
       filename: '/etc/obpi/obpi.db'
     },
     seeds: {
-      directory: './db/seeds'
+      directory: './data/seeds'
     },
     migrations: {
-      directory: './db/migrations'
+      directory: './data/migrations'
     },
     useNullAsDefault: true
   }
