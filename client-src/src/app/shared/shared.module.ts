@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { BytesPipe, PrettyUnitPipe, RoundPipe } from './pipes/format_pipes';
+import { CommonModule, DecimalPipe } from '@angular/common';
+import { BytesPipe, OBDValuePipe, PrettyUnitPipe, RoundPipe } from './pipes/format_pipes';
 
 
 
@@ -8,7 +8,8 @@ import { BytesPipe, PrettyUnitPipe, RoundPipe } from './pipes/format_pipes';
   declarations: [
     BytesPipe,
     PrettyUnitPipe,
-    RoundPipe
+    RoundPipe,
+    OBDValuePipe
   ],
   imports: [
     CommonModule
@@ -16,7 +17,9 @@ import { BytesPipe, PrettyUnitPipe, RoundPipe } from './pipes/format_pipes';
   exports: [
     BytesPipe,
     PrettyUnitPipe,
-    RoundPipe
-  ]
+    RoundPipe,
+    OBDValuePipe
+  ],
+  providers: [DecimalPipe]
 })
 export class SharedModule { }

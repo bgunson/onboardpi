@@ -14,14 +14,7 @@
                 {{ cmd.name }}
                 <span style="flex: 1 1 auto;"></span>
                 <ng-container *ngIf="watch[cmd.name] else notApplicable">
-                    <ng-container *ngIf="isNumber(watch[cmd.name].value) else string">
-                        {{ watch[cmd.name].value | number:'1.1-2'  }}
-                    </ng-container>
-                    <ng-template #string>
-                        <ng-container *ngIf="isString(watch[cmd.name].value) else nan">
-                            {{ watch[cmd.name].value }}
-                        </ng-container>
-                    </ng-template>
+                    {{ watch[cmd.name].value | obdValue:'1.1-2' }}
                 </ng-container>
                 <ng-template #nan>NaN</ng-template>
                 <ng-template #notApplicable>N/A</ng-template>
@@ -32,7 +25,7 @@
         <div mat-subheader><mat-icon>directions_car</mat-icon>&nbsp;OBD Connection</div>
         <mat-card style="padding: 0px;" class="mat-elevation-z2">
             <mat-list-item>
-                Protocol<span style="flex: 1 1 auto"></span>{{ protocolName$ | async    }}
+                Protocol<span style="flex: 1 1 auto"></span>{{ protocolName$ | async }}
             </mat-list-item>
             <mat-list-item>
                 Port<span style="flex: 1 1 auto"></span>{{ portName$ | async }}

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { AppSocket } from './app.module';
 import { DisplayService } from './shared/services/display.service';
 import { ActionService } from './shared/services/action.service';
 import { OBDService } from './shared/services/obd.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -12,7 +13,7 @@ import { Observable } from 'rxjs';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   title = 'onboardpi-client';
 
   route$: Observable<string | undefined>;
@@ -53,6 +54,12 @@ export class AppComponent implements OnInit {
       urlSeg.pop();
     }
     this.router.navigate(urlSeg);
+  }
+
+  ngAfterViewInit(): void {
+      if (environment.demo && !sessionStorage.getItem('demo')) {
+        this.router.navigateByUrl('demo');
+      }
   }
   
   ngOnInit() {

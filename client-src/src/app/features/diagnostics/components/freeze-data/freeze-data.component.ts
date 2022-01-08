@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { OBDCommand, ResponseSet } from 'src/app/shared/models/obd.model';
+import { pluck } from 'rxjs/operators';
+import { OBDCommand, OBDResponse, ResponseSet } from 'src/app/shared/models/obd.model';
 import { OBDService } from 'src/app/shared/services/obd.service';
 
 @Component({
@@ -18,8 +19,16 @@ export class FreezeDataComponent implements OnInit, OnDestroy {
 
   constructor(private obd: OBDService) { }
 
+  pluck(cmd: string): Observable<OBDResponse> {
+    return this.live$.pipe(pluck(cmd));
+  }
+
   ngOnInit(): void {
-    this.commands$ = this.obd.allCommands().then(all => all[2]);
+    this.commands$ = this.obd.allCommands().then(all => {
+      let modeTwo = all[2];
+      this.obd.watch(modeTwo.map(cmd => cmd.name));
+      return modeTwo;
+    });
     this.live$ = this.obd.getWatching();
   }
 

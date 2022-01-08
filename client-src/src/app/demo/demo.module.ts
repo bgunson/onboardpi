@@ -3,14 +3,16 @@ import { CommonModule } from '@angular/common';
 
 import { DemoRoutingModule } from './demo-routing.module';
 import { HttpClientModule } from '@angular/common/http';
+import { DemoComponent } from './demo.component';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    DemoComponent
+  ],
   imports: [
     CommonModule,
     DemoRoutingModule,
-    HttpClientModule
   ]
 })
 export class DemoModule { }

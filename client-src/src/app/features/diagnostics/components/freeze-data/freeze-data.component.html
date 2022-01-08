@@ -1,7 +1,12 @@
-<mat-list>
+<mat-list *ngIf="live$ | async as live">
     <mat-card class="code-card">
         <mat-list-item *ngFor="let cmd of commands$ | async">
             {{ cmd.name.slice(4) }}
+            <span style="flex: 1 1 auto"></span>
+            <ng-container *ngIf="live[cmd.name] as live; else notApplicable">
+                {{ live.value | obdValue:'1.1-2' }}
+            </ng-container>
+            <ng-template #notApplicable>N/A</ng-template>
         </mat-list-item>
     </mat-card>
 </mat-list>

@@ -2,14 +2,13 @@
 export interface OBDCommand {
     name: string;
     desc: string;
+    decoder?: string;
+    mode?: number;
 }
 
 export interface OBDResponse {
     value: any;
-    command: {
-        name: string;
-        desc: string;
-    };
+    command: OBDCommand;
     unit: string;
     time: number;
 }

@@ -1,0 +1,1218 @@
+{
+  "PIDS_A": {
+    "value": [
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      true
+    ],
+    "command": {
+      "name": "PIDS_A",
+      "desc": "Supported PIDs [01-20]",
+      "decoder": "pid",
+      "mode": 1
+    },
+    "time": 1641681987370,
+    "unit": "<class 'obd.utils.BitArray'>"
+  },
+  "STATUS": {
+    "value": {
+      "MIL": false,
+      "DTC_COUNT": 0,
+      "ignition_type": "spark"
+    },
+    "command": {
+      "name": "STATUS",
+      "desc": "Status since DTCs cleared",
+      "decoder": "status",
+      "mode": 1
+    },
+    "time": 1641681987371,
+    "unit": "<class 'obd.OBDResponse.Status'>"
+  },
+  "FREEZE_DTC": null,
+  "FUEL_STATUS": {
+    "value": [
+      "Open loop due to engine load OR fuel cut due to deceleration",
+      ""
+    ],
+    "command": {
+      "name": "FUEL_STATUS",
+      "desc": "Fuel System Status",
+      "decoder": "fuel_status",
+      "mode": 1
+    },
+    "time": 1641681987372,
+    "unit": "<class 'tuple'>"
+  },
+  "ENGINE_LOAD": {
+    "value": 62.35294117647059,
+    "command": {
+      "name": "ENGINE_LOAD",
+      "desc": "Calculated Engine Load",
+      "decoder": "percent",
+      "mode": 1
+    },
+    "time": 1641681987373,
+    "unit": "percent"
+  },
+  "COOLANT_TEMP": {
+    "value": 46,
+    "command": {
+      "name": "COOLANT_TEMP",
+      "desc": "Engine Coolant Temperature",
+      "decoder": "temp",
+      "mode": 1
+    },
+    "time": 1641681987373,
+    "unit": "degC"
+  },
+  "SHORT_FUEL_TRIM_1": {
+    "value": -5.46875,
+    "command": {
+      "name": "SHORT_FUEL_TRIM_1",
+      "desc": "Short Term Fuel Trim - Bank 1",
+      "decoder": "percent_centered",
+      "mode": 1
+    },
+    "time": 1641681987374,
+    "unit": "percent"
+  },
+  "LONG_FUEL_TRIM_1": {
+    "value": -1.5625,
+    "command": {
+      "name": "LONG_FUEL_TRIM_1",
+      "desc": "Long Term Fuel Trim - Bank 1",
+      "decoder": "percent_centered",
+      "mode": 1
+    },
+    "time": 1641681987375,
+    "unit": "percent"
+  },
+  "SHORT_FUEL_TRIM_2": null,
+  "LONG_FUEL_TRIM_2": null,
+  "FUEL_PRESSURE": null,
+  "INTAKE_PRESSURE": {
+    "value": 97,
+    "command": {
+      "name": "INTAKE_PRESSURE",
+      "desc": "Intake Manifold Pressure",
+      "decoder": "pressure",
+      "mode": 1
+    },
+    "time": 1641681987376,
+    "unit": "kilopascal"
+  },
+  "RPM": {
+    "value": 2441.25,
+    "command": {
+      "name": "RPM",
+      "desc": "Engine RPM",
+      "decoder": "0x07",
+      "mode": 1
+    },
+    "time": 1641681987376,
+    "unit": "revolutions_per_minute"
+  },
+  "SPEED": {
+    "value": 41.0,
+    "command": {
+      "name": "SPEED",
+      "desc": "Vehicle Speed",
+      "decoder": "0x09",
+      "mode": 1
+    },
+    "time": 1641681987376,
+    "unit": "kph"
+  },
+  "TIMING_ADVANCE": {
+    "value": 21.5,
+    "command": {
+      "name": "TIMING_ADVANCE",
+      "desc": "Timing Advance",
+      "decoder": "timing_advance",
+      "mode": 1
+    },
+    "time": 1641681987377,
+    "unit": "degree"
+  },
+  "INTAKE_TEMP": {
+    "value": 16,
+    "command": {
+      "name": "INTAKE_TEMP",
+      "desc": "Intake Air Temp",
+      "decoder": "temp",
+      "mode": 1
+    },
+    "time": 1641681987377,
+    "unit": "degC"
+  },
+  "MAF": {
+    "value": 41.18,
+    "command": {
+      "name": "MAF",
+      "desc": "Air Flow Rate (MAF)",
+      "decoder": "0x27",
+      "mode": 1
+    },
+    "time": 1641681987377,
+    "unit": "gps"
+  },
+  "THROTTLE_POS": {
+    "value": 16.862745098039216,
+    "command": {
+      "name": "THROTTLE_POS",
+      "desc": "Throttle Position",
+      "decoder": "percent",
+      "mode": 1
+    },
+    "time": 1641681987378,
+    "unit": "percent"
+  },
+  "AIR_STATUS": null,
+  "O2_SENSORS": {
+    "value": [
+      [],
+      [
+        false,
+        false,
+        false,
+        false
+      ],
+      [
+        false,
+        false,
+        true,
+        true
+      ]
+    ],
+    "command": {
+      "name": "O2_SENSORS",
+      "desc": "O2 Sensors Present",
+      "decoder": "o2_sensors",
+      "mode": 1
+    },
+    "time": 1641681987378,
+    "unit": "<class 'tuple'>"
+  },
+  "O2_B1S1": null,
+  "O2_B1S2": {
+    "value": 0.035,
+    "command": {
+      "name": "O2_B1S2",
+      "desc": "O2: Bank 1 - Sensor 2 Voltage",
+      "decoder": "sensor_voltage",
+      "mode": 1
+    },
+    "time": 1641681987379,
+    "unit": "volt"
+  },
+  "O2_B1S3": null,
+  "O2_B1S4": null,
+  "O2_B2S1": null,
+  "O2_B2S2": null,
+  "O2_B2S3": null,
+  "O2_B2S4": null,
+  "OBD_COMPLIANCE": {
+    "value": "EOBD (Europe)",
+    "command": {
+      "name": "OBD_COMPLIANCE",
+      "desc": "OBD Standards Compliance",
+      "decoder": "obd_compliance",
+      "mode": 1
+    },
+    "time": 1641681987379,
+    "unit": "<class 'str'>"
+  },
+  "O2_SENSORS_ALT": null,
+  "AUX_INPUT_STATUS": null,
+  "RUN_TIME": {
+    "value": 150.0,
+    "command": {
+      "name": "RUN_TIME",
+      "desc": "Engine Run Time",
+      "decoder": "0x12",
+      "mode": 1
+    },
+    "time": 1641681987380,
+    "unit": "second"
+  },
+  "PIDS_B": {
+    "value": [
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true
+    ],
+    "command": {
+      "name": "PIDS_B",
+      "desc": "Supported PIDs [21-40]",
+      "decoder": "pid",
+      "mode": 1
+    },
+    "time": 1641681987380,
+    "unit": "<class 'obd.utils.BitArray'>"
+  },
+  "DISTANCE_W_MIL": {
+    "value": 0.0,
+    "command": {
+      "name": "DISTANCE_W_MIL",
+      "desc": "Distance Traveled with MIL on",
+      "decoder": "0x25",
+      "mode": 1
+    },
+    "time": 1641681987381,
+    "unit": "kilometer"
+  },
+  "FUEL_RAIL_PRESSURE_VAC": null,
+  "FUEL_RAIL_PRESSURE_DIRECT": null,
+  "O2_S1_WR_VOLTAGE": {
+    "value": 3.3488059815365836,
+    "command": {
+      "name": "O2_S1_WR_VOLTAGE",
+      "desc": "02 Sensor 1 WR Lambda Voltage",
+      "decoder": "sensor_voltage_big",
+      "mode": 1
+    },
+    "time": 1641681987381,
+    "unit": "volt"
+  },
+  "O2_S2_WR_VOLTAGE": null,
+  "O2_S3_WR_VOLTAGE": null,
+  "O2_S4_WR_VOLTAGE": null,
+  "O2_S5_WR_VOLTAGE": null,
+  "O2_S6_WR_VOLTAGE": null,
+  "O2_S7_WR_VOLTAGE": null,
+  "O2_S8_WR_VOLTAGE": null,
+  "COMMANDED_EGR": {
+    "value": 0.0,
+    "command": {
+      "name": "COMMANDED_EGR",
+      "desc": "Commanded EGR",
+      "decoder": "percent",
+      "mode": 1
+    },
+    "time": 1641681987382,
+    "unit": "percent"
+  },
+  "EGR_ERROR": null,
+  "EVAPORATIVE_PURGE": {
+    "value": 0.0,
+    "command": {
+      "name": "EVAPORATIVE_PURGE",
+      "desc": "Commanded Evaporative Purge",
+      "decoder": "percent",
+      "mode": 1
+    },
+    "time": 1641681987382,
+    "unit": "percent"
+  },
+  "FUEL_LEVEL": null,
+  "WARMUPS_SINCE_DTC_CLEAR": {
+    "value": 4.0,
+    "command": {
+      "name": "WARMUPS_SINCE_DTC_CLEAR",
+      "desc": "Number of warm-ups since codes cleared",
+      "decoder": "0x01",
+      "mode": 1
+    },
+    "time": 1641681987383,
+    "unit": "count"
+  },
+  "DISTANCE_SINCE_DTC_CLEAR": {
+    "value": 51.0,
+    "command": {
+      "name": "DISTANCE_SINCE_DTC_CLEAR",
+      "desc": "Distance traveled since codes cleared",
+      "decoder": "0x25",
+      "mode": 1
+    },
+    "time": 1641681987383,
+    "unit": "kilometer"
+  },
+  "EVAP_VAPOR_PRESSURE": null,
+  "BAROMETRIC_PRESSURE": {
+    "value": 97,
+    "command": {
+      "name": "BAROMETRIC_PRESSURE",
+      "desc": "Barometric Pressure",
+      "decoder": "pressure",
+      "mode": 1
+    },
+    "time": 1641681987383,
+    "unit": "kilopascal"
+  },
+  "O2_S1_WR_CURRENT": {
+    "value": -0.0078125,
+    "command": {
+      "name": "O2_S1_WR_CURRENT",
+      "desc": "02 Sensor 1 WR Lambda Current",
+      "decoder": "current_centered",
+      "mode": 1
+    },
+    "time": 1641681987384,
+    "unit": "milliampere"
+  },
+  "O2_S2_WR_CURRENT": null,
+  "O2_S3_WR_CURRENT": null,
+  "O2_S4_WR_CURRENT": null,
+  "O2_S5_WR_CURRENT": null,
+  "O2_S6_WR_CURRENT": null,
+  "O2_S7_WR_CURRENT": null,
+  "O2_S8_WR_CURRENT": null,
+  "CATALYST_TEMP_B1S1": {
+    "value": 304.1,
+    "command": {
+      "name": "CATALYST_TEMP_B1S1",
+      "desc": "Catalyst Temperature: Bank 1 - Sensor 1",
+      "decoder": "0x16",
+      "mode": 1
+    },
+    "time": 1641681987385,
+    "unit": "degC"
+  },
+  "CATALYST_TEMP_B2S1": null,
+  "CATALYST_TEMP_B1S2": {
+    "value": 389.20000000000005,
+    "command": {
+      "name": "CATALYST_TEMP_B1S2",
+      "desc": "Catalyst Temperature: Bank 1 - Sensor 2",
+      "decoder": "0x16",
+      "mode": 1
+    },
+    "time": 1641681987385,
+    "unit": "degC"
+  },
+  "CATALYST_TEMP_B2S2": null,
+  "PIDS_C": {
+    "value": [
+      false,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "command": {
+      "name": "PIDS_C",
+      "desc": "Supported PIDs [41-60]",
+      "decoder": "pid",
+      "mode": 1
+    },
+    "time": 1641681987385,
+    "unit": "<class 'obd.utils.BitArray'>"
+  },
+  "STATUS_DRIVE_CYCLE": null,
+  "CONTROL_MODULE_VOLTAGE": {
+    "value": 14.687000000000001,
+    "command": {
+      "name": "CONTROL_MODULE_VOLTAGE",
+      "desc": "Control module voltage",
+      "decoder": "0x0b",
+      "mode": 1
+    },
+    "time": 1641681987386,
+    "unit": "volt"
+  },
+  "ABSOLUTE_LOAD": {
+    "value": 23.52941176470588,
+    "command": {
+      "name": "ABSOLUTE_LOAD",
+      "desc": "Absolute load value",
+      "decoder": "absolute_load",
+      "mode": 1
+    },
+    "time": 1641681987386,
+    "unit": "percent"
+  },
+  "COMMANDED_EQUIV_RATIO": {
+    "value": 0.91866,
+    "command": {
+      "name": "COMMANDED_EQUIV_RATIO",
+      "desc": "Commanded equivalence ratio",
+      "decoder": "0x1e",
+      "mode": 1
+    },
+    "time": 1641681987387,
+    "unit": "ratio"
+  },
+  "RELATIVE_THROTTLE_POS": {
+    "value": 1.1764705882352942,
+    "command": {
+      "name": "RELATIVE_THROTTLE_POS",
+      "desc": "Relative throttle position",
+      "decoder": "percent",
+      "mode": 1
+    },
+    "time": 1641681987387,
+    "unit": "percent"
+  },
+  "AMBIANT_AIR_TEMP": null,
+  "THROTTLE_POS_B": {
+    "value": 48.627450980392155,
+    "command": {
+      "name": "THROTTLE_POS_B",
+      "desc": "Absolute throttle position B",
+      "decoder": "percent",
+      "mode": 1
+    },
+    "time": 1641681987388,
+    "unit": "percent"
+  },
+  "THROTTLE_POS_C": null,
+  "ACCELERATOR_POS_D": null,
+  "ACCELERATOR_POS_E": null,
+  "ACCELERATOR_POS_F": null,
+  "THROTTLE_ACTUATOR": {
+    "value": 16.470588235294116,
+    "command": {
+      "name": "THROTTLE_ACTUATOR",
+      "desc": "Commanded throttle actuator",
+      "decoder": "percent",
+      "mode": 1
+    },
+    "time": 1641681987388,
+    "unit": "percent"
+  },
+  "RUN_TIME_MIL": {
+    "value": 0.0,
+    "command": {
+      "name": "RUN_TIME_MIL",
+      "desc": "Time run with MIL on",
+      "decoder": "0x34",
+      "mode": 1
+    },
+    "time": 1641681987389,
+    "unit": "minute"
+  },
+  "TIME_SINCE_DTC_CLEARED": {
+    "value": 92.0,
+    "command": {
+      "name": "TIME_SINCE_DTC_CLEARED",
+      "desc": "Time since trouble codes cleared",
+      "decoder": "0x34",
+      "mode": 1
+    },
+    "time": 1641681987389,
+    "unit": "minute"
+  },
+  "MAX_VALUES": null,
+  "MAX_MAF": null,
+  "FUEL_TYPE": {
+    "value": "Gasoline",
+    "command": {
+      "name": "FUEL_TYPE",
+      "desc": "Fuel Type",
+      "decoder": "fuel_type",
+      "mode": 1
+    },
+    "time": 1641681987389,
+    "unit": "<class 'str'>"
+  },
+  "ETHANOL_PERCENT": null,
+  "EVAP_VAPOR_PRESSURE_ABS": null,
+  "EVAP_VAPOR_PRESSURE_ALT": null,
+  "SHORT_O2_TRIM_B1": null,
+  "LONG_O2_TRIM_B1": null,
+  "SHORT_O2_TRIM_B2": null,
+  "LONG_O2_TRIM_B2": null,
+  "FUEL_RAIL_PRESSURE_ABS": null,
+  "RELATIVE_ACCEL_POS": null,
+  "HYBRID_BATTERY_REMAINING": null,
+  "OIL_TEMP": null,
+  "FUEL_INJECT_TIMING": null,
+  "FUEL_RATE": null,
+  "EMISSION_REQ": null,
+  "DTC_PIDS_A": null,
+  "DTC_STATUS": {
+    "value": {
+      "MIL": false,
+      "DTC_COUNT": 18,
+      "ignition_type": "spark"
+    },
+    "command": {
+      "name": "DTC_STATUS",
+      "desc": "DTC Status since DTCs cleared",
+      "decoder": "status",
+      "mode": 2
+    },
+    "time": 1641681987390,
+    "unit": "<class 'obd.OBDResponse.Status'>"
+  },
+  "DTC_FREEZE_DTC": null,
+  "DTC_FUEL_STATUS": null,
+  "DTC_ENGINE_LOAD": {
+    "value": 7.0588235294117645,
+    "command": {
+      "name": "DTC_ENGINE_LOAD",
+      "desc": "DTC Calculated Engine Load",
+      "decoder": "percent",
+      "mode": 2
+    },
+    "time": 1641681987391,
+    "unit": "percent"
+  },
+  "DTC_COOLANT_TEMP": {
+    "value": -22,
+    "command": {
+      "name": "DTC_COOLANT_TEMP",
+      "desc": "DTC Engine Coolant Temperature",
+      "decoder": "temp",
+      "mode": 2
+    },
+    "time": 1641681987392,
+    "unit": "degC"
+  },
+  "DTC_SHORT_FUEL_TRIM_1": {
+    "value": -85.9375,
+    "command": {
+      "name": "DTC_SHORT_FUEL_TRIM_1",
+      "desc": "DTC Short Term Fuel Trim - Bank 1",
+      "decoder": "percent_centered",
+      "mode": 2
+    },
+    "time": 1641681987392,
+    "unit": "percent"
+  },
+  "DTC_LONG_FUEL_TRIM_1": {
+    "value": -85.9375,
+    "command": {
+      "name": "DTC_LONG_FUEL_TRIM_1",
+      "desc": "DTC Long Term Fuel Trim - Bank 1",
+      "decoder": "percent_centered",
+      "mode": 2
+    },
+    "time": 1641681987392,
+    "unit": "percent"
+  },
+  "DTC_SHORT_FUEL_TRIM_2": null,
+  "DTC_LONG_FUEL_TRIM_2": null,
+  "DTC_FUEL_PRESSURE": null,
+  "DTC_INTAKE_PRESSURE": {
+    "value": 18,
+    "command": {
+      "name": "DTC_INTAKE_PRESSURE",
+      "desc": "DTC Intake Manifold Pressure",
+      "decoder": "pressure",
+      "mode": 2
+    },
+    "time": 1641681987393,
+    "unit": "kilopascal"
+  },
+  "DTC_RPM": {
+    "value": 1152.0,
+    "command": {
+      "name": "DTC_RPM",
+      "desc": "DTC Engine RPM",
+      "decoder": "0x07",
+      "mode": 2
+    },
+    "time": 1641681987393,
+    "unit": "revolutions_per_minute"
+  },
+  "DTC_SPEED": {
+    "value": 18.0,
+    "command": {
+      "name": "DTC_SPEED",
+      "desc": "DTC Vehicle Speed",
+      "decoder": "0x09",
+      "mode": 2
+    },
+    "time": 1641681987394,
+    "unit": "kph"
+  },
+  "DTC_TIMING_ADVANCE": {
+    "value": -55.0,
+    "command": {
+      "name": "DTC_TIMING_ADVANCE",
+      "desc": "DTC Timing Advance",
+      "decoder": "timing_advance",
+      "mode": 2
+    },
+    "time": 1641681987394,
+    "unit": "degree"
+  },
+  "DTC_INTAKE_TEMP": {
+    "value": -22,
+    "command": {
+      "name": "DTC_INTAKE_TEMP",
+      "desc": "DTC Intake Air Temp",
+      "decoder": "temp",
+      "mode": 2
+    },
+    "time": 1641681987395,
+    "unit": "degC"
+  },
+  "DTC_MAF": {
+    "value": 46.08,
+    "command": {
+      "name": "DTC_MAF",
+      "desc": "DTC Air Flow Rate (MAF)",
+      "decoder": "0x27",
+      "mode": 2
+    },
+    "time": 1641681987395,
+    "unit": "gps"
+  },
+  "DTC_THROTTLE_POS": {
+    "value": 7.0588235294117645,
+    "command": {
+      "name": "DTC_THROTTLE_POS",
+      "desc": "DTC Throttle Position",
+      "decoder": "percent",
+      "mode": 2
+    },
+    "time": 1641681987396,
+    "unit": "percent"
+  },
+  "DTC_AIR_STATUS": null,
+  "DTC_O2_SENSORS": {
+    "value": [
+      [],
+      [
+        false,
+        false,
+        false,
+        true
+      ],
+      [
+        false,
+        false,
+        true,
+        false
+      ]
+    ],
+    "command": {
+      "name": "DTC_O2_SENSORS",
+      "desc": "DTC O2 Sensors Present",
+      "decoder": "o2_sensors",
+      "mode": 2
+    },
+    "time": 1641681987396,
+    "unit": "<class 'tuple'>"
+  },
+  "DTC_O2_B1S1": null,
+  "DTC_O2_B1S2": {
+    "value": 0.09,
+    "command": {
+      "name": "DTC_O2_B1S2",
+      "desc": "DTC O2: Bank 1 - Sensor 2 Voltage",
+      "decoder": "sensor_voltage",
+      "mode": 2
+    },
+    "time": 1641681987397,
+    "unit": "volt"
+  },
+  "DTC_O2_B1S3": null,
+  "DTC_O2_B1S4": null,
+  "DTC_O2_B2S1": null,
+  "DTC_O2_B2S2": null,
+  "DTC_O2_B2S3": null,
+  "DTC_O2_B2S4": null,
+  "DTC_OBD_COMPLIANCE": {
+    "value": "Engine Manufacturer Diagnostics Enhanced (EMD+)",
+    "command": {
+      "name": "DTC_OBD_COMPLIANCE",
+      "desc": "DTC OBD Standards Compliance",
+      "decoder": "obd_compliance",
+      "mode": 2
+    },
+    "time": 1641681987397,
+    "unit": "<class 'str'>"
+  },
+  "DTC_O2_SENSORS_ALT": null,
+  "DTC_AUX_INPUT_STATUS": null,
+  "DTC_RUN_TIME": {
+    "value": 4608.0,
+    "command": {
+      "name": "DTC_RUN_TIME",
+      "desc": "DTC Engine Run Time",
+      "decoder": "0x12",
+      "mode": 2
+    },
+    "time": 1641681987398,
+    "unit": "second"
+  },
+  "DTC_PIDS_B": null,
+  "DTC_DISTANCE_W_MIL": {
+    "value": 4608.0,
+    "command": {
+      "name": "DTC_DISTANCE_W_MIL",
+      "desc": "DTC Distance Traveled with MIL on",
+      "decoder": "0x25",
+      "mode": 2
+    },
+    "time": 1641681987399,
+    "unit": "kilometer"
+  },
+  "DTC_FUEL_RAIL_PRESSURE_VAC": null,
+  "DTC_FUEL_RAIL_PRESSURE_DIRECT": null,
+  "DTC_O2_S1_WR_VOLTAGE": {
+    "value": 0.0,
+    "command": {
+      "name": "DTC_O2_S1_WR_VOLTAGE",
+      "desc": "DTC 02 Sensor 1 WR Lambda Voltage",
+      "decoder": "sensor_voltage_big",
+      "mode": 2
+    },
+    "time": 1641681987399,
+    "unit": "volt"
+  },
+  "DTC_O2_S2_WR_VOLTAGE": null,
+  "DTC_O2_S3_WR_VOLTAGE": null,
+  "DTC_O2_S4_WR_VOLTAGE": null,
+  "DTC_O2_S5_WR_VOLTAGE": null,
+  "DTC_O2_S6_WR_VOLTAGE": null,
+  "DTC_O2_S7_WR_VOLTAGE": null,
+  "DTC_O2_S8_WR_VOLTAGE": null,
+  "DTC_COMMANDED_EGR": {
+    "value": 7.0588235294117645,
+    "command": {
+      "name": "DTC_COMMANDED_EGR",
+      "desc": "DTC Commanded EGR",
+      "decoder": "percent",
+      "mode": 2
+    },
+    "time": 1641681987400,
+    "unit": "percent"
+  },
+  "DTC_EGR_ERROR": null,
+  "DTC_EVAPORATIVE_PURGE": {
+    "value": 7.0588235294117645,
+    "command": {
+      "name": "DTC_EVAPORATIVE_PURGE",
+      "desc": "DTC Commanded Evaporative Purge",
+      "decoder": "percent",
+      "mode": 2
+    },
+    "time": 1641681987400,
+    "unit": "percent"
+  },
+  "DTC_FUEL_LEVEL": null,
+  "DTC_WARMUPS_SINCE_DTC_CLEAR": {
+    "value": 18.0,
+    "command": {
+      "name": "DTC_WARMUPS_SINCE_DTC_CLEAR",
+      "desc": "DTC Number of warm-ups since codes cleared",
+      "decoder": "0x01",
+      "mode": 2
+    },
+    "time": 1641681987401,
+    "unit": "count"
+  },
+  "DTC_DISTANCE_SINCE_DTC_CLEAR": {
+    "value": 4608.0,
+    "command": {
+      "name": "DTC_DISTANCE_SINCE_DTC_CLEAR",
+      "desc": "DTC Distance traveled since codes cleared",
+      "decoder": "0x25",
+      "mode": 2
+    },
+    "time": 1641681987401,
+    "unit": "kilometer"
+  },
+  "DTC_EVAP_VAPOR_PRESSURE": null,
+  "DTC_BAROMETRIC_PRESSURE": {
+    "value": 18,
+    "command": {
+      "name": "DTC_BAROMETRIC_PRESSURE",
+      "desc": "DTC Barometric Pressure",
+      "decoder": "pressure",
+      "mode": 2
+    },
+    "time": 1641681987402,
+    "unit": "kilopascal"
+  },
+  "DTC_O2_S1_WR_CURRENT": {
+    "value": -128.0,
+    "command": {
+      "name": "DTC_O2_S1_WR_CURRENT",
+      "desc": "DTC 02 Sensor 1 WR Lambda Current",
+      "decoder": "current_centered",
+      "mode": 2
+    },
+    "time": 1641681987402,
+    "unit": "milliampere"
+  },
+  "DTC_O2_S2_WR_CURRENT": null,
+  "DTC_O2_S3_WR_CURRENT": null,
+  "DTC_O2_S4_WR_CURRENT": null,
+  "DTC_O2_S5_WR_CURRENT": null,
+  "DTC_O2_S6_WR_CURRENT": null,
+  "DTC_O2_S7_WR_CURRENT": null,
+  "DTC_O2_S8_WR_CURRENT": null,
+  "DTC_CATALYST_TEMP_B1S1": {
+    "value": 420.8,
+    "command": {
+      "name": "DTC_CATALYST_TEMP_B1S1",
+      "desc": "DTC Catalyst Temperature: Bank 1 - Sensor 1",
+      "decoder": "0x16",
+      "mode": 2
+    },
+    "time": 1641681987403,
+    "unit": "degC"
+  },
+  "DTC_CATALYST_TEMP_B2S1": null,
+  "DTC_CATALYST_TEMP_B1S2": {
+    "value": 420.8,
+    "command": {
+      "name": "DTC_CATALYST_TEMP_B1S2",
+      "desc": "DTC Catalyst Temperature: Bank 1 - Sensor 2",
+      "decoder": "0x16",
+      "mode": 2
+    },
+    "time": 1641681987404,
+    "unit": "degC"
+  },
+  "DTC_CATALYST_TEMP_B2S2": null,
+  "DTC_PIDS_C": null,
+  "DTC_STATUS_DRIVE_CYCLE": null,
+  "DTC_CONTROL_MODULE_VOLTAGE": {
+    "value": 4.6080000000000005,
+    "command": {
+      "name": "DTC_CONTROL_MODULE_VOLTAGE",
+      "desc": "DTC Control module voltage",
+      "decoder": "0x0b",
+      "mode": 2
+    },
+    "time": 1641681987405,
+    "unit": "volt"
+  },
+  "DTC_ABSOLUTE_LOAD": {
+    "value": 1807.0588235294117,
+    "command": {
+      "name": "DTC_ABSOLUTE_LOAD",
+      "desc": "DTC Absolute load value",
+      "decoder": "absolute_load",
+      "mode": 2
+    },
+    "time": 1641681987405,
+    "unit": "percent"
+  },
+  "DTC_COMMANDED_EQUIV_RATIO": {
+    "value": 0.140544,
+    "command": {
+      "name": "DTC_COMMANDED_EQUIV_RATIO",
+      "desc": "DTC Commanded equivalence ratio",
+      "decoder": "0x1e",
+      "mode": 2
+    },
+    "time": 1641681987406,
+    "unit": "ratio"
+  },
+  "DTC_RELATIVE_THROTTLE_POS": {
+    "value": 7.0588235294117645,
+    "command": {
+      "name": "DTC_RELATIVE_THROTTLE_POS",
+      "desc": "DTC Relative throttle position",
+      "decoder": "percent",
+      "mode": 2
+    },
+    "time": 1641681987406,
+    "unit": "percent"
+  },
+  "DTC_AMBIANT_AIR_TEMP": null,
+  "DTC_THROTTLE_POS_B": {
+    "value": 7.0588235294117645,
+    "command": {
+      "name": "DTC_THROTTLE_POS_B",
+      "desc": "DTC Absolute throttle position B",
+      "decoder": "percent",
+      "mode": 2
+    },
+    "time": 1641681987407,
+    "unit": "percent"
+  },
+  "DTC_THROTTLE_POS_C": null,
+  "DTC_ACCELERATOR_POS_D": null,
+  "DTC_ACCELERATOR_POS_E": null,
+  "DTC_ACCELERATOR_POS_F": null,
+  "DTC_THROTTLE_ACTUATOR": {
+    "value": 7.0588235294117645,
+    "command": {
+      "name": "DTC_THROTTLE_ACTUATOR",
+      "desc": "DTC Commanded throttle actuator",
+      "decoder": "percent",
+      "mode": 2
+    },
+    "time": 1641681987407,
+    "unit": "percent"
+  },
+  "DTC_RUN_TIME_MIL": {
+    "value": 4608.0,
+    "command": {
+      "name": "DTC_RUN_TIME_MIL",
+      "desc": "DTC Time run with MIL on",
+      "decoder": "0x34",
+      "mode": 2
+    },
+    "time": 1641681987408,
+    "unit": "minute"
+  },
+  "DTC_TIME_SINCE_DTC_CLEARED": {
+    "value": 4608.0,
+    "command": {
+      "name": "DTC_TIME_SINCE_DTC_CLEARED",
+      "desc": "DTC Time since trouble codes cleared",
+      "decoder": "0x34",
+      "mode": 2
+    },
+    "time": 1641681987408,
+    "unit": "minute"
+  },
+  "DTC_MAX_VALUES": null,
+  "DTC_MAX_MAF": null,
+  "DTC_FUEL_TYPE": {
+    "value": "Hybrid Ethanol",
+    "command": {
+      "name": "DTC_FUEL_TYPE",
+      "desc": "DTC Fuel Type",
+      "decoder": "fuel_type",
+      "mode": 2
+    },
+    "time": 1641681987409,
+    "unit": "<class 'str'>"
+  },
+  "DTC_ETHANOL_PERCENT": null,
+  "DTC_EVAP_VAPOR_PRESSURE_ABS": null,
+  "DTC_EVAP_VAPOR_PRESSURE_ALT": null,
+  "DTC_SHORT_O2_TRIM_B1": null,
+  "DTC_LONG_O2_TRIM_B1": null,
+  "DTC_SHORT_O2_TRIM_B2": null,
+  "DTC_LONG_O2_TRIM_B2": null,
+  "DTC_FUEL_RAIL_PRESSURE_ABS": null,
+  "DTC_RELATIVE_ACCEL_POS": null,
+  "DTC_HYBRID_BATTERY_REMAINING": null,
+  "DTC_OIL_TEMP": null,
+  "DTC_FUEL_INJECT_TIMING": null,
+  "DTC_FUEL_RATE": null,
+  "DTC_EMISSION_REQ": null,
+  "GET_DTC": {
+    "value": [],
+    "command": {
+      "name": "GET_DTC",
+      "desc": "Get DTCs",
+      "decoder": "dtc",
+      "mode": 3
+    },
+    "time": 1641681987410,
+    "unit": "<class 'list'>"
+  },
+  "CLEAR_DTC": null,
+  "MIDS_A": {
+    "value": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true
+    ],
+    "command": {
+      "name": "MIDS_A",
+      "desc": "Supported MIDs [01-20]",
+      "decoder": "pid",
+      "mode": 6
+    },
+    "time": 1641681987411,
+    "unit": "<class 'obd.utils.BitArray'>"
+  },
+  "MONITOR_O2_B1S1": null,
+  "MONITOR_O2_B1S2": null,
+  "MONITOR_O2_B1S3": null,
+  "MONITOR_O2_B1S4": null,
+  "MONITOR_O2_B2S1": null,
+  "MONITOR_O2_B2S2": null,
+  "MONITOR_O2_B2S3": null,
+  "MONITOR_O2_B2S4": null,
+  "MONITOR_O2_B3S1": null,
+  "MONITOR_O2_B3S2": null,
+  "MONITOR_O2_B3S3": null,
+  "MONITOR_O2_B3S4": null,
+  "MONITOR_O2_B4S1": null,
+  "MONITOR_O2_B4S2": null,
+  "MONITOR_O2_B4S3": null,
+  "MONITOR_O2_B4S4": null,
+  "MIDS_B": null,
+  "MONITOR_CATALYST_B1": null,
+  "MONITOR_CATALYST_B2": null,
+  "MONITOR_CATALYST_B3": null,
+  "MONITOR_CATALYST_B4": null,
+  "MONITOR_EGR_B1": null,
+  "MONITOR_EGR_B2": null,
+  "MONITOR_EGR_B3": null,
+  "MONITOR_EGR_B4": null,
+  "MONITOR_VVT_B1": null,
+  "MONITOR_VVT_B2": null,
+  "MONITOR_VVT_B3": null,
+  "MONITOR_VVT_B4": null,
+  "MONITOR_EVAP_150": null,
+  "MONITOR_EVAP_090": null,
+  "MONITOR_EVAP_040": null,
+  "MONITOR_EVAP_020": null,
+  "MONITOR_PURGE_FLOW": null,
+  "MIDS_C": null,
+  "MONITOR_O2_HEATER_B1S1": null,
+  "MONITOR_O2_HEATER_B1S2": null,
+  "MONITOR_O2_HEATER_B1S3": null,
+  "MONITOR_O2_HEATER_B1S4": null,
+  "MONITOR_O2_HEATER_B2S1": null,
+  "MONITOR_O2_HEATER_B2S2": null,
+  "MONITOR_O2_HEATER_B2S3": null,
+  "MONITOR_O2_HEATER_B2S4": null,
+  "MONITOR_O2_HEATER_B3S1": null,
+  "MONITOR_O2_HEATER_B3S2": null,
+  "MONITOR_O2_HEATER_B3S3": null,
+  "MONITOR_O2_HEATER_B3S4": null,
+  "MONITOR_O2_HEATER_B4S1": null,
+  "MONITOR_O2_HEATER_B4S2": null,
+  "MONITOR_O2_HEATER_B4S3": null,
+  "MONITOR_O2_HEATER_B4S4": null,
+  "MIDS_D": null,
+  "MONITOR_HEATED_CATALYST_B1": null,
+  "MONITOR_HEATED_CATALYST_B2": null,
+  "MONITOR_HEATED_CATALYST_B3": null,
+  "MONITOR_HEATED_CATALYST_B4": null,
+  "MONITOR_SECONDARY_AIR_1": null,
+  "MONITOR_SECONDARY_AIR_2": null,
+  "MONITOR_SECONDARY_AIR_3": null,
+  "MONITOR_SECONDARY_AIR_4": null,
+  "MIDS_E": null,
+  "MONITOR_FUEL_SYSTEM_B1": null,
+  "MONITOR_FUEL_SYSTEM_B2": null,
+  "MONITOR_FUEL_SYSTEM_B3": null,
+  "MONITOR_FUEL_SYSTEM_B4": null,
+  "MONITOR_BOOST_PRESSURE_B1": null,
+  "MONITOR_BOOST_PRESSURE_B2": null,
+  "MONITOR_NOX_ABSORBER_B1": null,
+  "MONITOR_NOX_ABSORBER_B2": null,
+  "MONITOR_NOX_CATALYST_B1": null,
+  "MONITOR_NOX_CATALYST_B2": null,
+  "MIDS_F": null,
+  "MONITOR_MISFIRE_GENERAL": null,
+  "MONITOR_MISFIRE_CYLINDER_1": null,
+  "MONITOR_MISFIRE_CYLINDER_2": null,
+  "MONITOR_MISFIRE_CYLINDER_3": null,
+  "MONITOR_MISFIRE_CYLINDER_4": null,
+  "MONITOR_MISFIRE_CYLINDER_5": null,
+  "MONITOR_MISFIRE_CYLINDER_6": null,
+  "MONITOR_MISFIRE_CYLINDER_7": null,
+  "MONITOR_MISFIRE_CYLINDER_8": null,
+  "MONITOR_MISFIRE_CYLINDER_9": null,
+  "MONITOR_MISFIRE_CYLINDER_10": null,
+  "MONITOR_MISFIRE_CYLINDER_11": null,
+  "MONITOR_MISFIRE_CYLINDER_12": null,
+  "MONITOR_PM_FILTER_B1": null,
+  "MONITOR_PM_FILTER_B2": null,
+  "GET_CURRENT_DTC": {
+    "value": [],
+    "command": {
+      "name": "GET_CURRENT_DTC",
+      "desc": "Get DTCs from the current/last driving cycle",
+      "decoder": "dtc",
+      "mode": 7
+    },
+    "time": 1641681987414,
+    "unit": "<class 'list'>"
+  }
+}

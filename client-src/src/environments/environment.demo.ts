@@ -1,8 +1,9 @@
-import { DemoAppSocket } from "src/app/demo/demo-app-socket";
-import { DemoOBDSocket } from "src/app/demo/demo-obd-socket";
+import { DemoAppSocket } from "src/app/demo/sockets/demo-app-socket";
+import { DemoOBDSocket } from "src/app/demo/sockets/demo-obd-socket";
 
 export const environment = {
-    production: false,
+    production: true,
+    demo: true,
     appSocket: DemoAppSocket,
     obdSocket: DemoOBDSocket,
     dataURL: 'https://raw.githubusercontent.com/bgunson/onboardpi/main/data'

@@ -1,16 +1,16 @@
 import { HttpClient, HttpHandler, HttpXhrBackend } from "@angular/common/http";
 import { Injector } from "@angular/core";
 import { interval, Observable, of } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, share, switchMap, take } from "rxjs/operators";
+import { OBDCommand, ResponseSet } from "src/app/shared/models/obd.model";
 import { environment } from "src/environments/environment";
-import { OBDCommand, ResponseSet } from "../shared/models/obd.model";
 
 const injector = Injector.create({
     providers: [
         { provide: HttpClient, deps: [HttpHandler] },
         { provide: HttpHandler, useValue: new HttpXhrBackend({ build: () => new XMLHttpRequest }) },
     ]
-})
+});
 
 export class DemoOBDSocket {
 
@@ -18,19 +18,21 @@ export class DemoOBDSocket {
 
     private _allCommands$: Observable<OBDCommand[]>;
 
+    private _snapshot$: Observable<ResponseSet>;
+
     private _watchList: Set<string> = new Set<string>();
     watch$: Observable<ResponseSet> = interval(500).pipe(
-        map(() => {
+        switchMap(() => this.getSnapshot()), 
+        map((snapshot) => {
             var response: ResponseSet = {};
             [...this._watchList].forEach((cmd: string) => {
-                response[cmd] = {
-                    value: Math.random() * 8000,
-                    time: Date.now(),
-                    command: {
-                        name: 'RPM',
-                        desc: 'ENGINE RPM'
-                    },
-                    unit: 'revolutions_per_minute'
+                if (snapshot[cmd]) {
+                    response[cmd] = {
+                        value: this.generateValue(snapshot[cmd].value),
+                        time: Date.now(),
+                        command: snapshot[cmd].command,
+                        unit: snapshot[cmd].unit
+                    }
                 }
             });
             return response;
@@ -56,6 +58,28 @@ export class DemoOBDSocket {
     }
 
     constructor(args: any) { }
+
+    /**
+     * If value is a number, +- a random amount within 10% of the original.
+     * @param value 
+     * @returns 
+     */
+    generateValue(value: any) {
+        if (typeof value === 'number') {
+            let max = value * 0.1;
+            let min = -max;
+            return value + Math.random() * (max - min) + min;
+        } else {
+            return value;
+        }
+    }
+
+    getSnapshot(): Observable<ResponseSet> {
+        if (!this._snapshot$) {
+            this._snapshot$ = this._http.get<ResponseSet>(environment.dataURL + '/obd/snapshot.json').pipe(share());
+        }
+        return this._snapshot$;
+    }
 
     //////////////////////////////////////////
 

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { DemoGuard } from './demo/demo.guard';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { DataStreamComponent } from './features/data-stream/data-stream.component';
 import { FreezeDataComponent } from './features/diagnostics/components/freeze-data/freeze-data.component';
@@ -10,6 +11,7 @@ import { RealtimeCurvesComponent } from './features/realtime-curves/realtime-cur
 import { ConnectionParametersComponent } from './features/settings/components/connection-parameters/connection-parameters.component';
 import { LogLevelComponent } from './features/settings/components/log-level/log-level.component';
 import { SettingsComponent } from './features/settings/settings.component';
+
 
 const routes: Routes = [
   {
@@ -48,6 +50,11 @@ const routes: Routes = [
         path: 'log-level', component: LogLevelComponent
       }
     ]
+  },
+  {
+    path: 'demo', 
+    loadChildren: () => import('./demo/demo.module').then(m => m.DemoModule), 
+    canLoad: [DemoGuard]
   },
   {
     path: '', component: MenuComponent

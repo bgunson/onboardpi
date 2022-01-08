@@ -1,5 +1,27 @@
+import { DecimalPipe } from '@angular/common';
 import { Pipe, PipeTransform } from '@angular/core';
 
+
+@Pipe({
+  name: 'obdValue'
+})
+export class OBDValuePipe implements PipeTransform {
+
+  constructor(private decimals: DecimalPipe) {
+
+  }
+
+  transform(value: any, args: string) {
+    if (typeof value === 'number') {
+      return this.decimals.transform(value, args)
+    } else if (typeof value === 'string') {
+      return value;
+    } else {
+      return 'NaN'
+    }
+  }
+  
+}
 
 /**
  * Format a given number of bytes to its largest unit as string
