@@ -43,17 +43,13 @@ export class MaintenanceComponent implements OnInit, OnDestroy {
     this.maintenanceService.deleteRecord(record);
   }
 
-  add() {
-    this.dialog.open(RecordFormComponent)
-  }
-
   ngOnInit(): void {
     this.action.setAction('post_add');
+    this.subscriptions.add(this.action.actionClick.subscribe(() => this.dialog.open(RecordFormComponent)));
     this.subscriptions = this.maintenanceService.getRecords().subscribe(records => {
       this.dataSource.data = records;
       this.dataSource.sort = this.sort;
     });
-    this.subscriptions.add(this.action.actionClick.subscribe(() => this.add()));
   }
 
   ngOnDestroy(): void {

@@ -1,0 +1,18 @@
+{
+    "vehicle": {
+        "make": null,
+        "model": null,
+        "year": null,
+        "vin": null
+    },
+
+    "connection": {
+        "auto": true,
+        "parameters": {
+            "portstr": null,
+            "baudrate": null,
+            "protocol": null
+        },
+        "log_level": "WARNING"
+    }
+}

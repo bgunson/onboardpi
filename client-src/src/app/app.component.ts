@@ -5,7 +5,6 @@ import { ActionService } from './shared/services/action.service';
 import { OBDService } from './shared/services/obd.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 
 
 @Component({
@@ -25,7 +24,6 @@ export class AppComponent implements OnInit {
     public action: ActionService,
     private appSocket: AppSocket,
     private router: Router,
-    private http: HttpClient
   ) {
 
     this.appSocket.on('obd:reconnect', (msg: string) => {
@@ -58,9 +56,6 @@ export class AppComponent implements OnInit {
   }
   
   ngOnInit() {
-    this.http.get<any>('https://raw.githubusercontent.com/bgunson/test_obj/main/obj.json').subscribe(res => {
-      console.log(res);
-    })
     this.display.checkTheme();
   }
 

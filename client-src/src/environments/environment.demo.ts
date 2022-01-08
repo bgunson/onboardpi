@@ -1,6 +1,8 @@
-import { DemoSocket } from "src/app/demo/sockets/demo-socket";
+import { DemoAppSocket } from "src/app/demo/demo-app-socket";
+import { DemoOBDSocket } from "src/app/demo/demo-obd-socket";
 
 export const environment = {
     production: false,
-    socketClass: DemoSocket
+    appSocket: DemoAppSocket,
+    obdSocket: DemoOBDSocket
 }

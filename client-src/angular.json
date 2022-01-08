@@ -37,6 +37,12 @@
           },
           "configurations": {
             "demo":{
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -67,8 +73,7 @@
             },
             "development": {
               "buildOptimizer": false,
-              "optimization": false
-              ,
+              "optimization": false,
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,

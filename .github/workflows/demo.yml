@@ -1,0 +1,25 @@
+name: Demo on Github Pages
+
+on:
+  push:
+    branches:
+      - 'main'
+    # tags:
+    #   - 'v*'
+
+jobs: 
+  deploy: 
+    runs-on: ubuntu-latest
+    steps:
+    -
+      name: Checkout
+      uses: actions/checkout@v2
+    - 
+      name: Angular Deploy gh-pages Actions
+      uses: AhsanAyaz/angular-deploy-gh-pages-actions@v1.3.2
+      with:
+        # github_access_token: ${{ secrets.ACCESS_TOKEN }} # see the Configuration section for how you can create secrets
+        build_configuration: demo # The build environment for the app. please look configurations in your angular.json
+        base_href: /onboardpi/   # make sure this corresponds to https://<your_username>.github.io/<base_href>/
+        deploy_branch: gh-pages # The branch the action should deploy to.
+        angular_dist_build_folder: ../public # The folder where your project is supposed to be after running ng build by the action.

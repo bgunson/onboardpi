@@ -14,7 +14,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSortModule } from '@angular/material/sort';
 import { RecordFormComponent } from './components/record-form/record-form.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MaintenanceRoutingModule } from './maintenance-routing.module';
+// import { MaintenanceRoutingModule } from './maintenance-routing.module';
 
 
 
@@ -22,7 +22,7 @@ import { MaintenanceRoutingModule } from './maintenance-routing.module';
   declarations: [MaintenanceComponent, RecordFormComponent],
   imports: [
     CommonModule,
-    MaintenanceRoutingModule,
+    // MaintenanceRoutingModule,
     MatButtonModule,
     MatDialogModule,
     FormsModule,

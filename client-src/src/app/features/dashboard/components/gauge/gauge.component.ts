@@ -7,7 +7,7 @@ import { OBDService } from 'src/app/shared/services/obd.service';
 import { DashboardCard } from '../../models/dashboard.model';
 import { DashboardService } from '../../services/dashboard.service';
 
-const GAUGE_CONFIG: {[cmd: string]: any} = {
+export const GAUGE_CONFIG: {[cmd: string]: any} = {
 
   'RPM': {
       min: 0,
@@ -30,6 +30,7 @@ const GAUGE_CONFIG: {[cmd: string]: any} = {
       max: 180,
       type: 'arch',
   }
+
 }
 
 @Component({
