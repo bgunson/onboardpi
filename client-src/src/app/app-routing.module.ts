@@ -4,6 +4,7 @@ import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { DataStreamComponent } from './features/data-stream/data-stream.component';
 import { FreezeDataComponent } from './features/diagnostics/components/freeze-data/freeze-data.component';
 import { DiagnosticsComponent } from './features/diagnostics/diagnostics.component';
+import { MaintenanceComponent } from './features/maintenance/maintenance.component';
 import { MenuComponent } from './features/menu/menu.component';
 import { RealtimeCurvesComponent } from './features/realtime-curves/realtime-curves.component';
 import { ConnectionParametersComponent } from './features/settings/components/connection-parameters/connection-parameters.component';
@@ -32,7 +33,7 @@ const routes: Routes = [
     path: 'realtime-curves', component: RealtimeCurvesComponent
   },
   {
-    path: 'maintenance', loadChildren: () => import('./features/maintenance/maintenance.module').then(m => m.MaintenanceModule)
+    path: 'maintenance', component: MaintenanceComponent
   },
   {
     path: 'settings',

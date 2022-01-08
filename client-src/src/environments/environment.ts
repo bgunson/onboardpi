@@ -2,8 +2,12 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import { Socket } from "ngx-socket-io";
+
 export const environment = {
-  production: false
+  production: false,
+  appSocket: Socket,
+  obdSocket: Socket
 };
 
 /*

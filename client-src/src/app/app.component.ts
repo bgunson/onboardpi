@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'carpi-client';
+  title = 'onboardpi-client';
 
   route$: Observable<string | undefined>;
   obdConnected: Promise<boolean>;

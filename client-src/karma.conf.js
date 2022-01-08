@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/carpi-client'),
+      dir: require('path').join(__dirname, './coverage/onboardpi-client'),
       subdir: '.',
       reporters: [
         { type: 'html' },

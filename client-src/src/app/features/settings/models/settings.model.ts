@@ -5,10 +5,10 @@ export interface Settings {
 }
 
 export interface Vehicle {
-    make: string;
-    model: string;
-    year: number;
-    vin: string;
+    make: string | null;
+    model: string | null;
+    year: number | null;
+    vin: string | null;
 }
 
 export interface ConnectionParameters {

@@ -16,9 +16,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { DataStreamModule } from './features/data-stream/data-stream.module';
 import { MenuModule } from './features/menu/menu.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { environment } from 'src/environments/environment';
+import { MaintenanceModule } from './features/maintenance/maintenance.module';
+
+
 
 @Injectable()
-export class OBDSocket extends Socket {
+export class OBDSocket extends environment.obdSocket {
   constructor() {
     super({ 
       url: 'http://' + window.location.hostname + ':60000',
@@ -30,7 +34,7 @@ export class OBDSocket extends Socket {
 }
 
 @Injectable()
-export class AppSocket extends Socket {
+export class AppSocket extends environment.appSocket {
   constructor() {
     super({
       url: window.origin,
@@ -55,6 +59,7 @@ export class AppSocket extends Socket {
     SocketIoModule,
 
     DashboardModule,
+    MaintenanceModule,
     RealtimeCurvesModule,
     DiagnosticsModule,
     SettingsModule,
@@ -65,7 +70,7 @@ export class AppSocket extends Socket {
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
-    MatButtonModule
+    MatButtonModule,
     
   ],
   providers: [OBDSocket, AppSocket],
