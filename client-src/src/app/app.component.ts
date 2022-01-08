@@ -5,8 +5,7 @@ import { ActionService } from './shared/services/action.service';
 import { OBDService } from './shared/services/obd.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { Location } from '@angular/common';
+
 
 @Component({
   selector: 'app-root',
@@ -25,7 +24,6 @@ export class AppComponent implements OnInit {
     public action: ActionService,
     private appSocket: AppSocket,
     private router: Router,
-    private location: Location
   ) {
 
     this.appSocket.on('obd:reconnect', (msg: string) => {
@@ -59,8 +57,6 @@ export class AppComponent implements OnInit {
   
   ngOnInit() {
     this.display.checkTheme();
-    if (environment.production)
-      this.obd.getConnection();
   }
 
 }

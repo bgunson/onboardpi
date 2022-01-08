@@ -75,6 +75,8 @@ export class RealtimeCurvesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+    this.obd.getConnection();
     
     if (this.curveOptions.lines) {
       this.curveOptions.lines[0].color = this.display.defaultColor;

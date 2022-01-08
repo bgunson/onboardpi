@@ -42,20 +42,22 @@ export class OBDService {
   }
 
   getConnection(): void {
-    this.connectingNow.next(true);
-    this.getStatus();
-    this.isConnected()
-      .pipe(
-        takeWhile(v => v === false),
-        timeout(10000)
-      ).subscribe(
-        () => {},
-        () => {
-          this.connectingNow.next(false);
-          alert("Unable to connect to the vehicle. Please check your connection your OBD adapter and connection parameters in settings.")
-        },
-        () => this.connectingNow.next(false)
-      );
+    if (!this.connectingNow.getValue()) {
+      this.connectingNow.next(true);
+      this.getStatus();
+      this.isConnected()
+        .pipe(
+          takeWhile(v => v === false),
+          timeout(10000)
+        ).subscribe(
+          () => {},
+          () => {
+            this.connectingNow.next(false);
+            alert("Unable to connect to the vehicle. Please check your OBD adapter and connection parameters in settings.")
+          },
+          () => this.connectingNow.next(false)
+        );
+    }
   }
 
   getStatus(): BehaviorSubject<string> {

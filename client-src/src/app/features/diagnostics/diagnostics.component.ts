@@ -36,6 +36,8 @@ export class DiagnosticsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // this.action.setActionBtn('delete_sweep');
+
+    this.obd.getConnection();
     this.carConnected$ = this.obd.isConnected();
     this.obd.watch(this.diagnosticCmds);
 

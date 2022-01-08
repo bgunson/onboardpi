@@ -53,7 +53,7 @@
         <mat-list-item routerLink="log-level" matRipple style="cursor: pointer;">
             Log Level
             <span style="flex: 1 1 auto"></span>
-            <span style="color:grey">{{ (settings.connection.log_level || 'NOTSET') | titlecase }}<mat-icon style="vertical-align: middle;">chevron_right</mat-icon></span>
+            <span style="color:grey">{{ (settings.connection.log_level || 'WARNING') | titlecase }}<mat-icon style="vertical-align: middle;">chevron_right</mat-icon></span>
         </mat-list-item>
     </mat-card>    
 </mat-list>

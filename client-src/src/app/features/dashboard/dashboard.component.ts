@@ -97,6 +97,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.action.setAction('dashboard_customize');
     this.setDimensions();
     
+    this.obd.getConnection();
     this.vehicleConnected$ = this.obd.isConnected();
 
     // Subscribe to sreen orientation

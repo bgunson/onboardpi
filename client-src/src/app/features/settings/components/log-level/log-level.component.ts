@@ -20,7 +20,7 @@ export class LogLevelComponent implements OnInit, OnDestroy {
     'WARNING',
     'INFO',
     'DEBUG',
-    'NOTSET'
+    // 'NOTSET'
   ];
 
   settings$: Promise<Settings>;

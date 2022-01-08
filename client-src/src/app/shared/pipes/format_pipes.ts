@@ -15,7 +15,7 @@ export class BytesPipe implements PipeTransform {
     } else if (bytes > 1000000) {  // To MB
       return Math.round(bytes / 1000000) + ' MB';
     } else if (bytes > 1000) {
-      return Math.round(bytes / 1000) + ' KB';
+      return Math.round(bytes / 1000) + ' kB';
     } else {
       return Math.round(bytes) + ' bytes';
     }
