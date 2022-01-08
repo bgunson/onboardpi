@@ -1,7 +1,7 @@
 import { HttpClient, HttpHandler, HttpXhrBackend } from "@angular/common/http";
 import { Injector } from "@angular/core";
 import { interval, Observable, of } from "rxjs";
-import { map, share, switchMap, take } from "rxjs/operators";
+import { map, share, shareReplay, switchMap, take } from "rxjs/operators";
 import { OBDCommand, ResponseSet } from "src/app/shared/models/obd.model";
 import { environment } from "src/environments/environment";
 
@@ -66,7 +66,7 @@ export class DemoOBDSocket {
      */
     generateValue(value: any) {
         if (typeof value === 'number') {
-            let max = value * 0.1;
+            let max = value * 0.2;
             let min = -max;
             return value + Math.random() * (max - min) + min;
         } else {
@@ -76,7 +76,7 @@ export class DemoOBDSocket {
 
     getSnapshot(): Observable<ResponseSet> {
         if (!this._snapshot$) {
-            this._snapshot$ = this._http.get<ResponseSet>(environment.dataURL + '/obd/snapshot.json').pipe(share());
+            this._snapshot$ = this._http.get<ResponseSet>(environment.dataURL + '/obd/snapshot.json').pipe(shareReplay());
         }
         return this._snapshot$;
     }

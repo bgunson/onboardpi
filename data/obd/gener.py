@@ -125,6 +125,9 @@ def dumps(*args, **kwargs):
 connection = obd.OBD('/dev/pts/4')
 
 snapshot = {}
+for cmd in obd.commands.base_commands():
+    snapshot[cmd.name] = connection.query(cmd)
+
 for mode in obd.commands:
     for cmd in mode:
         if cmd is not None:
