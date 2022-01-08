@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { DataStreamComponent } from './features/data-stream/data-stream.component';
+import { FreezeDataComponent } from './features/diagnostics/components/freeze-data/freeze-data.component';
 import { DiagnosticsComponent } from './features/diagnostics/diagnostics.component';
-import { MaintenanceComponent } from './features/maintenance/maintenance.component';
 import { MenuComponent } from './features/menu/menu.component';
 import { RealtimeCurvesComponent } from './features/realtime-curves/realtime-curves.component';
 import { ConnectionParametersComponent } from './features/settings/components/connection-parameters/connection-parameters.component';
@@ -15,7 +15,15 @@ const routes: Routes = [
     path: 'dashboard', component: DashboardComponent
   },
   {
-    path: 'diagnostics', component: DiagnosticsComponent
+    path: 'diagnostics', 
+    children: [
+      {
+        path: '', component: DiagnosticsComponent
+      },
+      {
+        path: 'freeze-data', component: FreezeDataComponent
+      }
+    ]
   },
   {
     path: 'data-stream', component: DataStreamComponent

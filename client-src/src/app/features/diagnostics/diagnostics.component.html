@@ -46,6 +46,7 @@
                     </mat-list-item>
                 </mat-card>
             </ng-container>
+
             <div mat-subheader><mat-icon>online_prediction</mat-icon>&nbsp;Status</div>
             <ng-container *ngIf="dtcs.STATUS?.value as status; else notSupported">
                 <mat-card class="code-card">
@@ -71,6 +72,14 @@
             <mat-card class="code-card">
                 <mat-list-item>
                     <span *ngIf="dtcs.FUEL_STATUS?.value as fuelStatus; else notApplicable">{{ fuelStatus[0] }}</span>
+                </mat-list-item>
+            </mat-card>
+
+            <mat-card class="code-card freeze">
+                <mat-list-item matRipple routerLink="freeze-data">
+                    View Freeze Data
+                    <span style="flex: 1 1 auto"></span>
+                    <mat-icon class="chevron">chevron_right</mat-icon>
                 </mat-list-item>
             </mat-card>
         </mat-list>

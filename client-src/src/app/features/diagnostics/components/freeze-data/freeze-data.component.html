@@ -1,0 +1,7 @@
+<mat-list>
+    <mat-card class="code-card">
+        <mat-list-item *ngFor="let cmd of commands$ | async">
+            {{ cmd.name.slice(4) }}
+        </mat-list-item>
+    </mat-card>
+</mat-list>
