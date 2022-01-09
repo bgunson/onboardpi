@@ -85,13 +85,8 @@ export class RealtimeCurvesComponent implements OnInit, OnDestroy {
 
     this.commands$ = this.obd.allCommands().then(all => all[1]);
 
-    this.curvePid = localStorage.getItem('curvePid') || "";
-    if (this.curvePid) {
-      this.previousPid = this.curvePid;
-      this.obd.watch([this.curvePid]);
-      this.setLiveValue();
-      this.setCurve();
-    }
+    this.curvePid = localStorage.getItem('curvePid') || "ENGINE_RPM";
+    this.setCurvePid();
     this.unwatchSub = this.obd.unwatched.subscribe(() => this.obd.watch([this.curvePid]));
   }
 

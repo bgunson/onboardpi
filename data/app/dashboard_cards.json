@@ -2,7 +2,7 @@
     {
         "id": 1,
         "index": 0,
-        "type": "gauge.arch",
+        "type": "curve",
         "command": "RPM"
     },
     {

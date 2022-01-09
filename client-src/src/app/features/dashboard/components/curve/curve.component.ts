@@ -50,9 +50,10 @@ export class CurveComponent implements OnInit {
         this.curveOptions.lines[0].areaColor = this.display.defaultColor;
     }
 
+
     setTimeout(() => {
       this.chartData = [this.curveData.getCurve(this.card.command)];
-    }, 500);
+    }, 600);
 
     this.live$ = this.obd.getWatching().pipe(pluck(this.card.command));
 

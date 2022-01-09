@@ -7,7 +7,7 @@
                 Temperature<span style="flex: 1 1 auto"></span>{{ (info.cpu.temp | number:'1.1-2') ?? 'N/A'}} °C
             </mat-list-item>
             <mat-list-item>
-                Clock Rate<span style="flex: 1 1 auto"></span>{{ info.cpu.speed ?? 'N/A'}} GHz
+                Clock Rate<span style="flex: 1 1 auto"></span>{{ (info.cpu.speed | number:'1.1-2') ?? 'N/A'}} GHz
             </mat-list-item>
             <mat-list-item>
                 Load<span style="flex: 1 1 auto"></span>{{ (info.cpu.load | number:'1.1-2') ?? 'N/A'}} %
@@ -18,10 +18,10 @@
         <div mat-subheader><mat-icon>memory</mat-icon>&nbsp;Memory</div>
         <mat-card class="info-card">
             <mat-list-item>
-                Used<span style="flex: 1 1 auto"></span>{{ info.mem.active | bytes }} GB ({{ ((info.mem.active / info.mem.total)*100 | number:'1.1-1') ?? 'N/A'}} %)
+                Used<span style="flex: 1 1 auto"></span>{{ info.mem.active | bytes }} ({{ ((info.mem.active / info.mem.total)*100 | number:'1.1-1') ?? 'N/A'}} %)
             </mat-list-item>
             <mat-list-item>
-                Total<span style="flex: 1 1 auto"></span>{{ (info.mem.total | bytes) ?? 'N/A'}} GB
+                Total<span style="flex: 1 1 auto"></span>{{ (info.mem.total | bytes) ?? 'N/A'}}
             </mat-list-item>
         </mat-card>
       

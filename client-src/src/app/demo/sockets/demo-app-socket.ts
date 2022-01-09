@@ -1,7 +1,5 @@
-import { HttpClient, HttpHandler, HttpXhrBackend } from "@angular/common/http";
-import { Injector } from "@angular/core";
-import { interval, Observable, of } from "rxjs";
-import { map, shareReplay, switchMap } from "rxjs/operators";
+import { BehaviorSubject, interval, merge, Observable } from "rxjs";
+import { map, shareReplay, startWith, switchMap } from "rxjs/operators";
 import { DashboardCard } from "src/app/features/dashboard/models/dashboard.model";
 import { SysInfo } from "src/app/features/data-stream/models/sys-info.model";
 import { MaintenanceRecord } from "src/app/features/maintenance/models/maintenance.model";
@@ -11,6 +9,15 @@ import { DemoSocket } from "./demo-socket";
 
 
 export class DemoAppSocket extends DemoSocket {
+
+
+  private _dashboardCards$: BehaviorSubject<DashboardCard[]> = new BehaviorSubject<DashboardCard[]>([]);
+  private _maintenanceRecords$: BehaviorSubject<MaintenanceRecord[]> = new BehaviorSubject<MaintenanceRecord[]>([]);
+
+  private _crud: {[name: string]: BehaviorSubject<any[]>} = {
+    'dashboard_cards': this._dashboardCards$,
+    'maintenance':this._maintenanceRecords$
+  }
 
   private _sysSnapshot$: Observable<SysInfo>;
 
@@ -37,13 +44,51 @@ export class DemoAppSocket extends DemoSocket {
   }
 
   fromEvents: { [event: string]: Observable<any> } = {
-    'dashboard_cards:response': this.get<DashboardCard[]>(environment.dataURL + '/app/dashboard_cards.json'),
-    'maintenance:response': this.get<MaintenanceRecord[]>(environment.dataURL + '/app/maintenance.json'),
+    'dashboard_cards:response': this.getList('dashboard_cards'),
+    'maintenance:response': this.getList('maintenance'),
     'sysInfo': this._sysInfo$
-  } 
+  }
+  
+  emits: { [event: string]: Function } = {
+    'dashboard_cards:update': (args: any[]) => this.update(args[0], 'dashboard_cards'),
+    'dashboard_cards:create': (args: any[]) => this.create(args[0], 'dashboard_cards'),
+    'maintenance:update': (args: any[]) => this.update(args[0], 'maintenance'),
+    'maintenance:create': (args: any[]) => this.create(args[0], 'maintenance')
+  }
   
   constructor(args: any) {
     super();
+  }
+
+  create(item: MaintenanceRecord | DashboardCard, crudList: string) {
+    let list: BehaviorSubject<any[]> = this._crud[crudList];
+    list.getValue().push(item);
+    list.next(list.getValue());
+    localStorage.setItem(crudList, JSON.stringify(list.getValue()));
+  }
+
+  update(update: MaintenanceRecord | DashboardCard, crudList: string) {
+    let list: BehaviorSubject<any[]> = this._crud[crudList];
+    const updated = list.getValue().map(element => {
+      if (element.id === update.id) {
+        return update;
+      }
+      return element;
+    });
+    list.next(updated);
+    localStorage.setItem(crudList, JSON.stringify(list.getValue()));
+  }
+
+  getList(crudList: string) {
+    if (this._crud[crudList].getValue().length === 0) {
+      let localList = localStorage.getItem(crudList);
+      if (localList) {
+        this._crud[crudList].next(JSON.parse(localList));
+      } else {
+        this.get<DashboardCard[]>(`${environment.dataURL}/app/${crudList}.json`).subscribe(res => this._crud[crudList].next(res));
+      }
+    }
+    return this._crud[crudList].asObservable();
   }
 
   getSysSnapshot() {
@@ -55,7 +100,10 @@ export class DemoAppSocket extends DemoSocket {
 
   // Start Socket class overrides
 
-  emit(event: string, ...args: any[]): void { }
+  emit(event: string, ...args: any[]): void {
+    this.emits[event] ? this.emits[event](args) : null;
+
+  }
 
   fromOneTimeEvent<T>(event: string): Promise<T> {
     return this.oneTimeEvents[event];
