@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DisplayService } from '../shared/services/display.service';
 
 @Component({
   selector: 'app-demo',
@@ -6,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DemoComponent implements OnInit {
 
-  constructor() { }
+  constructor(public display: DisplayService) { }
 
   ngOnInit(): void {
     sessionStorage.setItem('demo', "seen");

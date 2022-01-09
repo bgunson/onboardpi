@@ -1,0 +1,56 @@
+{
+    "cpu": {
+      "load": 2.2699386503067487,
+      "speed": 2.28,
+      "temp": 40.3
+    },
+    "mem": {
+      "total": 16700071936,
+      "free": 8385601536,
+      "used": 8314470400,
+      "active": 5692907520
+    },
+    "network": [
+      {
+        "iface": "enp42s0",
+        "ifaceName": "enp42s0",
+        "ip4": "192.168.1.101",
+        "ip4subnet": "255.255.255.0",
+        "ip6": "2001:56a:74da:1100:56bb:73c0:fc75:a8f6",
+        "ip6subnet": "ffff:ffff:ffff:ffff::",
+        "mac": "12:34:56:78:90",
+        "internal": false,
+        "virtual": false,
+        "operstate": "up",
+        "type": "wired",
+        "duplex": "full",
+        "mtu": 1500,
+        "speed": 1000,
+        "dhcp": true,
+        "dnsSuffix": "Not defined",
+        "ieee8021xAuth": "Not defined",
+        "ieee8021xState": "Disabled",
+        "carrierChanges": 2,
+        "rx_bytes": 165050936,
+        "rx_dropped": 0,
+        "rx_errors": 0,
+        "tx_bytes": 66408698,
+        "tx_dropped": 0,
+        "tx_errors": 0,
+        "rx_sec": 58.59375,
+        "tx_sec": 0,
+        "ms": 1024
+      }
+    ],
+    "storage": [
+      {
+        "fs": "/dev/sda2",
+        "type": "ext4",
+        "size": 244529655808,
+        "used": 39266140160,
+        "available": 192770678784,
+        "use": 16.92,
+        "mount": "/"
+      }
+    ]
+  }

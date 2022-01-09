@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { DemoRoutingModule } from './demo-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { DemoComponent } from './demo.component';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import { DemoComponent } from './demo.component';
   imports: [
     CommonModule,
     DemoRoutingModule,
+    MatButtonModule
   ]
 })
 export class DemoModule { }

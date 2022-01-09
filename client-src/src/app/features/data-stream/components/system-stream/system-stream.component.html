@@ -18,10 +18,10 @@
         <div mat-subheader><mat-icon>memory</mat-icon>&nbsp;Memory</div>
         <mat-card class="info-card">
             <mat-list-item>
-                Used<span style="flex: 1 1 auto"></span>{{ info.mem.active / 1000000000 | number:'1.1-1' }} GB ({{ ((info.mem.active / info.mem.total)*100 | number:'1.1-1') ?? 'N/A'}} %)
+                Used<span style="flex: 1 1 auto"></span>{{ info.mem.active | bytes }} GB ({{ ((info.mem.active / info.mem.total)*100 | number:'1.1-1') ?? 'N/A'}} %)
             </mat-list-item>
             <mat-list-item>
-                Total<span style="flex: 1 1 auto"></span>{{ (info.mem.total / 1000000000 | number:'1.1-1') ?? 'N/A'}} GB
+                Total<span style="flex: 1 1 auto"></span>{{ (info.mem.total | bytes) ?? 'N/A'}} GB
             </mat-list-item>
         </mat-card>
       

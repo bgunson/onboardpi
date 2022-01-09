@@ -1,46 +1,70 @@
 import { HttpClient, HttpHandler, HttpXhrBackend } from "@angular/common/http";
 import { Injector } from "@angular/core";
-import { Observable, of } from "rxjs";
+import { interval, Observable, of } from "rxjs";
+import { map, shareReplay, switchMap } from "rxjs/operators";
 import { DashboardCard } from "src/app/features/dashboard/models/dashboard.model";
+import { SysInfo } from "src/app/features/data-stream/models/sys-info.model";
 import { MaintenanceRecord } from "src/app/features/maintenance/models/maintenance.model";
 import { environment } from "src/environments/environment";
 import { Settings } from "../../features/settings/models/settings.model";
+import { DemoSocket } from "./demo-socket";
 
-const injector = Injector.create({
-  providers: [
-      { provide: HttpClient, deps: [HttpHandler] },
-      { provide: HttpHandler, useValue: new HttpXhrBackend({ build: () => new XMLHttpRequest }) },
-  ]
-});
 
-export class DemoAppSocket {
+export class DemoAppSocket extends DemoSocket {
 
-  private _http: HttpClient = injector.get(HttpClient);
+  private _sysSnapshot$: Observable<SysInfo>;
+
+  private _sysInfo$: Observable<SysInfo> = interval(1000).pipe(
+    switchMap(() => this.getSysSnapshot()),
+    map((snapshot) => {
+      let info: SysInfo = snapshot;
+      info.cpu.load = this.generateValue(snapshot.cpu.load);
+      info.cpu.speed = this.generateValue(snapshot.cpu.speed);
+      info.cpu.temp = this.generateValue(snapshot.cpu.temp);
+
+      info.mem.active = this.generateValue(snapshot.mem.active);
+
+      info.network.forEach(iface => {
+        iface.rx_sec = this.generateValue(iface.rx_bytes);
+        iface.tx_sec = this.generateValue(iface.tx_sec);
+      });
+      return info;
+    })
+  );
 
   oneTimeEvents: { [event: string]: Promise<any> } = {
-    'settings:response': this._http.get<Settings>(environment.dataURL + '/app/settings.json').toPromise()
+    'settings:response': this.get<Settings>(environment.dataURL + '/app/settings.json').toPromise()
   }
 
   fromEvents: { [event: string]: Observable<any> } = {
-    'dashboard_cards:response': this._http.get<DashboardCard[]>(environment.dataURL + '/app/dashboard_cards.json'),
-    'maintenance:response': this._http.get<MaintenanceRecord[]>(environment.dataURL + '/app/maintenance.json')
+    'dashboard_cards:response': this.get<DashboardCard[]>(environment.dataURL + '/app/dashboard_cards.json'),
+    'maintenance:response': this.get<MaintenanceRecord[]>(environment.dataURL + '/app/maintenance.json'),
+    'sysInfo': this._sysInfo$
   } 
   
-  constructor(args: any) { }
-
-  emit(event: string, ...args: any[]): void {
-      console.log("APP EMIT", event);
+  constructor(args: any) {
+    super();
   }
 
+  getSysSnapshot() {
+    if (!this._sysSnapshot$) {
+      this._sysSnapshot$ = this.get<SysInfo>(environment.dataURL + '/app/sys_snapshot.json').pipe(shareReplay())
+    }
+    return this._sysSnapshot$;
+  }
+
+  // Start Socket class overrides
+
+  emit(event: string, ...args: any[]): void { }
+
   fromOneTimeEvent<T>(event: string): Promise<T> {
-      console.log("APP FROM ONE TIEM EVENT", event)
-      return this.oneTimeEvents[event];
+    return this.oneTimeEvents[event];
   }
 
   fromEvent<T>(event: string): Observable<T> {
-      console.log("APP FROM EVENT", event);
-      return this.fromEvents[event];
+    return this.fromEvents[event];
   }
 
   on(event: string, cb: Function): void { }
+
 }

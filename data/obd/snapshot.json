@@ -80,7 +80,9 @@
     "unit": "<class 'obd.utils.BitArray'>"
   },
   "GET_DTC": {
-    "value": [],
+    "value": [
+      [ "P0104", "Mass or Volume Air Flow Circuit Intermittent" ]
+    ],
     "command": {
       "name": "GET_DTC",
       "desc": "Get DTCs",
@@ -213,7 +215,7 @@
     "unit": "kilopascal"
   },
   "RPM": {
-    "value": 1278.75,
+    "value": 2672.75,
     "command": {
       "name": "RPM",
       "desc": "Engine RPM",
