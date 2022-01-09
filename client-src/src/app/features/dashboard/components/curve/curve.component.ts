@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { RealtimeChartData, RealtimeChartOptions } from 'ngx-graph';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { pluck } from 'rxjs/operators';
 import { OBDResponse } from 'src/app/shared/models/obd.model';
 import { CurveDataService } from 'src/app/features/realtime-curves/services/curve-data.service';
@@ -19,8 +19,9 @@ export class CurveComponent implements OnInit {
   @Input() card: DashboardCard;
 
   live$: Observable<OBDResponse>;
+  loaded$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  chartData: RealtimeChartData[][];
+  chartData: RealtimeChartData[];
 
   curveOptions: RealtimeChartOptions = {
     height: this.dashboardService.rowHeight * 2,
@@ -38,7 +39,7 @@ export class CurveComponent implements OnInit {
     private curveData: CurveDataService,
     private obd: OBDService,
     public dashboardService: DashboardService, 
-    private display: DisplayService
+    public display: DisplayService
   ) { }
 
 
@@ -52,8 +53,9 @@ export class CurveComponent implements OnInit {
 
 
     setTimeout(() => {
-      this.chartData = [this.curveData.getCurve(this.card.command)];
-    }, 600);
+      this.chartData = this.curveData.getCurve(this.card.command);
+      this.loaded$.next(true);
+    }, 1000);
 
     this.live$ = this.obd.getWatching().pipe(pluck(this.card.command));
 

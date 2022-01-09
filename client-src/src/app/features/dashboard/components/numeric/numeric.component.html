@@ -3,7 +3,7 @@
         {{ live.command.desc | slice:0:26 }}
     </mat-card-title>
     <mat-card-content class="card-content">
-        <span class="value">{{ live.value | number:'1.1-2' }} </span>
+        <span class="value">{{ live.value | obdValue:'1.1-2' }} </span>
         <span class="unit">{{ live.unit | prettyUnit }}</span>
     </mat-card-content>
 </ng-container>

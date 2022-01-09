@@ -3,6 +3,7 @@ import { NgxGaugeType } from 'ngx-gauge/gauge/gauge';
 import { Observable } from 'rxjs';
 import { pluck } from 'rxjs/operators';
 import { OBDResponse } from 'src/app/shared/models/obd.model';
+import { DisplayService } from 'src/app/shared/services/display.service';
 import { OBDService } from 'src/app/shared/services/obd.service';
 import { DashboardCard } from '../../models/dashboard.model';
 import { DashboardService } from '../../services/dashboard.service';
@@ -50,7 +51,13 @@ export class GaugeComponent implements OnInit {
   max: number;
   thresholds: any;
 
-  constructor(private obd: OBDService, public dashboardService: DashboardService) { }
+  spinnerDia = this.dashboardService.rowHeight;
+
+  constructor(
+    private obd: OBDService, 
+    public dashboardService: DashboardService,
+    public display: DisplayService
+  ) { }
 
   getSize() {
     if (this.gaugeType === 'arch') {

@@ -52,8 +52,12 @@ export class DemoAppSocket extends DemoSocket {
   emits: { [event: string]: Function } = {
     'dashboard_cards:update': (args: any[]) => this.update(args[0], 'dashboard_cards'),
     'dashboard_cards:create': (args: any[]) => this.create(args[0], 'dashboard_cards'),
+    'dashboard_cards:delete': (args: any[]) => this.delete(args[0], 'dashboard_cards'),
+
     'maintenance:update': (args: any[]) => this.update(args[0], 'maintenance'),
-    'maintenance:create': (args: any[]) => this.create(args[0], 'maintenance')
+    'maintenance:create': (args: any[]) => this.create(args[0], 'maintenance'),
+    'maintenance:delete': (args: any[]) => this.delete(args[0], 'maintenance')
+
   }
   
   constructor(args: any) {
@@ -76,6 +80,12 @@ export class DemoAppSocket extends DemoSocket {
       return element;
     });
     list.next(updated);
+    localStorage.setItem(crudList, JSON.stringify(list.getValue()));
+  }
+
+  delete(item: MaintenanceRecord | DashboardCard, crudList: string) {
+    let list: BehaviorSubject<any[]> = this._crud[crudList];
+    list.next(list.getValue().filter(val => val.id !== item.id));
     localStorage.setItem(crudList, JSON.stringify(list.getValue()));
   }
 

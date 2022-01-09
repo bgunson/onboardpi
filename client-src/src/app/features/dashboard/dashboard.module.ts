@@ -20,6 +20,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { RealtimeChartModule } from 'ngx-graph';
 import { SharedModule } from 'src/app/shared/shared.module';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 
 
@@ -42,7 +43,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     FormsModule,
     MatDialogModule,
     MatSelectModule,
-
+    MatProgressBarModule,
     RealtimeChartModule
   ],
 })

@@ -1,8 +1,8 @@
-<ng-container *ngIf="live$ | async as live">
-    <mat-card-title class="card-title">
-        {{ live.command.desc }}
-    </mat-card-title>
-    <mat-card-content>
+<mat-card-title class="card-title">
+    {{ (live$ | async)?.command?.desc }}
+</mat-card-title>
+<mat-card-content>
+    <ng-container *ngIf="live$ | async as live; else loading">
         <ngx-gauge
             class="gauge"
             cap="round"
@@ -15,5 +15,14 @@
             [value]="live.value | round"
             [duration]="500">
         </ngx-gauge>
-    </mat-card-content>
-</ng-container>
+    </ng-container>
+    <ng-template #loading>
+        <mat-spinner 
+            class="gauge"
+            [diameter]="spinnerDia" 
+            [ngStyle]="{'top.px': dashboardService.rowHeight/3.2}" 
+            style="margin-top: 20px;"
+            [color]="display.palette">
+        </mat-spinner>
+    </ng-template>
+</mat-card-content>

@@ -14,13 +14,13 @@ export class DemoSocket {
     private _http: HttpClient = injector.get(HttpClient);
 
     /**
-     * If value is a number, +- a random amount within 10% of the original.
+     * If value is a number, +- a random amount within 50% of the original.
      * @param value 
      * @returns 
      */
      generateValue(value: any) {
         if (typeof value === 'number') {
-            let max = value * 0.2;
+            let max = value * 0.5;
             let min = -max;
             return value + Math.random() * (max - min) + min;
         } else {

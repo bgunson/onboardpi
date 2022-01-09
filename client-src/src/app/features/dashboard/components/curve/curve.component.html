@@ -7,6 +7,8 @@
     </div>   
 </mat-card-title>
 
-<div class="curve" *ngIf="chartData">
-    <ngx-realtime-chart [options]="curveOptions" [data]="chartData"></ngx-realtime-chart>
+<div class="curve">
+    <ngx-realtime-chart *ngIf="chartData" [options]="curveOptions" [data]="[chartData]"></ngx-realtime-chart>
 </div>
+
+<mat-progress-bar [color]="display.palette" *ngIf="!(loaded$ | async)" class="progress-bar" mode="indeterminate"></mat-progress-bar>
