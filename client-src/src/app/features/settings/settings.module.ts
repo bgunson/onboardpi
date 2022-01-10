@@ -6,7 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import {MatListModule} from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
-import {MatExpansionModule} from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { MatDividerModule } from '@angular/material/divider';
@@ -33,7 +32,6 @@ import { LogLevelComponent } from './components/log-level/log-level.component';
     FormsModule,
     MatListModule,
     MatCardModule,
-    MatExpansionModule,
     MatButtonModule,
     MatDividerModule,
     MatRippleModule,

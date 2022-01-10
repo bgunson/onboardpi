@@ -4,24 +4,26 @@ import sys
 import asyncio
 import time
 
-obd.logger.setLevel(sys.argv[1])
-
-if len(sys.argv) == 3:
-    params = obdio.loads(sys.argv[2])
-else: 
-    params = {}
-
-io = obdio.OBDio(**params)
-
-sio = io.create_server(cors_allowed_origins='*', json=obdio)
+LOG_LEVEL = sys.argv[1]
+UPDATE_RATE = 0.5
+PARAMS = {}
 
 watching = {}
 last = 0
-update_rate = 0.25
+
+obd.logger.setLevel(LOG_LEVEL)
+
+if len(sys.argv) == 3:
+    PARAMS = obdio.loads(sys.argv[2])
+
+io = obdio.OBDio(**PARAMS)
+
+sio = io.create_server(cors_allowed_origins='*', json=obdio)
+
 
 async def watch_respond(values):
     global last
-    if time.time() - last >= update_rate:
+    if time.time() - last >= UPDATE_RATE:
         await sio.emit('watching', values, room='watch')
         last = time.time()
 
@@ -64,4 +66,4 @@ async def all_commands(sid):
 async def get_command(sid, cmd):
     await sio.emit('get_command', obd.commands[cmd], room=sid)
 
-io.run_server(host='0.0.0.0', port=60000)
+io.run_server(host='0.0.0.0', port=60000, log_level=LOG_LEVEL.lower())

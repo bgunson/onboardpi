@@ -11,9 +11,9 @@ export class OBDValuePipe implements PipeTransform {
 
   }
 
-  transform(value: any, args: string) {
+  transform(value: any, digits?: string) {
     if (typeof value === 'number') {
-      return this.decimals.transform(value, args)
+      return this.decimals.transform(value, digits)
     } else if (typeof value === 'string') {
       return value;
     } else {
@@ -31,15 +31,20 @@ export class OBDValuePipe implements PipeTransform {
 })
 export class BytesPipe implements PipeTransform {
 
-  transform(bytes: number, ...args: unknown[]): string {
+  constructor(private decimals: DecimalPipe) { }
+
+  transform(bytes: number, digits?: string): string {
+    if (!digits) {
+      digits = '1.0-0';
+    }
     if (bytes > 1000000000) { // To GB
-      return Math.round(bytes / 1000000000) + ' GB';
+      return this.decimals.transform((bytes / 1000000000), digits) + ' GB';
     } else if (bytes > 1000000) {  // To MB
-      return Math.round(bytes / 1000000) + ' MB';
+      return this.decimals.transform((bytes / 1000000), digits) + ' MB';
     } else if (bytes > 1000) {
-      return Math.round(bytes / 1000) + ' kB';
+      return this.decimals.transform((bytes / 1000), digits) + ' kB';
     } else {
-      return Math.round(bytes) + ' bytes';
+      return this.decimals.transform((bytes), digits) + ' bytes';
     }
   }
 }
@@ -65,6 +70,9 @@ export class PrettyUnitPipe implements PipeTransform {
     }
     
     transform(value: string, ...args: unknown[]): string {
+      if (value.startsWith('<class')) {
+        return "";
+      }
       return this.prettyUnits[value] ? this.prettyUnits[value] : value;
     }
   

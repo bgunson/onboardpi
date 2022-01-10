@@ -12,7 +12,7 @@
         </button>
         <span style="flex: 1 1 auto"></span>
         <button
-            *ngIf="display.isHandset$"
+            *ngIf="display.isHandset$ | async"
             (click)="refresh()"
             type="button"
             mat-icon-button>
@@ -33,8 +33,8 @@
             [opened]="!(display.isPortrait$ | async)">
 
             <mat-nav-list style="overflow-x: hidden;">
-                <mat-list-item *ngIf="route" (click)="back()">
-                    <mat-icon mat-list-icon >{{ route ? 'chevron_left' : 'refresh' }}</mat-icon>
+                <mat-list-item (click)="back()" *ngIf="route">
+                    <mat-icon mat-list-icon >chevron_left</mat-icon>
                 </mat-list-item>
                 <mat-list-item [ngClass]="{ 'bottom' : (display.isHandset$ | async) }" *ngIf="action.icon | async as icon" (click)="action.click()">
                     <mat-icon mat-list-icon>{{ icon }}</mat-icon>

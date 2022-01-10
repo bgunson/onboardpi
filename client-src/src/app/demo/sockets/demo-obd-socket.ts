@@ -22,7 +22,7 @@ export class DemoOBDSocket extends DemoSocket {
             [...this._watchList].forEach((cmd: string) => {
                 if (snapshot[cmd]) {
                     response[cmd] = {
-                        value: this.generateValue(snapshot[cmd].value),
+                        value: !cmd.startsWith('DTC') ? this.generateValue(snapshot[cmd].value) : snapshot[cmd].value,
                         time: Date.now(),
                         command: snapshot[cmd].command,
                         unit: snapshot[cmd].unit

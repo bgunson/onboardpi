@@ -1,6 +1,6 @@
 <ng-container *ngIf="carConnected$ | async else waiting">
 
-    <ng-container *ngIf="dtcs$ | async as dtcs">
+    <ng-container *ngIf="dtcs$ | async as dtcs; else waiting">
         <mat-list>
             <ng-container *ngIf="dtcs.GET_DTC?.value as dtcs">
                 <div mat-subheader><mat-icon>archive</mat-icon>&nbsp;Stored Codes</div>
@@ -42,11 +42,13 @@
                         Check Engine Light
                         <span style="flex: 1 1 auto"></span>
                         <span style="color: grey;">{{ status.MIL ? 'On' : 'Off' }}</span>
+                        <mat-divider class="app-divider"></mat-divider>
                     </mat-list-item>
                     <mat-list-item>
                         DTCs Present
                         <span style="flex: 1 1 auto"></span>
                         <span style="color: grey;">{{ status.DTC_COUNT }}</span>
+                        <mat-divider class="app-divider"></mat-divider>
                     </mat-list-item>
                     <mat-list-item>
                         Ignition Type

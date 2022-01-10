@@ -5,9 +5,11 @@
             <mat-list-item>
                 <!-- <mat-icon mat-list-icon>thermostat</mat-icon> -->
                 Temperature<span style="flex: 1 1 auto"></span>{{ (info.cpu.temp | number:'1.1-2') ?? 'N/A'}} °C
+                <mat-divider class="app-divider"></mat-divider>
             </mat-list-item>
             <mat-list-item>
                 Clock Rate<span style="flex: 1 1 auto"></span>{{ (info.cpu.speed | number:'1.1-2') ?? 'N/A'}} GHz
+                <mat-divider class="app-divider"></mat-divider>
             </mat-list-item>
             <mat-list-item>
                 Load<span style="flex: 1 1 auto"></span>{{ (info.cpu.load | number:'1.1-2') ?? 'N/A'}} %
@@ -18,10 +20,10 @@
         <div mat-subheader><mat-icon>memory</mat-icon>&nbsp;Memory</div>
         <mat-card class="info-card">
             <mat-list-item>
-                Used<span style="flex: 1 1 auto"></span>{{ info.mem.active | bytes }} ({{ ((info.mem.active / info.mem.total)*100 | number:'1.1-1') ?? 'N/A'}} %)
+                Used<span style="flex: 1 1 auto"></span>{{ info.mem.active | bytes:'1.1-2' }} ({{ ((info.mem.active / info.mem.total)*100 | number:'1.1-1') ?? 'N/A'}} %)
             </mat-list-item>
             <mat-list-item>
-                Total<span style="flex: 1 1 auto"></span>{{ (info.mem.total | bytes) ?? 'N/A'}}
+                Total<span style="flex: 1 1 auto"></span>{{ (info.mem.total | bytes:'1.1-1') ?? 'N/A'}}
             </mat-list-item>
         </mat-card>
       
@@ -57,7 +59,7 @@
                         ({{ iface.rx_bytes | bytes }} Total)
                     </span>
                 </div>
-                <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
+                <mat-divider class="app-divider" *ngIf="!last"></mat-divider>
             </mat-list-item>
         </mat-card>
 
@@ -71,7 +73,7 @@
                     <div mat-line>
                         <span style="float: right;">{{ (disk.use | number:'1.1-2') ?? 'N/A'}} %</span>
                     </div>
-                    <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
+                    <mat-divider class="app-divider" *ngIf="!last"></mat-divider>
                 </mat-list-item>
             </mat-card>
         </ng-container>

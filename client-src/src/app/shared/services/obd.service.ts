@@ -13,10 +13,11 @@ import { OBDCommand, OBDResponse, ResponseSet } from '../models/obd.model';
   providedIn: 'root'
 })
 export class OBDService {
-
-  unwatched: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
  
   private _watching$: Observable<any>;
+
+  /** Active set of watched commands by name */
+  private _watchList: Set<string> = new Set<string>();
 
   private _status$: BehaviorSubject<string> = new BehaviorSubject<string>("Not Connected");
   private _isConnected$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -24,7 +25,7 @@ export class OBDService {
   connectingNow: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);    // TODO: maybe make this server side from appSocket event so other clients know if connecting
 
   constructor(private socket: OBDSocket) { 
-    socket.on('unwatch', (unwatched: string[]) => this.unwatched.next(unwatched));
+    socket.on('unwatch', () => this.watch([...this._watchList]));
 
     socket.fromEvent<string>('status').subscribe(v => this._status$.next(v));
     socket.fromEvent<boolean>('is_connected').subscribe(v => this._isConnected$.next(v));
@@ -35,7 +36,6 @@ export class OBDService {
     });
 
     socket.on('connect', () => {
-      this.unwatched.next([]);  // this will make modules re-watch when connection is disrupted
       this.getStatus();
       this.isConnected();
     });
@@ -71,11 +71,13 @@ export class OBDService {
   }
 
   watch(cmds: string[]): void {
+    cmds.forEach(c => this._watchList.add(c));
     this.socket.emit('join_watch');
     this.socket.emit('watch', cmds);
   }
 
   unwatch(cmds: string[]): void {
+    cmds.forEach(c => this._watchList.delete(c));
     this.socket.emit('leave_watch');
     this.socket.emit('unwatch', cmds);
   }

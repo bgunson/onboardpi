@@ -13,7 +13,7 @@
       </mat-form-field>    
         <div class="live">
           <span class="live-value" *ngIf="!(value$ | async)">N/A</span>
-          <span class="live-value" *ngIf="value$ | async as value">{{ value.value | number:'1.0-0' }}</span>
+          <span class="live-value" *ngIf="value$ | async as value">{{ value.value | obdValue:'1.0-0' }}</span>
           <br>
           <span class="live-unit" *ngIf="value$ | async as value">{{ value.unit | prettyUnit }}</span>
         </div>    

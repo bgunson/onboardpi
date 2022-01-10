@@ -1,14 +1,12 @@
 <ng-container *ngIf="carConnected$ | async else waiting">
     <mat-list style="overflow-x: hidden;" *ngIf="watch$ | async as watch; else waiting">
-        <div mat-subheader>
+        <!-- <div mat-subheader>
             <mat-icon class="material-icons-outlined">dynamic_form</mat-icon>&nbsp;Mode One
             <span style="flex: 1 1 auto"></span>
-            <mat-form-field appearance="outline" class="cmd-filter">
-                <!-- <mat-label>Outline form field</mat-label> -->
-                <input matInput (keyup)="applyFilter($event)" placeholder="Filter">
-                <mat-icon matSuffix>search</mat-icon>
-            </mat-form-field>
-        </div>
+            <shared-filter [size]="12" (keyup)="applyFilter($event)"></shared-filter>
+        </div> -->
+        <shared-filter [size]="12" (keyup)="applyFilter($event)"></shared-filter>
+
         <mat-card style="padding: 0px;" class="mat-elevation-z2">
             <mat-list-item *ngFor="let cmd of filteredCommands$ | async; last as last">
                 {{ cmd.name }}
@@ -18,11 +16,12 @@
                 </ng-container>
                 <ng-template #nan>NaN</ng-template>
                 <ng-template #notApplicable>N/A</ng-template>
-                <mat-divider *ngIf="!last" style="margin-left: 10px;"></mat-divider>
+                <mat-divider *ngIf="!last" style="margin-left: 15px;"></mat-divider>
             </mat-list-item>
         </mat-card>
 
-        <div mat-subheader><mat-icon>directions_car</mat-icon>&nbsp;OBD Connection</div>
+        <!-- move to lookup module -->
+        <!-- <div mat-subheader><mat-icon>directions_car</mat-icon>&nbsp;OBD Connection</div>
         <mat-card style="padding: 0px;" class="mat-elevation-z2">
             <mat-list-item>
                 Protocol<span style="flex: 1 1 auto"></span>{{ protocolName$ | async }}
@@ -40,7 +39,7 @@
                     <mat-list-item *ngFor="let cmd of supported">{{ cmd.desc }}</mat-list-item>
                 </mat-list>
             </mat-expansion-panel>
-        </mat-card>
+        </mat-card> -->
     </mat-list>
     
 </ng-container>

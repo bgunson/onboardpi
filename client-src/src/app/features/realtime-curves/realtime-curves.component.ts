@@ -87,7 +87,6 @@ export class RealtimeCurvesComponent implements OnInit, OnDestroy {
 
     this.curvePid = localStorage.getItem('curvePid') || "ENGINE_RPM";
     this.setCurvePid();
-    this.unwatchSub = this.obd.unwatched.subscribe(() => this.obd.watch([this.curvePid]));
   }
 
   ngOnDestroy() {

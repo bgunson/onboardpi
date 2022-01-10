@@ -1,16 +1,16 @@
 <mat-list *ngIf="connection$ | async as connection">
 
     <mat-card class="settings-card">
-        <mat-list-item>
+        <mat-list-item matRipple (click)="connection.auto = true" style="cursor: pointer;">
             Automatic
             <span style="flex: 1 1 auto"></span>
-            <mat-radio-button [color]="display.palette" [checked]="connection.auto" (change)="connection.auto = $event.value" [value]="true"></mat-radio-button>
+            <mat-radio-button [color]="display.palette" [checked]="connection.auto"></mat-radio-button>
+            <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
-        <mat-divider class="settings-divider"></mat-divider>
-        <mat-list-item>
+        <mat-list-item matRipple (click)="connection.auto = false" style="cursor: pointer;">
             Manual
             <span style="flex: 1 1 auto"></span>
-            <mat-radio-button [color]="display.palette" [checked]="!connection.auto" (change)="connection.auto = $event.value" [value]="false"></mat-radio-button>
+            <mat-radio-button [color]="display.palette" [checked]="!connection.auto"></mat-radio-button>
         </mat-list-item>
     </mat-card>
     <br>
@@ -19,11 +19,13 @@
             Serial Port
             <span style="flex: 1 1 auto"></span>
             <input matInput class="settings-input" [(ngModel)]="connection.parameters.portstr" placeholder="None"/>
+            <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
         <mat-list-item>
             Baudrate
             <span style="flex: 1 1 auto"></span>
             <input matInput class="settings-input" [(ngModel)]="connection.parameters.baudrate" placeholder="None"/>
+            <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
         <mat-list-item>
             Protocol

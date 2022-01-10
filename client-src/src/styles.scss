@@ -48,3 +48,8 @@ body {
     background: mat-color($theme-primary);
     border-radius: 10px;
 }
+
+.app-divider {
+    margin-left: 15px !important;
+    max-width: calc(100% - 15px);
+}

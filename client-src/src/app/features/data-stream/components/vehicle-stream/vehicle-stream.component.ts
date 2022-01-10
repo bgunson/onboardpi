@@ -30,16 +30,8 @@ export class VehicleStreamComponent implements OnInit, OnDestroy {
 
   constructor(private obd: OBDService, public display: DisplayService) { }
 
-  isNumber(value: any): boolean {
-    return !isNaN(value);
-  }
-
-  isString(value: any): boolean {
-    return typeof value === 'string';
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value.toLowerCase().trim();
+  applyFilter(event: HTMLInputElement) {
+    const filterValue = event.value.toLocaleLowerCase().trim();
     this.filteredCommands$ = this.commands$
       .then(commands => {
         return commands.filter(cmd => cmd.name.toLowerCase().includes(filterValue) || cmd.desc.toLowerCase().includes(filterValue));
@@ -55,7 +47,6 @@ export class VehicleStreamComponent implements OnInit, OnDestroy {
       let modeOne: OBDCommand[] = all[1];
       this.watchList = modeOne.map(cmd => cmd.name);
       this.obd.watch(this.watchList);
-      this.unwatchSub = this.obd.unwatched.subscribe(() => this.obd.watch(this.watchList));
       return modeOne;
     });
     this.filteredCommands$ = this.commands$;

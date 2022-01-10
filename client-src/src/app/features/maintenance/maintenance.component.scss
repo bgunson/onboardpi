@@ -1,12 +1,18 @@
+.top {
+    width: 100%;
+}
+
 .table {
     width: 100%;
     min-width: 800px;
     border-radius: 5px;
 }
-  
+
+
 .table-div {
     overflow-x: auto;
     border-radius: 5px;
+    width: 100%;
 }
 
 td {

@@ -110,9 +110,6 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
       this.obd.watch(this.watchList);
     }));
 
-    // Subscribe to unwatch events so we can re-watch the dashboard
-    this.subscriptions.add(this.obd.unwatched.subscribe(() => this.watchList ? this.obd.watch(this.watchList) : null));
-
     // Subscribe to the action button click event
     this.subscriptions.add(this.action.actionClick.subscribe(() => {
        this.dialog.open(CardFormComponent, {

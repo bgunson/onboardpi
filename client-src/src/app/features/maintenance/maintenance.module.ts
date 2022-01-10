@@ -14,6 +14,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSortModule } from '@angular/material/sort';
 import { RecordFormComponent } from './components/record-form/record-form.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SharedModule } from 'src/app/shared/shared.module';
 // import { MaintenanceRoutingModule } from './maintenance-routing.module';
 
 
@@ -22,6 +23,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   declarations: [MaintenanceComponent, RecordFormComponent],
   imports: [
     CommonModule,
+    SharedModule,
     // MaintenanceRoutingModule,
     MatButtonModule,
     MatDialogModule,

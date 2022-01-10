@@ -1,0 +1,7 @@
+<mat-form-field 
+    appearance="outline"
+    [ngStyle]="style">
+    <!-- <mat-label>Outline form field</mat-label> -->
+    <input matInput (keyup)="emitFilter($event)" placeholder="Filter">
+    <mat-icon matSuffix>search</mat-icon>
+</mat-form-field>

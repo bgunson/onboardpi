@@ -13,6 +13,6 @@
             "baudrate": null,
             "protocol": null
         },
-        "log_level": "WARNING"
+        "log_level": "INFO"
     }
 }

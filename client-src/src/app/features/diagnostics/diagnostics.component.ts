@@ -25,7 +25,6 @@ export class DiagnosticsComponent implements OnInit, OnDestroy {
 
   dtcs$: Observable<any>;
   carConnected$: Observable<boolean>;
-  unwatchSub: Subscription = new Subscription();
 
   constructor(
     private obd: OBDService, 
@@ -41,14 +40,11 @@ export class DiagnosticsComponent implements OnInit, OnDestroy {
     this.carConnected$ = this.obd.isConnected();
     this.obd.watch(this.diagnosticCmds);
 
-    this.unwatchSub = this.obd.unwatched.subscribe(() => this.obd.watch(this.diagnosticCmds));
-
     this.dtcs$ = this.obd.getWatching();
   }
 
   ngOnDestroy() {
     this.obd.unwatch(this.diagnosticCmds);
-    this.unwatchSub.unsubscribe();
   }
 
 }

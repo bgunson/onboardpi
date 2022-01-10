@@ -20,20 +20,20 @@
             Year
             <span style="flex: 1 1 auto"></span>
             <input matInput class="settings-input" [(ngModel)]="settings.vehicle.year" placeholder="None"/>
+            <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
-        <mat-divider [inset]="true" class="settings-divider"></mat-divider>
         <mat-list-item>
             Make
             <span style="flex: 1 1 auto"></span>
             <input matInput class="settings-input" [(ngModel)]="settings.vehicle.make" placeholder="None"/>
+            <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
-        <mat-divider [inset]="true" class="settings-divider"></mat-divider>
         <mat-list-item>
             Model
             <span style="flex: 1 1 auto"></span>
             <input matInput class="settings-input" [(ngModel)]="settings.vehicle.model" placeholder="None"/>
+            <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
-        <mat-divider [inset]="true" [inset]="true" class="settings-divider"></mat-divider>
         <mat-list-item>
             VIN#
             <span style="flex: 1 1 auto"></span>
@@ -48,8 +48,8 @@
             Parameters
             <span style="flex: 1 1 auto"></span>
             <span style="color:grey">{{ settings.connection.auto ? 'Automatic' : 'Manual' }}<mat-icon style="vertical-align: middle;">chevron_right</mat-icon></span>
+            <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
-        <mat-divider [inset]="true" class="settings-divider"></mat-divider>
         <mat-list-item routerLink="log-level" matRipple style="cursor: pointer;">
             Log Level
             <span style="flex: 1 1 auto"></span>
