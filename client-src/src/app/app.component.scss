@@ -1,6 +1,7 @@
 .sidenav-container {
     height: 100vh;
     overflow: hidden;
+    padding-top: env(safe-area-inset-top);
     // min-height: calc(100% + env(safe-area-inset-top));
 }
 

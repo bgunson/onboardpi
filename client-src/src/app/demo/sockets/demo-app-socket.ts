@@ -53,8 +53,10 @@ export class DemoAppSocket extends DemoSocket {
     'dashboard_cards:update': (args: any[]) => this.update(args[0], 'dashboard_cards'),
     'dashboard_cards:create': (args: any[]) => this.create(args[0], 'dashboard_cards'),
     'dashboard_cards:delete': (args: any[]) => this.delete(args[0], 'dashboard_cards'),
-    'dashboard_cards:reorder': (args: any[]) => this.update(args[0], 'dashboard_cards'),
-
+    'dashboard_cards:reorder': (args: any[]) => {
+      this._crud['dashboard_cards'].next((args[0])); 
+      localStorage.setItem('dashboard_cards', JSON.stringify(this._crud['dashboard_cards'].getValue())) 
+    },
     'maintenance:update': (args: any[]) => this.update(args[0], 'maintenance'),
     'maintenance:create': (args: any[]) => this.create(args[0], 'maintenance'),
     'maintenance:delete': (args: any[]) => this.delete(args[0], 'maintenance')
@@ -65,6 +67,7 @@ export class DemoAppSocket extends DemoSocket {
     super();
     console.log("Demo App socket created.")
   }
+
 
   create(item: MaintenanceRecord | DashboardCard, crudList: string) {
     let list: BehaviorSubject<any[]> = this._crud[crudList];

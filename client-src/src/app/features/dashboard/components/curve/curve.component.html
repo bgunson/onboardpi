@@ -1,7 +1,7 @@
 <mat-card-title class="card-title" *ngIf="live$ | async as live">
     {{ live.command.desc }}
     <div class="curve-live" *ngIf="live$ | async as value">
-        <span class="curve-live-value">{{ value.value | number:'1.0-0' }}</span>
+        <span class="curve-live-value">{{ value.value | obdValue:'1.0-0' }}</span>
         <br>
         <span>{{ value.unit | prettyUnit }}</span>
     </div>   
