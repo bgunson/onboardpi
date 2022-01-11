@@ -1,7 +1,9 @@
 <mat-form-field 
     appearance="outline"
     [ngStyle]="style">
-    <!-- <mat-label>Outline form field</mat-label> -->
-    <input matInput (keyup)="emitFilter($event)" placeholder="Filter">
-    <mat-icon matSuffix>search</mat-icon>
+    <mat-label *ngIf="label">{{ label }}</mat-label>
+    <input matInput type="text" [value]="value" (keyup)="emitFilter($event)" [placeholder]="placeholder || 'Filter'">
+    <button matSuffix mat-icon-button [color]="value.length ? 'warn' : ''" (click)="clearFilter()">
+        <mat-icon matSuffix>{{ value.length ? 'clear' : 'search' }}</mat-icon>
+    </button>
 </mat-form-field>

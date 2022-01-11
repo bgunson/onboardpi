@@ -32,7 +32,7 @@ export class DemoAppSocket extends DemoSocket {
       info.mem.active = this.generateValue(snapshot.mem.active);
 
       info.network.forEach(iface => {
-        iface.rx_sec = this.generateValue(iface.rx_bytes);
+        iface.rx_sec = this.generateValue(iface.rx_sec);
         iface.tx_sec = this.generateValue(iface.tx_sec);
       });
       return info;
@@ -53,6 +53,7 @@ export class DemoAppSocket extends DemoSocket {
     'dashboard_cards:update': (args: any[]) => this.update(args[0], 'dashboard_cards'),
     'dashboard_cards:create': (args: any[]) => this.create(args[0], 'dashboard_cards'),
     'dashboard_cards:delete': (args: any[]) => this.delete(args[0], 'dashboard_cards'),
+    'dashboard_cards:reorder': (args: any[]) => this.update(args[0], 'dashboard_cards'),
 
     'maintenance:update': (args: any[]) => this.update(args[0], 'maintenance'),
     'maintenance:create': (args: any[]) => this.create(args[0], 'maintenance'),
@@ -62,6 +63,7 @@ export class DemoAppSocket extends DemoSocket {
   
   constructor(args: any) {
     super();
+    console.log("Demo App socket created.")
   }
 
   create(item: MaintenanceRecord | DashboardCard, crudList: string) {

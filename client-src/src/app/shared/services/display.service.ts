@@ -32,9 +32,7 @@ export class DisplayService {
   constructor(
     private breakpointObserver: BreakpointObserver,
     private overlay: OverlayContainer
-  ) {
-    console.log(window.navigator)
-  }
+  ) { }
 
   setTheme(theme: string) : void {
     this.overlay.getContainerElement().classList.remove('dark-theme');

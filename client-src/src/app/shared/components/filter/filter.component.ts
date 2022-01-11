@@ -7,16 +7,25 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class FilterComponent implements OnInit {
 
-  @Output() keyup = new EventEmitter<HTMLInputElement>();
+  @Output() keyup = new EventEmitter<string>();
   @Input() size: number;
+  @Input() placeholder: string;
+  @Input() label: string;
 
   style: { [klass: string]: any; } | null;
+
+  value = '';
 
   constructor() { }
 
   emitFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement);
-    this.keyup.emit(filterValue);
+    this.value = (event.target as HTMLInputElement).value;
+    this.keyup.emit(this.value);
+  }
+
+  clearFilter() {
+    this.value = '';
+    this.keyup.emit('');
   }
 
   ngOnInit(): void {

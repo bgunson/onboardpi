@@ -5,6 +5,7 @@ import { FilterComponent } from './components/filter/filter.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 
 
@@ -14,13 +15,14 @@ import { MatIconModule } from '@angular/material/icon';
     PrettyUnitPipe,
     RoundPipe,
     OBDValuePipe,
-    FilterComponent
+    FilterComponent,
   ],
   imports: [
     CommonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatIconModule
+    MatIconModule,
+    MatButtonModule
   ],
   exports: [
     BytesPipe,

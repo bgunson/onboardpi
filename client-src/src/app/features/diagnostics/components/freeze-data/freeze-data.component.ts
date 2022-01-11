@@ -22,8 +22,8 @@ export class FreezeDataComponent implements OnInit, OnDestroy {
 
   constructor(private obd: OBDService, public display: DisplayService) { }
 
-  applyFilter(event: HTMLInputElement) {
-    const filterValue = event.value.toLocaleLowerCase().trim();
+  applyFilter(value: string) {
+    const filterValue = value.toLocaleLowerCase().trim();
     this.filteredCommands$ = this.commands$
       .then(commands => {
         return commands.filter(cmd => cmd.name.toLowerCase().includes(filterValue) || cmd.desc.toLowerCase().includes(filterValue));

@@ -34,8 +34,8 @@ export class DemoOBDSocket extends DemoSocket {
     );
 
     oneTimeEvents: { [event: string]: Promise<any> } = {
-        'port_name': new Promise<string>(resolve => resolve('/dev/demo/port')),
-        'protocol_name': new Promise<string>(resolve => resolve('DEMO')),
+        'port_name': Promise.resolve('/dev/demo/port'),
+        'protocol_name': Promise.resolve('DEMO'),
         'all_commands': this.get<OBDCommand[]>(environment.dataURL + '/obd/all_commands.json').toPromise(),
         'supported_commands': this.get(environment.dataURL + '/obd/supported_commands.json').toPromise()
     }
@@ -53,6 +53,7 @@ export class DemoOBDSocket extends DemoSocket {
 
     constructor(args: any) {
         super();
+        console.log("Demo OBD socket created")
     }
 
     getSnapshot(): Observable<ResponseSet> {

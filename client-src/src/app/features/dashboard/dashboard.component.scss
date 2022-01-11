@@ -132,3 +132,23 @@
         font-size: 9vw;
     }
 }
+
+
+.cdk-drop-list {
+    height: 100%;
+    width: 100%;
+  }
+  
+  
+  .cdk-drag-preview {
+    box-sizing: border-box;
+    opacity: 0.5;
+  }
+  
+  .cdk-drag-animating {
+    transition: unset;
+  }
+  
+  .cdk-drag-placeholder {
+    display: none;
+  }

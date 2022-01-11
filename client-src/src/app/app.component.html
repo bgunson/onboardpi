@@ -36,6 +36,9 @@
                 <mat-list-item (click)="back()" *ngIf="route">
                     <mat-icon mat-list-icon >chevron_left</mat-icon>
                 </mat-list-item>
+                <mat-list-item (click)="refresh()" *ngIf="!(display.isHandset$ | async)">
+                    <mat-icon mat-list-icon >refresh</mat-icon>
+                </mat-list-item>
                 <mat-list-item [ngClass]="{ 'bottom' : (display.isHandset$ | async) }" *ngIf="action.icon | async as icon" (click)="action.click()">
                     <mat-icon mat-list-icon>{{ icon }}</mat-icon>
                 </mat-list-item>

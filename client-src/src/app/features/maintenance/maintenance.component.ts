@@ -33,8 +33,8 @@ export class MaintenanceComponent implements OnInit, OnDestroy {
     public display: DisplayService
   ) { }
 
-  applyFilter(event: HTMLInputElement) {
-    const filterValue = event.value.toLowerCase().trim();
+  applyFilter(value: string) {
+    const filterValue = value.toLowerCase().trim();
     this.dataSource.filter = filterValue;
   }
 

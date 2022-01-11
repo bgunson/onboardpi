@@ -1,12 +1,30 @@
-<mat-grid-list
+<!-- <mat-grid-list
     *ngIf="vehicleConnected$ | async"
     [cols]="dashboardService.numCols"
     [rowHeight]="dashboardService.rowHeight" 
     cdkDropList 
     [cdkDropListData]="dashboard"
     (cdkDropListDropped)="drop($event)">
-        <mat-grid-tile #tile matCard *ngFor="let card of dashboard; trackBy:track; let i = index" [colspan]="getColspan(card)" [rowspan]="getRowspan(card)">
-            <mat-card class="card" cdkDrag cdkDragPreviewContainer="parent">
+    <mat-grid-tile #tile matCard *ngFor="let card of dashboard; trackBy:track; let i = index" [colspan]="getColspan(card)" [rowspan]="getRowspan(card)">
+        <mat-card class="card" cdkDrag cdkDragPreviewContainer="parent">
+            <mat-icon class="drag-handle" (click)="edit(card)" cdkDragHandle>drag_indicator</mat-icon>
+            <dashboard-gauge 
+                *ngIf="isGauge(card)" 
+                [card]="card">
+            </dashboard-gauge>
+            <dashboard-curve *ngIf="card.type === 'curve'" [card]="card"></dashboard-curve>
+            <dashboard-numeric *ngIf="card.type === 'numeric'" [card]="card"></dashboard-numeric>
+        </mat-card>
+    </mat-grid-tile>
+</mat-grid-list> -->
+
+<mat-grid-list
+    *ngIf="vehicleConnected$ | async"
+    [cols]="dashboardService.numCols"
+    [rowHeight]="dashboardService.rowHeight" >
+    <mat-grid-tile #tile matCard *ngFor="let card of dashboard; trackBy:track; let i = index" [colspan]="getColspan(card)" [rowspan]="getRowspan(card)">
+        <cdk-drop-list [cdkDropListConnectedTo]="drops" [cdkDropListData]="i" (cdkDropListDropped)="drop($event)">
+            <mat-card class="card" cdkDragPreviewContainer="parent" cdkDrag (cdkDragEntered)="entered($event)" [cdkDragData]="i">
                 <mat-icon class="drag-handle" (click)="edit(card)" cdkDragHandle>drag_indicator</mat-icon>
                 <dashboard-gauge 
                     *ngIf="isGauge(card)" 
@@ -15,8 +33,10 @@
                 <dashboard-curve *ngIf="card.type === 'curve'" [card]="card"></dashboard-curve>
                 <dashboard-numeric *ngIf="card.type === 'numeric'" [card]="card"></dashboard-numeric>
             </mat-card>
-        </mat-grid-tile>
+        </cdk-drop-list>
+    </mat-grid-tile>
 </mat-grid-list>
+
 
 <ng-container *ngIf="!(vehicleConnected$ | async)">
     <div style="text-align: center; margin-top: 25vh;">

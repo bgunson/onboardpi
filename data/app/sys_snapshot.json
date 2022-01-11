@@ -12,11 +12,11 @@
     },
     "network": [
       {
-        "iface": "enp42s0",
-        "ifaceName": "enp42s0",
-        "ip4": "192.168.1.101",
+        "iface": "wlan0",
+        "ifaceName": "wlan0",
+        "ip4": "10.0.0.5",
         "ip4subnet": "255.255.255.0",
-        "ip6": "2001:56a:74da:1100:56bb:73c0:fc75:a8f6",
+        "ip6": "",
         "ip6subnet": "ffff:ffff:ffff:ffff::",
         "mac": "12:34:56:78:90",
         "internal": false,
@@ -38,7 +38,7 @@
         "tx_dropped": 0,
         "tx_errors": 0,
         "rx_sec": 58.59375,
-        "tx_sec": 0,
+        "tx_sec": 34.654,
         "ms": 1024
       }
     ],

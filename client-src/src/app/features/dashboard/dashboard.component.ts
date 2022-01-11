@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { DisplayService } from 'src/app/shared/services/display.service';
 import { ActionService } from 'src/app/shared/services/action.service';
 import { OBDService } from 'src/app/shared/services/obd.service';
 import { DashboardCard } from './models/dashboard.model';
 import { DashboardService } from './services/dashboard.service';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDragEnter, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
 import { CardFormComponent } from './components/card-form/card-form.component';
 
@@ -29,6 +29,11 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   config: any;
 
   numCols: number = 2;
+
+
+  @ViewChildren(CdkDropList) dropsQuery: QueryList<CdkDropList>;
+
+  drops: CdkDropList[];
 
   constructor(
     private obd: OBDService, 
@@ -81,18 +86,26 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
   
-  drop(event: CdkDragDrop<DashboardCard[]>) {
-    moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    this.dashboard.forEach((card, index) => {
-      card.index = index;
-    });
+  drop(event: CdkDragDrop<any>) {
+    this.dashboard.forEach((card, i) => card.index = i);
     this.dashboardService.updateDashboard(this.dashboard);
   }
 
+  entered($event: CdkDragEnter) {
+    moveItemInArray(this.dashboard, $event.item.data, $event.container.data);
+  }
+  
 
   ngAfterViewInit(): void {
+    this.dropsQuery.changes.subscribe(() => {
+      this.drops = this.dropsQuery.toArray()
+    })
+    Promise.resolve().then(() => {
+      this.drops = this.dropsQuery.toArray();
+    })
   }
-  test: boolean;
+
+
   ngOnInit(): void {
     this.action.setAction('dashboard_customize');
     this.setDimensions();

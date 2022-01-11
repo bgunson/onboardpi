@@ -21,7 +21,7 @@
         </mat-card>
 
         <!-- move to lookup module -->
-        <!-- <div mat-subheader><mat-icon>directions_car</mat-icon>&nbsp;OBD Connection</div>
+        <div mat-subheader><mat-icon>directions_car</mat-icon>&nbsp;OBD Connection</div>
         <mat-card style="padding: 0px;" class="mat-elevation-z2">
             <mat-list-item>
                 Protocol<span style="flex: 1 1 auto"></span>{{ protocolName$ | async }}
@@ -29,7 +29,7 @@
             <mat-list-item>
                 Port<span style="flex: 1 1 auto"></span>{{ portName$ | async }}
             </mat-list-item>
-            <mat-expansion-panel matListItem *ngIf="supportedCmds$ | async as supported" class="mat-elevation-z0"  style="width: 100%;" [disabled]="!supported.length">
+            <!-- <mat-expansion-panel matListItem *ngIf="supportedCmds$ | async as supported" class="mat-elevation-z0"  style="width: 100%;" [disabled]="!supported.length">
                 <mat-expansion-panel-header style="padding: 0px; padding-right: 10px;">
                     <mat-panel-title style="margin-left: 15px;">
                         Supported Commands
@@ -38,8 +38,8 @@
                 <mat-list dense>
                     <mat-list-item *ngFor="let cmd of supported">{{ cmd.desc }}</mat-list-item>
                 </mat-list>
-            </mat-expansion-panel>
-        </mat-card> -->
+            </mat-expansion-panel> -->
+        </mat-card>
     </mat-list>
     
 </ng-container>

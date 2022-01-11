@@ -21,6 +21,7 @@
     "@angular/platform-browser": "~12.2.0",
     "@angular/platform-browser-dynamic": "~12.2.0",
     "@angular/router": "~12.2.0",
+    "@angular/service-worker": "~12.2.0",
     "date-fns": "^2.26.0",
     "material-icons": "^1.2.1",
     "ngx-gauge": "^4.0.0",

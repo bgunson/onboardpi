@@ -1,0 +1,1700 @@
+{
+  "PIDS_A": {
+    "name": "PIDS_A",
+    "desc": "Supported PIDs [01-20]",
+    "decoder": "pid",
+    "mode": 1
+  },
+  "STATUS": {
+    "name": "STATUS",
+    "desc": "Status since DTCs cleared",
+    "decoder": "status",
+    "mode": 1
+  },
+  "FREEZE_DTC": {
+    "name": "FREEZE_DTC",
+    "desc": "DTC that triggered the freeze frame",
+    "decoder": "single_dtc",
+    "mode": 1
+  },
+  "FUEL_STATUS": {
+    "name": "FUEL_STATUS",
+    "desc": "Fuel System Status",
+    "decoder": "fuel_status",
+    "mode": 1
+  },
+  "ENGINE_LOAD": {
+    "name": "ENGINE_LOAD",
+    "desc": "Calculated Engine Load",
+    "decoder": "percent",
+    "mode": 1
+  },
+  "COOLANT_TEMP": {
+    "name": "COOLANT_TEMP",
+    "desc": "Engine Coolant Temperature",
+    "decoder": "temp",
+    "mode": 1
+  },
+  "SHORT_FUEL_TRIM_1": {
+    "name": "SHORT_FUEL_TRIM_1",
+    "desc": "Short Term Fuel Trim - Bank 1",
+    "decoder": "percent_centered",
+    "mode": 1
+  },
+  "LONG_FUEL_TRIM_1": {
+    "name": "LONG_FUEL_TRIM_1",
+    "desc": "Long Term Fuel Trim - Bank 1",
+    "decoder": "percent_centered",
+    "mode": 1
+  },
+  "SHORT_FUEL_TRIM_2": {
+    "name": "SHORT_FUEL_TRIM_2",
+    "desc": "Short Term Fuel Trim - Bank 2",
+    "decoder": "percent_centered",
+    "mode": 1
+  },
+  "LONG_FUEL_TRIM_2": {
+    "name": "LONG_FUEL_TRIM_2",
+    "desc": "Long Term Fuel Trim - Bank 2",
+    "decoder": "percent_centered",
+    "mode": 1
+  },
+  "FUEL_PRESSURE": {
+    "name": "FUEL_PRESSURE",
+    "desc": "Fuel Pressure",
+    "decoder": "fuel_pressure",
+    "mode": 1
+  },
+  "INTAKE_PRESSURE": {
+    "name": "INTAKE_PRESSURE",
+    "desc": "Intake Manifold Pressure",
+    "decoder": "pressure",
+    "mode": 1
+  },
+  "RPM": {
+    "name": "RPM",
+    "desc": "Engine RPM",
+    "decoder": "rpm",
+    "mode": 1
+  },
+  "SPEED": {
+    "name": "SPEED",
+    "desc": "Vehicle Speed",
+    "decoder": "kph",
+    "mode": 1
+  },
+  "TIMING_ADVANCE": {
+    "name": "TIMING_ADVANCE",
+    "desc": "Timing Advance",
+    "decoder": "timing_advance",
+    "mode": 1
+  },
+  "INTAKE_TEMP": {
+    "name": "INTAKE_TEMP",
+    "desc": "Intake Air Temp",
+    "decoder": "temp",
+    "mode": 1
+  },
+  "MAF": {
+    "name": "MAF",
+    "desc": "Air Flow Rate (MAF)",
+    "decoder": "grams_per_second",
+    "mode": 1
+  },
+  "THROTTLE_POS": {
+    "name": "THROTTLE_POS",
+    "desc": "Throttle Position",
+    "decoder": "percent",
+    "mode": 1
+  },
+  "AIR_STATUS": {
+    "name": "AIR_STATUS",
+    "desc": "Secondary Air Status",
+    "decoder": "air_status",
+    "mode": 1
+  },
+  "O2_SENSORS": {
+    "name": "O2_SENSORS",
+    "desc": "O2 Sensors Present",
+    "decoder": "o2_sensors",
+    "mode": 1
+  },
+  "O2_B1S1": {
+    "name": "O2_B1S1",
+    "desc": "O2: Bank 1 - Sensor 1 Voltage",
+    "decoder": "sensor_voltage",
+    "mode": 1
+  },
+  "O2_B1S2": {
+    "name": "O2_B1S2",
+    "desc": "O2: Bank 1 - Sensor 2 Voltage",
+    "decoder": "sensor_voltage",
+    "mode": 1
+  },
+  "O2_B1S3": {
+    "name": "O2_B1S3",
+    "desc": "O2: Bank 1 - Sensor 3 Voltage",
+    "decoder": "sensor_voltage",
+    "mode": 1
+  },
+  "O2_B1S4": {
+    "name": "O2_B1S4",
+    "desc": "O2: Bank 1 - Sensor 4 Voltage",
+    "decoder": "sensor_voltage",
+    "mode": 1
+  },
+  "O2_B2S1": {
+    "name": "O2_B2S1",
+    "desc": "O2: Bank 2 - Sensor 1 Voltage",
+    "decoder": "sensor_voltage",
+    "mode": 1
+  },
+  "O2_B2S2": {
+    "name": "O2_B2S2",
+    "desc": "O2: Bank 2 - Sensor 2 Voltage",
+    "decoder": "sensor_voltage",
+    "mode": 1
+  },
+  "O2_B2S3": {
+    "name": "O2_B2S3",
+    "desc": "O2: Bank 2 - Sensor 3 Voltage",
+    "decoder": "sensor_voltage",
+    "mode": 1
+  },
+  "O2_B2S4": {
+    "name": "O2_B2S4",
+    "desc": "O2: Bank 2 - Sensor 4 Voltage",
+    "decoder": "sensor_voltage",
+    "mode": 1
+  },
+  "OBD_COMPLIANCE": {
+    "name": "OBD_COMPLIANCE",
+    "desc": "OBD Standards Compliance",
+    "decoder": "obd_compliance",
+    "mode": 1
+  },
+  "O2_SENSORS_ALT": {
+    "name": "O2_SENSORS_ALT",
+    "desc": "O2 Sensors Present (alternate)",
+    "decoder": "o2_sensors_alt",
+    "mode": 1
+  },
+  "AUX_INPUT_STATUS": {
+    "name": "AUX_INPUT_STATUS",
+    "desc": "Auxiliary input status (power take off)",
+    "decoder": "aux_input_status",
+    "mode": 1
+  },
+  "RUN_TIME": {
+    "name": "RUN_TIME",
+    "desc": "Engine Run Time",
+    "decoder": "second",
+    "mode": 1
+  },
+  "PIDS_B": {
+    "name": "PIDS_B",
+    "desc": "Supported PIDs [21-40]",
+    "decoder": "pid",
+    "mode": 1
+  },
+  "DISTANCE_W_MIL": {
+    "name": "DISTANCE_W_MIL",
+    "desc": "Distance Traveled with MIL on",
+    "decoder": "kilometer",
+    "mode": 1
+  },
+  "FUEL_RAIL_PRESSURE_VAC": {
+    "name": "FUEL_RAIL_PRESSURE_VAC",
+    "desc": "Fuel Rail Pressure (relative to vacuum)",
+    "decoder": "kilopascal",
+    "mode": 1
+  },
+  "FUEL_RAIL_PRESSURE_DIRECT": {
+    "name": "FUEL_RAIL_PRESSURE_DIRECT",
+    "desc": "Fuel Rail Pressure (direct inject)",
+    "decoder": "kilopascal",
+    "mode": 1
+  },
+  "O2_S1_WR_VOLTAGE": {
+    "name": "O2_S1_WR_VOLTAGE",
+    "desc": "02 Sensor 1 WR Lambda Voltage",
+    "decoder": "sensor_voltage_big",
+    "mode": 1
+  },
+  "O2_S2_WR_VOLTAGE": {
+    "name": "O2_S2_WR_VOLTAGE",
+    "desc": "02 Sensor 2 WR Lambda Voltage",
+    "decoder": "sensor_voltage_big",
+    "mode": 1
+  },
+  "O2_S3_WR_VOLTAGE": {
+    "name": "O2_S3_WR_VOLTAGE",
+    "desc": "02 Sensor 3 WR Lambda Voltage",
+    "decoder": "sensor_voltage_big",
+    "mode": 1
+  },
+  "O2_S4_WR_VOLTAGE": {
+    "name": "O2_S4_WR_VOLTAGE",
+    "desc": "02 Sensor 4 WR Lambda Voltage",
+    "decoder": "sensor_voltage_big",
+    "mode": 1
+  },
+  "O2_S5_WR_VOLTAGE": {
+    "name": "O2_S5_WR_VOLTAGE",
+    "desc": "02 Sensor 5 WR Lambda Voltage",
+    "decoder": "sensor_voltage_big",
+    "mode": 1
+  },
+  "O2_S6_WR_VOLTAGE": {
+    "name": "O2_S6_WR_VOLTAGE",
+    "desc": "02 Sensor 6 WR Lambda Voltage",
+    "decoder": "sensor_voltage_big",
+    "mode": 1
+  },
+  "O2_S7_WR_VOLTAGE": {
+    "name": "O2_S7_WR_VOLTAGE",
+    "desc": "02 Sensor 7 WR Lambda Voltage",
+    "decoder": "sensor_voltage_big",
+    "mode": 1
+  },
+  "O2_S8_WR_VOLTAGE": {
+    "name": "O2_S8_WR_VOLTAGE",
+    "desc": "02 Sensor 8 WR Lambda Voltage",
+    "decoder": "sensor_voltage_big",
+    "mode": 1
+  },
+  "COMMANDED_EGR": {
+    "name": "COMMANDED_EGR",
+    "desc": "Commanded EGR",
+    "decoder": "percent",
+    "mode": 1
+  },
+  "EGR_ERROR": {
+    "name": "EGR_ERROR",
+    "desc": "EGR Error",
+    "decoder": "percent_centered",
+    "mode": 1
+  },
+  "EVAPORATIVE_PURGE": {
+    "name": "EVAPORATIVE_PURGE",
+    "desc": "Commanded Evaporative Purge",
+    "decoder": "percent",
+    "mode": 1
+  },
+  "FUEL_LEVEL": {
+    "name": "FUEL_LEVEL",
+    "desc": "Fuel Level Input",
+    "decoder": "percent",
+    "mode": 1
+  },
+  "WARMUPS_SINCE_DTC_CLEAR": {
+    "name": "WARMUPS_SINCE_DTC_CLEAR",
+    "desc": "Number of warm-ups since codes cleared",
+    "decoder": "count",
+    "mode": 1
+  },
+  "DISTANCE_SINCE_DTC_CLEAR": {
+    "name": "DISTANCE_SINCE_DTC_CLEAR",
+    "desc": "Distance traveled since codes cleared",
+    "decoder": "kilometer",
+    "mode": 1
+  },
+  "EVAP_VAPOR_PRESSURE": {
+    "name": "EVAP_VAPOR_PRESSURE",
+    "desc": "Evaporative system vapor pressure",
+    "decoder": "evap_pressure",
+    "mode": 1
+  },
+  "BAROMETRIC_PRESSURE": {
+    "name": "BAROMETRIC_PRESSURE",
+    "desc": "Barometric Pressure",
+    "decoder": "pressure",
+    "mode": 1
+  },
+  "O2_S1_WR_CURRENT": {
+    "name": "O2_S1_WR_CURRENT",
+    "desc": "02 Sensor 1 WR Lambda Current",
+    "decoder": "current_centered",
+    "mode": 1
+  },
+  "O2_S2_WR_CURRENT": {
+    "name": "O2_S2_WR_CURRENT",
+    "desc": "02 Sensor 2 WR Lambda Current",
+    "decoder": "current_centered",
+    "mode": 1
+  },
+  "O2_S3_WR_CURRENT": {
+    "name": "O2_S3_WR_CURRENT",
+    "desc": "02 Sensor 3 WR Lambda Current",
+    "decoder": "current_centered",
+    "mode": 1
+  },
+  "O2_S4_WR_CURRENT": {
+    "name": "O2_S4_WR_CURRENT",
+    "desc": "02 Sensor 4 WR Lambda Current",
+    "decoder": "current_centered",
+    "mode": 1
+  },
+  "O2_S5_WR_CURRENT": {
+    "name": "O2_S5_WR_CURRENT",
+    "desc": "02 Sensor 5 WR Lambda Current",
+    "decoder": "current_centered",
+    "mode": 1
+  },
+  "O2_S6_WR_CURRENT": {
+    "name": "O2_S6_WR_CURRENT",
+    "desc": "02 Sensor 6 WR Lambda Current",
+    "decoder": "current_centered",
+    "mode": 1
+  },
+  "O2_S7_WR_CURRENT": {
+    "name": "O2_S7_WR_CURRENT",
+    "desc": "02 Sensor 7 WR Lambda Current",
+    "decoder": "current_centered",
+    "mode": 1
+  },
+  "O2_S8_WR_CURRENT": {
+    "name": "O2_S8_WR_CURRENT",
+    "desc": "02 Sensor 8 WR Lambda Current",
+    "decoder": "current_centered",
+    "mode": 1
+  },
+  "CATALYST_TEMP_B1S1": {
+    "name": "CATALYST_TEMP_B1S1",
+    "desc": "Catalyst Temperature: Bank 1 - Sensor 1",
+    "decoder": "celcius",
+    "mode": 1
+  },
+  "CATALYST_TEMP_B2S1": {
+    "name": "CATALYST_TEMP_B2S1",
+    "desc": "Catalyst Temperature: Bank 2 - Sensor 1",
+    "decoder": "celcius",
+    "mode": 1
+  },
+  "CATALYST_TEMP_B1S2": {
+    "name": "CATALYST_TEMP_B1S2",
+    "desc": "Catalyst Temperature: Bank 1 - Sensor 2",
+    "decoder": "celcius",
+    "mode": 1
+  },
+  "CATALYST_TEMP_B2S2": {
+    "name": "CATALYST_TEMP_B2S2",
+    "desc": "Catalyst Temperature: Bank 2 - Sensor 2",
+    "decoder": "celcius",
+    "mode": 1
+  },
+  "PIDS_C": {
+    "name": "PIDS_C",
+    "desc": "Supported PIDs [41-60]",
+    "decoder": "pid",
+    "mode": 1
+  },
+  "STATUS_DRIVE_CYCLE": {
+    "name": "STATUS_DRIVE_CYCLE",
+    "desc": "Monitor status this drive cycle",
+    "decoder": "status",
+    "mode": 1
+  },
+  "CONTROL_MODULE_VOLTAGE": {
+    "name": "CONTROL_MODULE_VOLTAGE",
+    "desc": "Control module voltage",
+    "decoder": "volt",
+    "mode": 1
+  },
+  "ABSOLUTE_LOAD": {
+    "name": "ABSOLUTE_LOAD",
+    "desc": "Absolute load value",
+    "decoder": "absolute_load",
+    "mode": 1
+  },
+  "COMMANDED_EQUIV_RATIO": {
+    "name": "COMMANDED_EQUIV_RATIO",
+    "desc": "Commanded equivalence ratio",
+    "decoder": "ratio",
+    "mode": 1
+  },
+  "RELATIVE_THROTTLE_POS": {
+    "name": "RELATIVE_THROTTLE_POS",
+    "desc": "Relative throttle position",
+    "decoder": "percent",
+    "mode": 1
+  },
+  "AMBIANT_AIR_TEMP": {
+    "name": "AMBIANT_AIR_TEMP",
+    "desc": "Ambient air temperature",
+    "decoder": "temp",
+    "mode": 1
+  },
+  "THROTTLE_POS_B": {
+    "name": "THROTTLE_POS_B",
+    "desc": "Absolute throttle position B",
+    "decoder": "percent",
+    "mode": 1
+  },
+  "THROTTLE_POS_C": {
+    "name": "THROTTLE_POS_C",
+    "desc": "Absolute throttle position C",
+    "decoder": "percent",
+    "mode": 1
+  },
+  "ACCELERATOR_POS_D": {
+    "name": "ACCELERATOR_POS_D",
+    "desc": "Accelerator pedal position D",
+    "decoder": "percent",
+    "mode": 1
+  },
+  "ACCELERATOR_POS_E": {
+    "name": "ACCELERATOR_POS_E",
+    "desc": "Accelerator pedal position E",
+    "decoder": "percent",
+    "mode": 1
+  },
+  "ACCELERATOR_POS_F": {
+    "name": "ACCELERATOR_POS_F",
+    "desc": "Accelerator pedal position F",
+    "decoder": "percent",
+    "mode": 1
+  },
+  "THROTTLE_ACTUATOR": {
+    "name": "THROTTLE_ACTUATOR",
+    "desc": "Commanded throttle actuator",
+    "decoder": "percent",
+    "mode": 1
+  },
+  "RUN_TIME_MIL": {
+    "name": "RUN_TIME_MIL",
+    "desc": "Time run with MIL on",
+    "decoder": "minute",
+    "mode": 1
+  },
+  "TIME_SINCE_DTC_CLEARED": {
+    "name": "TIME_SINCE_DTC_CLEARED",
+    "desc": "Time since trouble codes cleared",
+    "decoder": "minute",
+    "mode": 1
+  },
+  "MAX_VALUES": {
+    "name": "MAX_VALUES",
+    "desc": "Various Max values",
+    "decoder": "drop",
+    "mode": 1
+  },
+  "MAX_MAF": {
+    "name": "MAX_MAF",
+    "desc": "Maximum value for mass air flow sensor",
+    "decoder": "max_maf",
+    "mode": 1
+  },
+  "FUEL_TYPE": {
+    "name": "FUEL_TYPE",
+    "desc": "Fuel Type",
+    "decoder": "fuel_type",
+    "mode": 1
+  },
+  "ETHANOL_PERCENT": {
+    "name": "ETHANOL_PERCENT",
+    "desc": "Ethanol Fuel Percent",
+    "decoder": "percent",
+    "mode": 1
+  },
+  "EVAP_VAPOR_PRESSURE_ABS": {
+    "name": "EVAP_VAPOR_PRESSURE_ABS",
+    "desc": "Absolute Evap system Vapor Pressure",
+    "decoder": "abs_evap_pressure",
+    "mode": 1
+  },
+  "EVAP_VAPOR_PRESSURE_ALT": {
+    "name": "EVAP_VAPOR_PRESSURE_ALT",
+    "desc": "Evap system vapor pressure",
+    "decoder": "evap_pressure_alt",
+    "mode": 1
+  },
+  "SHORT_O2_TRIM_B1": {
+    "name": "SHORT_O2_TRIM_B1",
+    "desc": "Short term secondary O2 trim - Bank 1",
+    "decoder": "percent_centered",
+    "mode": 1
+  },
+  "LONG_O2_TRIM_B1": {
+    "name": "LONG_O2_TRIM_B1",
+    "desc": "Long term secondary O2 trim - Bank 1",
+    "decoder": "percent_centered",
+    "mode": 1
+  },
+  "SHORT_O2_TRIM_B2": {
+    "name": "SHORT_O2_TRIM_B2",
+    "desc": "Short term secondary O2 trim - Bank 2",
+    "decoder": "percent_centered",
+    "mode": 1
+  },
+  "LONG_O2_TRIM_B2": {
+    "name": "LONG_O2_TRIM_B2",
+    "desc": "Long term secondary O2 trim - Bank 2",
+    "decoder": "percent_centered",
+    "mode": 1
+  },
+  "FUEL_RAIL_PRESSURE_ABS": {
+    "name": "FUEL_RAIL_PRESSURE_ABS",
+    "desc": "Fuel rail pressure (absolute)",
+    "decoder": "kilopascal",
+    "mode": 1
+  },
+  "RELATIVE_ACCEL_POS": {
+    "name": "RELATIVE_ACCEL_POS",
+    "desc": "Relative accelerator pedal position",
+    "decoder": "percent",
+    "mode": 1
+  },
+  "HYBRID_BATTERY_REMAINING": {
+    "name": "HYBRID_BATTERY_REMAINING",
+    "desc": "Hybrid battery pack remaining life",
+    "decoder": "percent",
+    "mode": 1
+  },
+  "OIL_TEMP": {
+    "name": "OIL_TEMP",
+    "desc": "Engine oil temperature",
+    "decoder": "temp",
+    "mode": 1
+  },
+  "FUEL_INJECT_TIMING": {
+    "name": "FUEL_INJECT_TIMING",
+    "desc": "Fuel injection timing",
+    "decoder": "inject_timing",
+    "mode": 1
+  },
+  "FUEL_RATE": {
+    "name": "FUEL_RATE",
+    "desc": "Engine fuel rate",
+    "decoder": "fuel_rate",
+    "mode": 1
+  },
+  "EMISSION_REQ": {
+    "name": "EMISSION_REQ",
+    "desc": "Designed emission requirements",
+    "decoder": "drop",
+    "mode": 1
+  },
+  "DTC_PIDS_A": {
+    "name": "DTC_PIDS_A",
+    "desc": "DTC Supported PIDs [01-20]",
+    "decoder": "drop",
+    "mode": 2
+  },
+  "DTC_STATUS": {
+    "name": "DTC_STATUS",
+    "desc": "DTC Status since DTCs cleared",
+    "decoder": "status",
+    "mode": 2
+  },
+  "DTC_FREEZE_DTC": {
+    "name": "DTC_FREEZE_DTC",
+    "desc": "DTC DTC that triggered the freeze frame",
+    "decoder": "single_dtc",
+    "mode": 2
+  },
+  "DTC_FUEL_STATUS": {
+    "name": "DTC_FUEL_STATUS",
+    "desc": "DTC Fuel System Status",
+    "decoder": "fuel_status",
+    "mode": 2
+  },
+  "DTC_ENGINE_LOAD": {
+    "name": "DTC_ENGINE_LOAD",
+    "desc": "DTC Calculated Engine Load",
+    "decoder": "percent",
+    "mode": 2
+  },
+  "DTC_COOLANT_TEMP": {
+    "name": "DTC_COOLANT_TEMP",
+    "desc": "DTC Engine Coolant Temperature",
+    "decoder": "temp",
+    "mode": 2
+  },
+  "DTC_SHORT_FUEL_TRIM_1": {
+    "name": "DTC_SHORT_FUEL_TRIM_1",
+    "desc": "DTC Short Term Fuel Trim - Bank 1",
+    "decoder": "percent_centered",
+    "mode": 2
+  },
+  "DTC_LONG_FUEL_TRIM_1": {
+    "name": "DTC_LONG_FUEL_TRIM_1",
+    "desc": "DTC Long Term Fuel Trim - Bank 1",
+    "decoder": "percent_centered",
+    "mode": 2
+  },
+  "DTC_SHORT_FUEL_TRIM_2": {
+    "name": "DTC_SHORT_FUEL_TRIM_2",
+    "desc": "DTC Short Term Fuel Trim - Bank 2",
+    "decoder": "percent_centered",
+    "mode": 2
+  },
+  "DTC_LONG_FUEL_TRIM_2": {
+    "name": "DTC_LONG_FUEL_TRIM_2",
+    "desc": "DTC Long Term Fuel Trim - Bank 2",
+    "decoder": "percent_centered",
+    "mode": 2
+  },
+  "DTC_FUEL_PRESSURE": {
+    "name": "DTC_FUEL_PRESSURE",
+    "desc": "DTC Fuel Pressure",
+    "decoder": "fuel_pressure",
+    "mode": 2
+  },
+  "DTC_INTAKE_PRESSURE": {
+    "name": "DTC_INTAKE_PRESSURE",
+    "desc": "DTC Intake Manifold Pressure",
+    "decoder": "pressure",
+    "mode": 2
+  },
+  "DTC_RPM": {
+    "name": "DTC_RPM",
+    "desc": "DTC Engine RPM",
+    "decoder": "rpm",
+    "mode": 2
+  },
+  "DTC_SPEED": {
+    "name": "DTC_SPEED",
+    "desc": "DTC Vehicle Speed",
+    "decoder": "kph",
+    "mode": 2
+  },
+  "DTC_TIMING_ADVANCE": {
+    "name": "DTC_TIMING_ADVANCE",
+    "desc": "DTC Timing Advance",
+    "decoder": "timing_advance",
+    "mode": 2
+  },
+  "DTC_INTAKE_TEMP": {
+    "name": "DTC_INTAKE_TEMP",
+    "desc": "DTC Intake Air Temp",
+    "decoder": "temp",
+    "mode": 2
+  },
+  "DTC_MAF": {
+    "name": "DTC_MAF",
+    "desc": "DTC Air Flow Rate (MAF)",
+    "decoder": "grams_per_second",
+    "mode": 2
+  },
+  "DTC_THROTTLE_POS": {
+    "name": "DTC_THROTTLE_POS",
+    "desc": "DTC Throttle Position",
+    "decoder": "percent",
+    "mode": 2
+  },
+  "DTC_AIR_STATUS": {
+    "name": "DTC_AIR_STATUS",
+    "desc": "DTC Secondary Air Status",
+    "decoder": "air_status",
+    "mode": 2
+  },
+  "DTC_O2_SENSORS": {
+    "name": "DTC_O2_SENSORS",
+    "desc": "DTC O2 Sensors Present",
+    "decoder": "o2_sensors",
+    "mode": 2
+  },
+  "DTC_O2_B1S1": {
+    "name": "DTC_O2_B1S1",
+    "desc": "DTC O2: Bank 1 - Sensor 1 Voltage",
+    "decoder": "sensor_voltage",
+    "mode": 2
+  },
+  "DTC_O2_B1S2": {
+    "name": "DTC_O2_B1S2",
+    "desc": "DTC O2: Bank 1 - Sensor 2 Voltage",
+    "decoder": "sensor_voltage",
+    "mode": 2
+  },
+  "DTC_O2_B1S3": {
+    "name": "DTC_O2_B1S3",
+    "desc": "DTC O2: Bank 1 - Sensor 3 Voltage",
+    "decoder": "sensor_voltage",
+    "mode": 2
+  },
+  "DTC_O2_B1S4": {
+    "name": "DTC_O2_B1S4",
+    "desc": "DTC O2: Bank 1 - Sensor 4 Voltage",
+    "decoder": "sensor_voltage",
+    "mode": 2
+  },
+  "DTC_O2_B2S1": {
+    "name": "DTC_O2_B2S1",
+    "desc": "DTC O2: Bank 2 - Sensor 1 Voltage",
+    "decoder": "sensor_voltage",
+    "mode": 2
+  },
+  "DTC_O2_B2S2": {
+    "name": "DTC_O2_B2S2",
+    "desc": "DTC O2: Bank 2 - Sensor 2 Voltage",
+    "decoder": "sensor_voltage",
+    "mode": 2
+  },
+  "DTC_O2_B2S3": {
+    "name": "DTC_O2_B2S3",
+    "desc": "DTC O2: Bank 2 - Sensor 3 Voltage",
+    "decoder": "sensor_voltage",
+    "mode": 2
+  },
+  "DTC_O2_B2S4": {
+    "name": "DTC_O2_B2S4",
+    "desc": "DTC O2: Bank 2 - Sensor 4 Voltage",
+    "decoder": "sensor_voltage",
+    "mode": 2
+  },
+  "DTC_OBD_COMPLIANCE": {
+    "name": "DTC_OBD_COMPLIANCE",
+    "desc": "DTC OBD Standards Compliance",
+    "decoder": "obd_compliance",
+    "mode": 2
+  },
+  "DTC_O2_SENSORS_ALT": {
+    "name": "DTC_O2_SENSORS_ALT",
+    "desc": "DTC O2 Sensors Present (alternate)",
+    "decoder": "o2_sensors_alt",
+    "mode": 2
+  },
+  "DTC_AUX_INPUT_STATUS": {
+    "name": "DTC_AUX_INPUT_STATUS",
+    "desc": "DTC Auxiliary input status (power take off)",
+    "decoder": "aux_input_status",
+    "mode": 2
+  },
+  "DTC_RUN_TIME": {
+    "name": "DTC_RUN_TIME",
+    "desc": "DTC Engine Run Time",
+    "decoder": "second",
+    "mode": 2
+  },
+  "DTC_PIDS_B": {
+    "name": "DTC_PIDS_B",
+    "desc": "DTC Supported PIDs [21-40]",
+    "decoder": "drop",
+    "mode": 2
+  },
+  "DTC_DISTANCE_W_MIL": {
+    "name": "DTC_DISTANCE_W_MIL",
+    "desc": "DTC Distance Traveled with MIL on",
+    "decoder": "kilometer",
+    "mode": 2
+  },
+  "DTC_FUEL_RAIL_PRESSURE_VAC": {
+    "name": "DTC_FUEL_RAIL_PRESSURE_VAC",
+    "desc": "DTC Fuel Rail Pressure (relative to vacuum)",
+    "decoder": "kilopascal",
+    "mode": 2
+  },
+  "DTC_FUEL_RAIL_PRESSURE_DIRECT": {
+    "name": "DTC_FUEL_RAIL_PRESSURE_DIRECT",
+    "desc": "DTC Fuel Rail Pressure (direct inject)",
+    "decoder": "kilopascal",
+    "mode": 2
+  },
+  "DTC_O2_S1_WR_VOLTAGE": {
+    "name": "DTC_O2_S1_WR_VOLTAGE",
+    "desc": "DTC 02 Sensor 1 WR Lambda Voltage",
+    "decoder": "sensor_voltage_big",
+    "mode": 2
+  },
+  "DTC_O2_S2_WR_VOLTAGE": {
+    "name": "DTC_O2_S2_WR_VOLTAGE",
+    "desc": "DTC 02 Sensor 2 WR Lambda Voltage",
+    "decoder": "sensor_voltage_big",
+    "mode": 2
+  },
+  "DTC_O2_S3_WR_VOLTAGE": {
+    "name": "DTC_O2_S3_WR_VOLTAGE",
+    "desc": "DTC 02 Sensor 3 WR Lambda Voltage",
+    "decoder": "sensor_voltage_big",
+    "mode": 2
+  },
+  "DTC_O2_S4_WR_VOLTAGE": {
+    "name": "DTC_O2_S4_WR_VOLTAGE",
+    "desc": "DTC 02 Sensor 4 WR Lambda Voltage",
+    "decoder": "sensor_voltage_big",
+    "mode": 2
+  },
+  "DTC_O2_S5_WR_VOLTAGE": {
+    "name": "DTC_O2_S5_WR_VOLTAGE",
+    "desc": "DTC 02 Sensor 5 WR Lambda Voltage",
+    "decoder": "sensor_voltage_big",
+    "mode": 2
+  },
+  "DTC_O2_S6_WR_VOLTAGE": {
+    "name": "DTC_O2_S6_WR_VOLTAGE",
+    "desc": "DTC 02 Sensor 6 WR Lambda Voltage",
+    "decoder": "sensor_voltage_big",
+    "mode": 2
+  },
+  "DTC_O2_S7_WR_VOLTAGE": {
+    "name": "DTC_O2_S7_WR_VOLTAGE",
+    "desc": "DTC 02 Sensor 7 WR Lambda Voltage",
+    "decoder": "sensor_voltage_big",
+    "mode": 2
+  },
+  "DTC_O2_S8_WR_VOLTAGE": {
+    "name": "DTC_O2_S8_WR_VOLTAGE",
+    "desc": "DTC 02 Sensor 8 WR Lambda Voltage",
+    "decoder": "sensor_voltage_big",
+    "mode": 2
+  },
+  "DTC_COMMANDED_EGR": {
+    "name": "DTC_COMMANDED_EGR",
+    "desc": "DTC Commanded EGR",
+    "decoder": "percent",
+    "mode": 2
+  },
+  "DTC_EGR_ERROR": {
+    "name": "DTC_EGR_ERROR",
+    "desc": "DTC EGR Error",
+    "decoder": "percent_centered",
+    "mode": 2
+  },
+  "DTC_EVAPORATIVE_PURGE": {
+    "name": "DTC_EVAPORATIVE_PURGE",
+    "desc": "DTC Commanded Evaporative Purge",
+    "decoder": "percent",
+    "mode": 2
+  },
+  "DTC_FUEL_LEVEL": {
+    "name": "DTC_FUEL_LEVEL",
+    "desc": "DTC Fuel Level Input",
+    "decoder": "percent",
+    "mode": 2
+  },
+  "DTC_WARMUPS_SINCE_DTC_CLEAR": {
+    "name": "DTC_WARMUPS_SINCE_DTC_CLEAR",
+    "desc": "DTC Number of warm-ups since codes cleared",
+    "decoder": "count",
+    "mode": 2
+  },
+  "DTC_DISTANCE_SINCE_DTC_CLEAR": {
+    "name": "DTC_DISTANCE_SINCE_DTC_CLEAR",
+    "desc": "DTC Distance traveled since codes cleared",
+    "decoder": "kilometer",
+    "mode": 2
+  },
+  "DTC_EVAP_VAPOR_PRESSURE": {
+    "name": "DTC_EVAP_VAPOR_PRESSURE",
+    "desc": "DTC Evaporative system vapor pressure",
+    "decoder": "evap_pressure",
+    "mode": 2
+  },
+  "DTC_BAROMETRIC_PRESSURE": {
+    "name": "DTC_BAROMETRIC_PRESSURE",
+    "desc": "DTC Barometric Pressure",
+    "decoder": "pressure",
+    "mode": 2
+  },
+  "DTC_O2_S1_WR_CURRENT": {
+    "name": "DTC_O2_S1_WR_CURRENT",
+    "desc": "DTC 02 Sensor 1 WR Lambda Current",
+    "decoder": "current_centered",
+    "mode": 2
+  },
+  "DTC_O2_S2_WR_CURRENT": {
+    "name": "DTC_O2_S2_WR_CURRENT",
+    "desc": "DTC 02 Sensor 2 WR Lambda Current",
+    "decoder": "current_centered",
+    "mode": 2
+  },
+  "DTC_O2_S3_WR_CURRENT": {
+    "name": "DTC_O2_S3_WR_CURRENT",
+    "desc": "DTC 02 Sensor 3 WR Lambda Current",
+    "decoder": "current_centered",
+    "mode": 2
+  },
+  "DTC_O2_S4_WR_CURRENT": {
+    "name": "DTC_O2_S4_WR_CURRENT",
+    "desc": "DTC 02 Sensor 4 WR Lambda Current",
+    "decoder": "current_centered",
+    "mode": 2
+  },
+  "DTC_O2_S5_WR_CURRENT": {
+    "name": "DTC_O2_S5_WR_CURRENT",
+    "desc": "DTC 02 Sensor 5 WR Lambda Current",
+    "decoder": "current_centered",
+    "mode": 2
+  },
+  "DTC_O2_S6_WR_CURRENT": {
+    "name": "DTC_O2_S6_WR_CURRENT",
+    "desc": "DTC 02 Sensor 6 WR Lambda Current",
+    "decoder": "current_centered",
+    "mode": 2
+  },
+  "DTC_O2_S7_WR_CURRENT": {
+    "name": "DTC_O2_S7_WR_CURRENT",
+    "desc": "DTC 02 Sensor 7 WR Lambda Current",
+    "decoder": "current_centered",
+    "mode": 2
+  },
+  "DTC_O2_S8_WR_CURRENT": {
+    "name": "DTC_O2_S8_WR_CURRENT",
+    "desc": "DTC 02 Sensor 8 WR Lambda Current",
+    "decoder": "current_centered",
+    "mode": 2
+  },
+  "DTC_CATALYST_TEMP_B1S1": {
+    "name": "DTC_CATALYST_TEMP_B1S1",
+    "desc": "DTC Catalyst Temperature: Bank 1 - Sensor 1",
+    "decoder": "celcius",
+    "mode": 2
+  },
+  "DTC_CATALYST_TEMP_B2S1": {
+    "name": "DTC_CATALYST_TEMP_B2S1",
+    "desc": "DTC Catalyst Temperature: Bank 2 - Sensor 1",
+    "decoder": "celcius",
+    "mode": 2
+  },
+  "DTC_CATALYST_TEMP_B1S2": {
+    "name": "DTC_CATALYST_TEMP_B1S2",
+    "desc": "DTC Catalyst Temperature: Bank 1 - Sensor 2",
+    "decoder": "celcius",
+    "mode": 2
+  },
+  "DTC_CATALYST_TEMP_B2S2": {
+    "name": "DTC_CATALYST_TEMP_B2S2",
+    "desc": "DTC Catalyst Temperature: Bank 2 - Sensor 2",
+    "decoder": "celcius",
+    "mode": 2
+  },
+  "DTC_PIDS_C": {
+    "name": "DTC_PIDS_C",
+    "desc": "DTC Supported PIDs [41-60]",
+    "decoder": "drop",
+    "mode": 2
+  },
+  "DTC_STATUS_DRIVE_CYCLE": {
+    "name": "DTC_STATUS_DRIVE_CYCLE",
+    "desc": "DTC Monitor status this drive cycle",
+    "decoder": "status",
+    "mode": 2
+  },
+  "DTC_CONTROL_MODULE_VOLTAGE": {
+    "name": "DTC_CONTROL_MODULE_VOLTAGE",
+    "desc": "DTC Control module voltage",
+    "decoder": "volt",
+    "mode": 2
+  },
+  "DTC_ABSOLUTE_LOAD": {
+    "name": "DTC_ABSOLUTE_LOAD",
+    "desc": "DTC Absolute load value",
+    "decoder": "absolute_load",
+    "mode": 2
+  },
+  "DTC_COMMANDED_EQUIV_RATIO": {
+    "name": "DTC_COMMANDED_EQUIV_RATIO",
+    "desc": "DTC Commanded equivalence ratio",
+    "decoder": "ratio",
+    "mode": 2
+  },
+  "DTC_RELATIVE_THROTTLE_POS": {
+    "name": "DTC_RELATIVE_THROTTLE_POS",
+    "desc": "DTC Relative throttle position",
+    "decoder": "percent",
+    "mode": 2
+  },
+  "DTC_AMBIANT_AIR_TEMP": {
+    "name": "DTC_AMBIANT_AIR_TEMP",
+    "desc": "DTC Ambient air temperature",
+    "decoder": "temp",
+    "mode": 2
+  },
+  "DTC_THROTTLE_POS_B": {
+    "name": "DTC_THROTTLE_POS_B",
+    "desc": "DTC Absolute throttle position B",
+    "decoder": "percent",
+    "mode": 2
+  },
+  "DTC_THROTTLE_POS_C": {
+    "name": "DTC_THROTTLE_POS_C",
+    "desc": "DTC Absolute throttle position C",
+    "decoder": "percent",
+    "mode": 2
+  },
+  "DTC_ACCELERATOR_POS_D": {
+    "name": "DTC_ACCELERATOR_POS_D",
+    "desc": "DTC Accelerator pedal position D",
+    "decoder": "percent",
+    "mode": 2
+  },
+  "DTC_ACCELERATOR_POS_E": {
+    "name": "DTC_ACCELERATOR_POS_E",
+    "desc": "DTC Accelerator pedal position E",
+    "decoder": "percent",
+    "mode": 2
+  },
+  "DTC_ACCELERATOR_POS_F": {
+    "name": "DTC_ACCELERATOR_POS_F",
+    "desc": "DTC Accelerator pedal position F",
+    "decoder": "percent",
+    "mode": 2
+  },
+  "DTC_THROTTLE_ACTUATOR": {
+    "name": "DTC_THROTTLE_ACTUATOR",
+    "desc": "DTC Commanded throttle actuator",
+    "decoder": "percent",
+    "mode": 2
+  },
+  "DTC_RUN_TIME_MIL": {
+    "name": "DTC_RUN_TIME_MIL",
+    "desc": "DTC Time run with MIL on",
+    "decoder": "minute",
+    "mode": 2
+  },
+  "DTC_TIME_SINCE_DTC_CLEARED": {
+    "name": "DTC_TIME_SINCE_DTC_CLEARED",
+    "desc": "DTC Time since trouble codes cleared",
+    "decoder": "minute",
+    "mode": 2
+  },
+  "DTC_MAX_VALUES": {
+    "name": "DTC_MAX_VALUES",
+    "desc": "DTC Various Max values",
+    "decoder": "drop",
+    "mode": 2
+  },
+  "DTC_MAX_MAF": {
+    "name": "DTC_MAX_MAF",
+    "desc": "DTC Maximum value for mass air flow sensor",
+    "decoder": "max_maf",
+    "mode": 2
+  },
+  "DTC_FUEL_TYPE": {
+    "name": "DTC_FUEL_TYPE",
+    "desc": "DTC Fuel Type",
+    "decoder": "fuel_type",
+    "mode": 2
+  },
+  "DTC_ETHANOL_PERCENT": {
+    "name": "DTC_ETHANOL_PERCENT",
+    "desc": "DTC Ethanol Fuel Percent",
+    "decoder": "percent",
+    "mode": 2
+  },
+  "DTC_EVAP_VAPOR_PRESSURE_ABS": {
+    "name": "DTC_EVAP_VAPOR_PRESSURE_ABS",
+    "desc": "DTC Absolute Evap system Vapor Pressure",
+    "decoder": "abs_evap_pressure",
+    "mode": 2
+  },
+  "DTC_EVAP_VAPOR_PRESSURE_ALT": {
+    "name": "DTC_EVAP_VAPOR_PRESSURE_ALT",
+    "desc": "DTC Evap system vapor pressure",
+    "decoder": "evap_pressure_alt",
+    "mode": 2
+  },
+  "DTC_SHORT_O2_TRIM_B1": {
+    "name": "DTC_SHORT_O2_TRIM_B1",
+    "desc": "DTC Short term secondary O2 trim - Bank 1",
+    "decoder": "percent_centered",
+    "mode": 2
+  },
+  "DTC_LONG_O2_TRIM_B1": {
+    "name": "DTC_LONG_O2_TRIM_B1",
+    "desc": "DTC Long term secondary O2 trim - Bank 1",
+    "decoder": "percent_centered",
+    "mode": 2
+  },
+  "DTC_SHORT_O2_TRIM_B2": {
+    "name": "DTC_SHORT_O2_TRIM_B2",
+    "desc": "DTC Short term secondary O2 trim - Bank 2",
+    "decoder": "percent_centered",
+    "mode": 2
+  },
+  "DTC_LONG_O2_TRIM_B2": {
+    "name": "DTC_LONG_O2_TRIM_B2",
+    "desc": "DTC Long term secondary O2 trim - Bank 2",
+    "decoder": "percent_centered",
+    "mode": 2
+  },
+  "DTC_FUEL_RAIL_PRESSURE_ABS": {
+    "name": "DTC_FUEL_RAIL_PRESSURE_ABS",
+    "desc": "DTC Fuel rail pressure (absolute)",
+    "decoder": "kilopascal",
+    "mode": 2
+  },
+  "DTC_RELATIVE_ACCEL_POS": {
+    "name": "DTC_RELATIVE_ACCEL_POS",
+    "desc": "DTC Relative accelerator pedal position",
+    "decoder": "percent",
+    "mode": 2
+  },
+  "DTC_HYBRID_BATTERY_REMAINING": {
+    "name": "DTC_HYBRID_BATTERY_REMAINING",
+    "desc": "DTC Hybrid battery pack remaining life",
+    "decoder": "percent",
+    "mode": 2
+  },
+  "DTC_OIL_TEMP": {
+    "name": "DTC_OIL_TEMP",
+    "desc": "DTC Engine oil temperature",
+    "decoder": "temp",
+    "mode": 2
+  },
+  "DTC_FUEL_INJECT_TIMING": {
+    "name": "DTC_FUEL_INJECT_TIMING",
+    "desc": "DTC Fuel injection timing",
+    "decoder": "inject_timing",
+    "mode": 2
+  },
+  "DTC_FUEL_RATE": {
+    "name": "DTC_FUEL_RATE",
+    "desc": "DTC Engine fuel rate",
+    "decoder": "fuel_rate",
+    "mode": 2
+  },
+  "DTC_EMISSION_REQ": {
+    "name": "DTC_EMISSION_REQ",
+    "desc": "DTC Designed emission requirements",
+    "decoder": "drop",
+    "mode": 2
+  },
+  "GET_DTC": {
+    "name": "GET_DTC",
+    "desc": "Get DTCs",
+    "decoder": "dtc",
+    "mode": 3
+  },
+  "CLEAR_DTC": {
+    "name": "CLEAR_DTC",
+    "desc": "Clear DTCs and Freeze data",
+    "decoder": "drop",
+    "mode": 4
+  },
+  "MIDS_A": {
+    "name": "MIDS_A",
+    "desc": "Supported MIDs [01-20]",
+    "decoder": "pid",
+    "mode": 6
+  },
+  "MONITOR_O2_B1S1": {
+    "name": "MONITOR_O2_B1S1",
+    "desc": "O2 Sensor Monitor Bank 1 - Sensor 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_B1S2": {
+    "name": "MONITOR_O2_B1S2",
+    "desc": "O2 Sensor Monitor Bank 1 - Sensor 2",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_B1S3": {
+    "name": "MONITOR_O2_B1S3",
+    "desc": "O2 Sensor Monitor Bank 1 - Sensor 3",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_B1S4": {
+    "name": "MONITOR_O2_B1S4",
+    "desc": "O2 Sensor Monitor Bank 1 - Sensor 4",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_B2S1": {
+    "name": "MONITOR_O2_B2S1",
+    "desc": "O2 Sensor Monitor Bank 2 - Sensor 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_B2S2": {
+    "name": "MONITOR_O2_B2S2",
+    "desc": "O2 Sensor Monitor Bank 2 - Sensor 2",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_B2S3": {
+    "name": "MONITOR_O2_B2S3",
+    "desc": "O2 Sensor Monitor Bank 2 - Sensor 3",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_B2S4": {
+    "name": "MONITOR_O2_B2S4",
+    "desc": "O2 Sensor Monitor Bank 2 - Sensor 4",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_B3S1": {
+    "name": "MONITOR_O2_B3S1",
+    "desc": "O2 Sensor Monitor Bank 3 - Sensor 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_B3S2": {
+    "name": "MONITOR_O2_B3S2",
+    "desc": "O2 Sensor Monitor Bank 3 - Sensor 2",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_B3S3": {
+    "name": "MONITOR_O2_B3S3",
+    "desc": "O2 Sensor Monitor Bank 3 - Sensor 3",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_B3S4": {
+    "name": "MONITOR_O2_B3S4",
+    "desc": "O2 Sensor Monitor Bank 3 - Sensor 4",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_B4S1": {
+    "name": "MONITOR_O2_B4S1",
+    "desc": "O2 Sensor Monitor Bank 4 - Sensor 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_B4S2": {
+    "name": "MONITOR_O2_B4S2",
+    "desc": "O2 Sensor Monitor Bank 4 - Sensor 2",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_B4S3": {
+    "name": "MONITOR_O2_B4S3",
+    "desc": "O2 Sensor Monitor Bank 4 - Sensor 3",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_B4S4": {
+    "name": "MONITOR_O2_B4S4",
+    "desc": "O2 Sensor Monitor Bank 4 - Sensor 4",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MIDS_B": {
+    "name": "MIDS_B",
+    "desc": "Supported MIDs [21-40]",
+    "decoder": "pid",
+    "mode": 6
+  },
+  "MONITOR_CATALYST_B1": {
+    "name": "MONITOR_CATALYST_B1",
+    "desc": "Catalyst Monitor Bank 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_CATALYST_B2": {
+    "name": "MONITOR_CATALYST_B2",
+    "desc": "Catalyst Monitor Bank 2",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_CATALYST_B3": {
+    "name": "MONITOR_CATALYST_B3",
+    "desc": "Catalyst Monitor Bank 3",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_CATALYST_B4": {
+    "name": "MONITOR_CATALYST_B4",
+    "desc": "Catalyst Monitor Bank 4",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_EGR_B1": {
+    "name": "MONITOR_EGR_B1",
+    "desc": "EGR Monitor Bank 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_EGR_B2": {
+    "name": "MONITOR_EGR_B2",
+    "desc": "EGR Monitor Bank 2",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_EGR_B3": {
+    "name": "MONITOR_EGR_B3",
+    "desc": "EGR Monitor Bank 3",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_EGR_B4": {
+    "name": "MONITOR_EGR_B4",
+    "desc": "EGR Monitor Bank 4",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_VVT_B1": {
+    "name": "MONITOR_VVT_B1",
+    "desc": "VVT Monitor Bank 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_VVT_B2": {
+    "name": "MONITOR_VVT_B2",
+    "desc": "VVT Monitor Bank 2",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_VVT_B3": {
+    "name": "MONITOR_VVT_B3",
+    "desc": "VVT Monitor Bank 3",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_VVT_B4": {
+    "name": "MONITOR_VVT_B4",
+    "desc": "VVT Monitor Bank 4",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_EVAP_150": {
+    "name": "MONITOR_EVAP_150",
+    "desc": "EVAP Monitor (Cap Off / 0.150\")",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_EVAP_090": {
+    "name": "MONITOR_EVAP_090",
+    "desc": "EVAP Monitor (0.090\")",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_EVAP_040": {
+    "name": "MONITOR_EVAP_040",
+    "desc": "EVAP Monitor (0.040\")",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_EVAP_020": {
+    "name": "MONITOR_EVAP_020",
+    "desc": "EVAP Monitor (0.020\")",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_PURGE_FLOW": {
+    "name": "MONITOR_PURGE_FLOW",
+    "desc": "Purge Flow Monitor",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MIDS_C": {
+    "name": "MIDS_C",
+    "desc": "Supported MIDs [41-60]",
+    "decoder": "pid",
+    "mode": 6
+  },
+  "MONITOR_O2_HEATER_B1S1": {
+    "name": "MONITOR_O2_HEATER_B1S1",
+    "desc": "O2 Sensor Heater Monitor Bank 1 - Sensor 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_HEATER_B1S2": {
+    "name": "MONITOR_O2_HEATER_B1S2",
+    "desc": "O2 Sensor Heater Monitor Bank 1 - Sensor 2",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_HEATER_B1S3": {
+    "name": "MONITOR_O2_HEATER_B1S3",
+    "desc": "O2 Sensor Heater Monitor Bank 1 - Sensor 3",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_HEATER_B1S4": {
+    "name": "MONITOR_O2_HEATER_B1S4",
+    "desc": "O2 Sensor Heater Monitor Bank 1 - Sensor 4",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_HEATER_B2S1": {
+    "name": "MONITOR_O2_HEATER_B2S1",
+    "desc": "O2 Sensor Heater Monitor Bank 2 - Sensor 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_HEATER_B2S2": {
+    "name": "MONITOR_O2_HEATER_B2S2",
+    "desc": "O2 Sensor Heater Monitor Bank 2 - Sensor 2",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_HEATER_B2S3": {
+    "name": "MONITOR_O2_HEATER_B2S3",
+    "desc": "O2 Sensor Heater Monitor Bank 2 - Sensor 3",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_HEATER_B2S4": {
+    "name": "MONITOR_O2_HEATER_B2S4",
+    "desc": "O2 Sensor Heater Monitor Bank 2 - Sensor 4",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_HEATER_B3S1": {
+    "name": "MONITOR_O2_HEATER_B3S1",
+    "desc": "O2 Sensor Heater Monitor Bank 3 - Sensor 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_HEATER_B3S2": {
+    "name": "MONITOR_O2_HEATER_B3S2",
+    "desc": "O2 Sensor Heater Monitor Bank 3 - Sensor 2",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_HEATER_B3S3": {
+    "name": "MONITOR_O2_HEATER_B3S3",
+    "desc": "O2 Sensor Heater Monitor Bank 3 - Sensor 3",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_HEATER_B3S4": {
+    "name": "MONITOR_O2_HEATER_B3S4",
+    "desc": "O2 Sensor Heater Monitor Bank 3 - Sensor 4",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_HEATER_B4S1": {
+    "name": "MONITOR_O2_HEATER_B4S1",
+    "desc": "O2 Sensor Heater Monitor Bank 4 - Sensor 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_HEATER_B4S2": {
+    "name": "MONITOR_O2_HEATER_B4S2",
+    "desc": "O2 Sensor Heater Monitor Bank 4 - Sensor 2",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_HEATER_B4S3": {
+    "name": "MONITOR_O2_HEATER_B4S3",
+    "desc": "O2 Sensor Heater Monitor Bank 4 - Sensor 3",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_O2_HEATER_B4S4": {
+    "name": "MONITOR_O2_HEATER_B4S4",
+    "desc": "O2 Sensor Heater Monitor Bank 4 - Sensor 4",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MIDS_D": {
+    "name": "MIDS_D",
+    "desc": "Supported MIDs [61-80]",
+    "decoder": "pid",
+    "mode": 6
+  },
+  "MONITOR_HEATED_CATALYST_B1": {
+    "name": "MONITOR_HEATED_CATALYST_B1",
+    "desc": "Heated Catalyst Monitor Bank 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_HEATED_CATALYST_B2": {
+    "name": "MONITOR_HEATED_CATALYST_B2",
+    "desc": "Heated Catalyst Monitor Bank 2",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_HEATED_CATALYST_B3": {
+    "name": "MONITOR_HEATED_CATALYST_B3",
+    "desc": "Heated Catalyst Monitor Bank 3",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_HEATED_CATALYST_B4": {
+    "name": "MONITOR_HEATED_CATALYST_B4",
+    "desc": "Heated Catalyst Monitor Bank 4",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_SECONDARY_AIR_1": {
+    "name": "MONITOR_SECONDARY_AIR_1",
+    "desc": "Secondary Air Monitor 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_SECONDARY_AIR_2": {
+    "name": "MONITOR_SECONDARY_AIR_2",
+    "desc": "Secondary Air Monitor 2",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_SECONDARY_AIR_3": {
+    "name": "MONITOR_SECONDARY_AIR_3",
+    "desc": "Secondary Air Monitor 3",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_SECONDARY_AIR_4": {
+    "name": "MONITOR_SECONDARY_AIR_4",
+    "desc": "Secondary Air Monitor 4",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MIDS_E": {
+    "name": "MIDS_E",
+    "desc": "Supported MIDs [81-A0]",
+    "decoder": "pid",
+    "mode": 6
+  },
+  "MONITOR_FUEL_SYSTEM_B1": {
+    "name": "MONITOR_FUEL_SYSTEM_B1",
+    "desc": "Fuel System Monitor Bank 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_FUEL_SYSTEM_B2": {
+    "name": "MONITOR_FUEL_SYSTEM_B2",
+    "desc": "Fuel System Monitor Bank 2",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_FUEL_SYSTEM_B3": {
+    "name": "MONITOR_FUEL_SYSTEM_B3",
+    "desc": "Fuel System Monitor Bank 3",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_FUEL_SYSTEM_B4": {
+    "name": "MONITOR_FUEL_SYSTEM_B4",
+    "desc": "Fuel System Monitor Bank 4",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_BOOST_PRESSURE_B1": {
+    "name": "MONITOR_BOOST_PRESSURE_B1",
+    "desc": "Boost Pressure Control Monitor Bank 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_BOOST_PRESSURE_B2": {
+    "name": "MONITOR_BOOST_PRESSURE_B2",
+    "desc": "Boost Pressure Control Monitor Bank 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_NOX_ABSORBER_B1": {
+    "name": "MONITOR_NOX_ABSORBER_B1",
+    "desc": "NOx Absorber Monitor Bank 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_NOX_ABSORBER_B2": {
+    "name": "MONITOR_NOX_ABSORBER_B2",
+    "desc": "NOx Absorber Monitor Bank 2",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_NOX_CATALYST_B1": {
+    "name": "MONITOR_NOX_CATALYST_B1",
+    "desc": "NOx Catalyst Monitor Bank 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_NOX_CATALYST_B2": {
+    "name": "MONITOR_NOX_CATALYST_B2",
+    "desc": "NOx Catalyst Monitor Bank 2",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MIDS_F": {
+    "name": "MIDS_F",
+    "desc": "Supported MIDs [A1-C0]",
+    "decoder": "pid",
+    "mode": 6
+  },
+  "MONITOR_MISFIRE_GENERAL": {
+    "name": "MONITOR_MISFIRE_GENERAL",
+    "desc": "Misfire Monitor General Data",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_MISFIRE_CYLINDER_1": {
+    "name": "MONITOR_MISFIRE_CYLINDER_1",
+    "desc": "Misfire Cylinder 1 Data",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_MISFIRE_CYLINDER_2": {
+    "name": "MONITOR_MISFIRE_CYLINDER_2",
+    "desc": "Misfire Cylinder 2 Data",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_MISFIRE_CYLINDER_3": {
+    "name": "MONITOR_MISFIRE_CYLINDER_3",
+    "desc": "Misfire Cylinder 3 Data",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_MISFIRE_CYLINDER_4": {
+    "name": "MONITOR_MISFIRE_CYLINDER_4",
+    "desc": "Misfire Cylinder 4 Data",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_MISFIRE_CYLINDER_5": {
+    "name": "MONITOR_MISFIRE_CYLINDER_5",
+    "desc": "Misfire Cylinder 5 Data",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_MISFIRE_CYLINDER_6": {
+    "name": "MONITOR_MISFIRE_CYLINDER_6",
+    "desc": "Misfire Cylinder 6 Data",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_MISFIRE_CYLINDER_7": {
+    "name": "MONITOR_MISFIRE_CYLINDER_7",
+    "desc": "Misfire Cylinder 7 Data",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_MISFIRE_CYLINDER_8": {
+    "name": "MONITOR_MISFIRE_CYLINDER_8",
+    "desc": "Misfire Cylinder 8 Data",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_MISFIRE_CYLINDER_9": {
+    "name": "MONITOR_MISFIRE_CYLINDER_9",
+    "desc": "Misfire Cylinder 9 Data",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_MISFIRE_CYLINDER_10": {
+    "name": "MONITOR_MISFIRE_CYLINDER_10",
+    "desc": "Misfire Cylinder 10 Data",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_MISFIRE_CYLINDER_11": {
+    "name": "MONITOR_MISFIRE_CYLINDER_11",
+    "desc": "Misfire Cylinder 11 Data",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_MISFIRE_CYLINDER_12": {
+    "name": "MONITOR_MISFIRE_CYLINDER_12",
+    "desc": "Misfire Cylinder 12 Data",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_PM_FILTER_B1": {
+    "name": "MONITOR_PM_FILTER_B1",
+    "desc": "PM Filter Monitor Bank 1",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "MONITOR_PM_FILTER_B2": {
+    "name": "MONITOR_PM_FILTER_B2",
+    "desc": "PM Filter Monitor Bank 2",
+    "decoder": "monitor",
+    "mode": 6
+  },
+  "GET_CURRENT_DTC": {
+    "name": "GET_CURRENT_DTC",
+    "desc": "Get DTCs from the current/last driving cycle",
+    "decoder": "dtc",
+    "mode": 7
+  }
+}

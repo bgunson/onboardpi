@@ -4,6 +4,7 @@ const app = express();
 const httpServer = require("http").createServer(app);
 const io = require("socket.io")(httpServer);
 const port = process.env.PORT || 8080;
+const compression = require('compression');
 
 // Lib modules
 const SysInfo = require('./lib/sys-info');
@@ -18,6 +19,7 @@ const database = require('./data/config');
 // Middleware
 app.use(express.static(__dirname + '/public'));
 app.use(express.json());
+app.use(compression());
 
 app.get('/view-obd-log', (req, res) => {
     res.sendFile(__dirname + '/obd.log');
