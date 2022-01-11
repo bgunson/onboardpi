@@ -1,6 +1,9 @@
 import { Socket } from "ngx-socket-io";
+import pjson from '../../package.json';
+
 
 export const environment = {
+  version: pjson.version,
   production: true,
   demo: false,
   appSocket: Socket,

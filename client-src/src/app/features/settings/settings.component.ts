@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DisplayService } from 'src/app/shared/services/display.service';
+import { environment } from 'src/environments/environment';
 import { Settings } from './models/settings.model';
 import { SettingsService } from './services/settings.service';
+
 
 @Component({
   selector: 'app-settings',
@@ -13,6 +15,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   isDarkTheme: boolean;
   settings$: Promise<Settings>;
+
+  version = environment.version;
 
   constructor(
     public display: DisplayService,

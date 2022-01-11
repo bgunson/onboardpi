@@ -1,6 +1,6 @@
 dev
 data/dev
-
+elm*.log
 obd.log
 
 # compiled output

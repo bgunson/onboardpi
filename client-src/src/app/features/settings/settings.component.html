@@ -55,8 +55,20 @@
             <span style="flex: 1 1 auto"></span>
             <span style="color:grey">{{ (settings.connection.log_level || 'WARNING') | titlecase }}<mat-icon style="vertical-align: middle;">chevron_right</mat-icon></span>
         </mat-list-item>
-    </mat-card>    
+    </mat-card>
+    <br>
+    <mat-card class="settings-card">
+        <mat-list-item>
+            Version
+            <span style="flex: 1 1 auto"></span>
+            <span style="color: grey;">{{ version }}</span>
+        </mat-list-item>
+    </mat-card>
+
+   
 </mat-list>
+
+
 
 <ng-template #loading>
     <mat-spinner style="margin: 25vh auto;" [color]="display.palette"></mat-spinner>
