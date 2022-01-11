@@ -66,6 +66,9 @@ MIT
 @angular/router
 MIT
 
+@angular/service-worker
+MIT
+
 @socket.io/component-emitter
 MIT
 (The MIT License)
