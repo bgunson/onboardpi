@@ -76,7 +76,8 @@ This project is intended to be cost effective, while you do not need the most ex
     - [DC-DC Buck Converter](https://www.amazon.ca/gp/product/B074J4DLWQ/ref=ppx_yo_dt_b_asin_title_o07_s00?ie=UTF8&psc=1) - adjustable, cheap and effiecient.
     - [DC-DC 12V to 5V 3A](https://www.amazon.ca/gp/product/B07H7X37T6/ref=ppx_yo_dt_b_asin_title_o01_s00?ie=UTF8&psc=1) - non-adjustable but enclosed (somewhat waterproof) and micro-USB, so a micro-USB to USB C adapter is needed.
 
-- **A relay, switch or button** to implement a graceful shutdown circuit for the Pi. If the Pi is powered via ignition you risk corruption when you shut the car (and the Pi) off with the key. So you need to alert the Pi beforehand with accessory power (ACC) that it is time to safely shutdown. I will have more in-depth info on this in the future.
+- **A relay, switch or button** to implement a graceful shutdown circuit for the Pi. If the Pi is powered via ignition you risk corruption when you shut the car (and the Pi) off with the key. So you need to alert the Pi beforehand with accessory power (ACC) that it is time to safely shutdown.
+    - Read my [blog post](https://bengunson.me/blog/software/hardware/2022/01/13/shutdown-circuits.html) on how I set up a graceful shutdown circuit.
 
 ### Installation
 Once your Pi is physically ready to be installed in your car there are a few things that need to be worked out. Since OnBoardPi uses a web-server to push OBD data to connected devices, you will need some sort of LAN within your car. We have a few options:
