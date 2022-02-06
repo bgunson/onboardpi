@@ -9,9 +9,9 @@ const compression = require('compression');
 // Lib modules
 const SysInfo = require('./lib/sys-info');
 const OBDServer = require('./lib/obd-server');
-const Settings = require('./lib/crud/settings');
-const Dashboard = require('./lib/crud/dashboard');
-const Crud = require('./lib/crud');
+const Settings = require('./controllers/settings');
+const Dashboard = require('./controllers/dashboard');
+const Crud = require('./controllers');
 
 // Database 
 const database = require('./data/config');
@@ -21,36 +21,37 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.json());
 app.use(compression());
 
-app.get('/view-obd-log', (req, res) => {
-    res.sendFile(__dirname + '/obd.log');
-});
-
-app.get('/download-obd-log', (req, res) => {
-    res.download(__dirname + '/obd.log');
-});
-
-
 database.configure((config) => {
 
     httpServer.listen(port, () => {
         console.log("Server lisenting on port: " + port);
     });
 
-    const socketAPIs = [];
+    const socketAPIs = {};
 
     const settings = new Settings(io, config.path);
-    socketAPIs.push(settings);
-    socketAPIs.push(new Dashboard(io, config.knex));
-    socketAPIs.push(new Crud('maintenance', io, config.knex));
-    socketAPIs.push(new SysInfo(io));
-
+    socketAPIs.settings = settings;
+    socketAPIs.dashboard_cards = new Dashboard(io, config.knex);
+    socketAPIs.maintenance = new Crud('maintenance', io, config.knex);
+    socketAPIs.sysInfo = new SysInfo(io);
     const obdServer = new OBDServer(io, settings);
-    socketAPIs.push(obdServer);   // OBD server needs settings for parameters, log_level
+    socketAPIs.obd = obdServer;   // OBD server needs settings for parameters, log_level
+
+    app.set('API', socketAPIs);
+    app.use(require('./routes'));
 
     io.on("connection", (socket) => {
-        console.log("Client connected.");
-        // Connect new clients to each api
-        socketAPIs.forEach(api => api.connect(socket));
+        console.log(`Client connected from ${socket.handshake.address}`);
+        socket.onAny((eventName, args) => {
+            let [api, action] = eventName.split(':');
+            if (api && action) {
+                socketAPIs[api][action](args)
+                    .then((res) => {
+                         io.emit(`${api}:response`, res)
+                    })
+                    .catch((err) => socket.emit(`${api}:error`, err));      // tell the individual client what they did failed  
+            }
+        });
     });
 
     process.on('SIGINT', () => {

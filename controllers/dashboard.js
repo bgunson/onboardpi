@@ -8,11 +8,6 @@ class Dashboard extends Crud {
         this.knex = knex;
     }
 
-    connect(client) {
-        super.connect(client);
-        client.on('dashboard_cards:reorder', cards => this.reorder(cards));
-    }
-
     reorder(cards) {
         const queries = [];
         cards.forEach(card => {
@@ -21,7 +16,7 @@ class Dashboard extends Crud {
                 .update(card)
             queries.push(query);   
         });
-        Promise.all(queries).then(() => this.updateAll());
+        return Promise.all(queries).then(() => this.getTable());
     }
 
 }

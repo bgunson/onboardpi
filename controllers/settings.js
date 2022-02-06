@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const _ = require('lodash');
-const seed = require('../../data/app/settings.json');
+const seed = require('../data/app/settings.json');
 
 class Settings {
 
@@ -14,25 +14,8 @@ class Settings {
         this.settings = require(this.settingsPath);
     }
 
-    /**
-     * Expose the settings CRUD API to a specific client socket
-     * @param {Socket} client Individual client connection to the server
-     */
-    connect(client) {
-        client.on('settings:create', () => {});
-        client.on('settings:read', () => client.emit('settings:response', this.settings));
-        client.on('settings:update', settings => { 
-            this.update(settings).then(msg => {
-                if (msg) {
-                    client.emit('obd:reconnect', "Connection parameters have been changed. Would you like to reconnect to the vehicle?");
-                }
-            })
-        });
-        client.on('settings:delete', () => {});
-    }
-
     create() {
-        throw new Error("Settings can only be read or updated")
+        throw new Error("Settings can only be read or updated");
     }
 
     /**
@@ -42,11 +25,11 @@ class Settings {
      * @returns The value of the current settings for the given properties, if any 
      */
     read(...properties) {
-        let current = this.settings;
-        properties.forEach(p => {
-            current = current[p];
-        });
-        return current;
+        // let current = this.settings;
+        // properties.forEach(p => {
+        //     current = current[p];
+        // });
+        return Promise.resolve(this.settings);
     }
 
     update(updated) {
@@ -60,13 +43,14 @@ class Settings {
                 if (err) {
                     reject(err);
                 } else {
-                    this.io.emit('settings:response', this.settings);
+                    resolve(this.settings);
+                    // this.io.emit('settings:response', this.settings);
                 }
-                if (reconnect) {
-                    resolve("Connection parameters have been changed. Would you like to reconnect to the vehicle?");
-                } else {
-                    resolve(false);
-                }
+                // if (reconnect) {
+                //     resolve("Connection parameters have been changed. Would you like to reconnect to the vehicle?");
+                // } else {
+                //     resolve(false);
+                // }
             });
         });
     }
