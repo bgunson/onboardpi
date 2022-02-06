@@ -29,7 +29,6 @@ import { MatButtonModule } from '@angular/material/button';
     PrettyUnitPipe,
     RoundPipe,
     OBDValuePipe,
-
     FilterComponent
   ],
   providers: [DecimalPipe]

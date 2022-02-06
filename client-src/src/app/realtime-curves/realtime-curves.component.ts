@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RealtimeChartData, RealtimeChartOptions} from 'ngx-graph';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { pluck, throttleTime } from 'rxjs/operators';
-import { OBDCommand, OBDResponse } from 'src/app/shared/models/obd.model';
+import { OBDResponse } from 'src/app/shared/models/obd.model';
 import { DisplayService } from 'src/app/shared/services/display.service';
 import { OBDService } from 'src/app/shared/services/obd.service';
 import { CurveDataService } from './services/curve-data.service';
@@ -19,7 +19,7 @@ export class RealtimeCurvesComponent implements OnInit, OnDestroy {
 
   unwatchSub: Subscription = new Subscription();
 
-  commands$: Promise<OBDCommand[]>;  // mode 1 commands
+  commands$: Promise<string[]>;  // mode 1 commands
 
   value$: Observable<OBDResponse>;
   curveData: RealtimeChartData[][];
@@ -83,7 +83,8 @@ export class RealtimeCurvesComponent implements OnInit, OnDestroy {
       this.curveOptions.lines[0].areaColor = this.display.defaultColor;
     }
 
-    this.commands$ = this.obd.allCommands().then(all => all[1]);
+    this.commands$ = this.obd.allCommands()
+      .then(all => all[1].map(cmd => cmd.name).sort());
 
     this.curvePid = localStorage.getItem('curvePid') || "ENGINE_RPM";
     this.setCurvePid();

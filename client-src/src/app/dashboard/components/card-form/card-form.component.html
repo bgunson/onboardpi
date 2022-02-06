@@ -16,8 +16,8 @@
         <mat-form-field appearance="outline">
             <mat-label>Command</mat-label>
             <mat-select [(ngModel)]="card.command" name="command" required>
-              <mat-option *ngFor="let cmd of commands$ | async" [value]="cmd.name">
-                {{cmd.desc}}
+              <mat-option *ngFor="let cmd of commands$ | async" [value]="cmd">
+                {{ cmd }}
               </mat-option>
             </mat-select>
         </mat-form-field>

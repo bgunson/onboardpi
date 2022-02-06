@@ -1,5 +1,5 @@
-<div style="width: 100%; height: 35px;">
-    <shared-filter (keyup)="applyFilter($event)" [size]="12"></shared-filter>
+<div style="display: block;">
+    <shared-filter (keyup)="applyFilter($event)"></shared-filter>
 </div>
 <mat-list *ngIf="live$ | async as live; else waiting" style="position: relative;">
     <mat-card class="code-card">

@@ -1,7 +1,5 @@
-<div style="width: 100%;">
-  <shared-filter  [size]="12" (keyup)="applyFilter($event)"></shared-filter>
-  <!-- <button mat-icon-button><mat-icon>more_vert</mat-icon></button> -->
-</div>
+
+<shared-filter [size]="12" (keyup)="applyFilter($event)"></shared-filter>
 <div class="table-div">
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 table" matSort matSortActive="date" matSortDirection="desc">
         <!-- date Column -->

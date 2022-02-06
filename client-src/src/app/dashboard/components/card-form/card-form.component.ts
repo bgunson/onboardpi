@@ -27,7 +27,7 @@ export class CardFormComponent implements OnInit {
     'Numeric': 'numeric'
   }
 
-  commands$: Promise<OBDCommand[]>;
+  commands$: Promise<string[]>;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -49,7 +49,7 @@ export class CardFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.card = this.data.card;
-    this.commands$ = this.obd.allCommands().then(all => all[1]);
+    this.commands$ = this.obd.allCommands().then(all => all[1].map(cmd => cmd.name).sort());
   }
 
 }

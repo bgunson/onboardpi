@@ -11,3 +11,7 @@
 :host ::ng-deep .mat-form-field-outline-end {
     border-radius: 0 28px 28px 0 !important;
 }
+
+:host ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 10px;
+}

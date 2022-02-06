@@ -6,8 +6,8 @@
           Realtime Curve
         </mat-label>
         <mat-select [(value)]="curvePid" (selectionChange)="setCurvePid()">
-          <mat-option *ngFor="let cmd of commands$ | async" [value]="cmd.name">
-            {{ cmd.desc }}
+          <mat-option *ngFor="let cmd of commands$ | async" [value]="cmd">
+            {{ cmd }}
           </mat-option>
         </mat-select>
       </mat-form-field>    

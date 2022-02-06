@@ -35,7 +35,7 @@ export class FilterComponent implements OnInit {
     this.style = {
       'margin-bottom': '-14px',
       'width': '100%',
-      'font-size': this.size + 'px'
+      // 'font-size': this.size + 'px'
     }
   }
 

@@ -1,3 +1,5 @@
+<shared-filter (keyup)="applyFilter($event)"></shared-filter>
+
 <ng-container *ngIf="carConnected$ | async else waiting">
     <mat-list style="overflow-x: hidden;" *ngIf="watch$ | async as watch; else waiting">
         <!-- <div mat-subheader>
@@ -5,7 +7,6 @@
             <span style="flex: 1 1 auto"></span>
             <shared-filter [size]="12" (keyup)="applyFilter($event)"></shared-filter>
         </div> -->
-        <shared-filter [size]="12" (keyup)="applyFilter($event)"></shared-filter>
 
         <mat-card style="padding: 0px;" class="mat-elevation-z2">
             <mat-list-item *ngFor="let cmd of filteredCommands$ | async; last as last">

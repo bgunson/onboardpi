@@ -1,12 +1,11 @@
 .sidenav-container {
     height: 100vh;
     overflow: hidden;
-    padding-top: env(safe-area-inset-top);
     // min-height: calc(100% + env(safe-area-inset-top));
 }
 
 .mobile-container {
-    padding-bottom: 120px;
+    padding-top: 0px !important;
 }
 
 .sidenav {
@@ -29,7 +28,7 @@
 
 .content {
     overflow-x: hidden;
-    padding: 5px !important;
+    padding: 8px !important;
     // padding-bottom: 60px;
 }
 
