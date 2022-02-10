@@ -4,19 +4,15 @@ import sys
 import asyncio
 import time
 
-LOG_LEVEL = sys.argv[1]
+LOG_LEVEL = 'WARNING'
 UPDATE_RATE = 0.5
-PARAMS = {}
 
 watching = {}
 last = 0
 
 obd.logger.setLevel(LOG_LEVEL)
 
-if len(sys.argv) == 3:
-    PARAMS = obdio.loads(sys.argv[2])
-
-io = obdio.OBDio(**PARAMS)
+io = obdio.OBDio()
 
 sio = io.create_server(cors_allowed_origins='*', json=obdio)
 

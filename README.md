@@ -112,18 +112,18 @@ git clone <repo>
 ```
 Change directories to the cloned folder. Next install needed node and python modules.
 ```
-npm install
-pip install -r requirements.txt
+cd web && npm install
+cd obd-server && pip install -r requirements.txt
 ```
 Now for the client.
 ```
-cd client-src
+cd web/client
 npm install
 npm run build
 ```
 To run OnBoardPi
 ```
-node app.js
+node web/server.js
 ```
 From there you can define a systemd service to run OnBoardPi as a service.
 
