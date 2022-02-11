@@ -26,7 +26,7 @@ import { MaintenanceModule } from './maintenance/maintenance.module';
 export class OBDSocket extends environment.obdSocket {
   constructor() {
     super({ 
-      url: 'http://' + window.location.hostname + ':60000',
+      url: `http://${window.location.hostname}:60000`,
       options: { 
         transports: ['websocket'] 
       }

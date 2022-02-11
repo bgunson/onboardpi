@@ -20,7 +20,11 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.json());
 app.use(compression());
 
-database.configure((config) => {
+const settings = new Settings(io);
+
+const isCrud = (action) => ['create', 'read', 'update', 'delete'].includes(action);
+
+database.configure(knex => {
 
     httpServer.listen(port, () => {
         console.log("Server lisenting on port: " + port);
@@ -28,9 +32,9 @@ database.configure((config) => {
 
     const socketAPIs = {};
 
-    socketAPIs.settings = new Settings(io, config.path);
-    socketAPIs.dashboard_cards = new Dashboard(io, config.knex);
-    socketAPIs.maintenance = new Crud('maintenance', io, config.knex);
+    socketAPIs.settings = settings;
+    socketAPIs.dashboard_cards = new Dashboard(io, knex);
+    socketAPIs.maintenance = new Crud('maintenance', io, knex);
     socketAPIs.sysInfo = new SysInfo(io);
 
     app.set('API', socketAPIs);
@@ -41,11 +45,28 @@ database.configure((config) => {
         socket.onAny((eventName, args) => {
             let [api, action] = eventName.split(':');
             if (api && action) {
-                socketAPIs[api][action](args)
-                    .then((res) => io.emit(`${api}:response`, res))
-                    .catch((err) => socket.emit(`${api}:error`, err));      // tell the individual client what they did failed  
+                if (isCrud(action)) {
+                    socketAPIs[api][action](args)
+                    .then((res) => {
+                        if (action === 'read') {
+                            // If request was a read then we only need to respond to the individual client
+                            socket.emit(`${api}:response`, res);
+                        } else {
+                            // Tell every client of the changes
+                            io.emit(`${api}:response`, res);
+                        }
+                    })
+                    .catch((err) => socket.emit(`${api}:error`, err));      // tell the individual client what they did failed 
+                } else {
+                    socketAPIs[api][action](socket, args);
+                }
             }
         });
     });
 
+});
+
+process.on('SIGTERM', () => {
+    httpServer.close();
+    process.exit();
 });

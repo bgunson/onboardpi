@@ -1,5 +1,5 @@
 dev
-data/dev
+data/dev.db
 
 # compiled output
 /public

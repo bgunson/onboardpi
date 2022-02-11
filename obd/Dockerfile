@@ -4,9 +4,11 @@ FROM python:3.8-alpine
 # Create app directory
 WORKDIR /usr/src/app
 
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
 # Bundle app source
 COPY . .
-RUN pip3 install -r requiremenst.txt
 
 EXPOSE 60000
-CMD [ "python", "server.py" ]
+CMD python server.py > obd.log 2>&1

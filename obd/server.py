@@ -1,21 +1,17 @@
 import obd
 import obdio
-import sys
 import asyncio
 import time
+from helpers import *
 
-LOG_LEVEL = 'WARNING'
-UPDATE_RATE = 0.5
+UPDATE_RATE = 0.25
 
 watching = {}
 last = 0
 
-obd.logger.setLevel(LOG_LEVEL)
-
-io = obdio.OBDio()
-
-sio = io.create_server(cors_allowed_origins='*', json=obdio)
-
+obd.logger.setLevel(get_log_level())
+io = obdio.OBDio(**get_params())
+sio = io.create_server(cors_allowed_origins='*', json=obdio, logger=False, engineio_logger=False)
 
 async def watch_respond(values):
     global last
@@ -62,4 +58,21 @@ async def all_commands(sid):
 async def get_command(sid, cmd):
     await sio.emit('get_command', obd.commands[cmd], room=sid)
 
-io.run_server(host='0.0.0.0', port=60000, log_level=LOG_LEVEL.lower())
+
+@sio.event 
+async def connect_obd(sid):
+    global io
+    obd.logger.setLevel(get_log_level())
+    io = obdio.OBDio(**get_params())
+
+@sio.event 
+async def disconnect_obd(sid):
+    io.close()
+    await sio.emit('disconnect_obd')
+
+io.serve_static({
+    '/view/obd-log': {'filename': 'obd.log', 'content_type': 'text/plain'},
+    '/download/obd-log': 'obd.log'
+})
+
+io.run_server(host='0.0.0.0', port=60000, log_level='critical')

@@ -5,10 +5,12 @@ const seed = require('../data/app/settings.json');
 
 class Settings {
 
-    constructor(io, settingsPath) {
+    constructor(io) {
         this.io = io;
-        this.settingsPath = path.join(path.resolve(settingsPath), 'settings.json');
+        this.settingsPath = path.join(process.env.SETTINGS_DIR || process.cwd(), 'settings.json');
+        console.log(`Using ${this.settingsPath} for settings configuration.`);
         if (!fs.existsSync(this.settingsPath)) {
+            console.log("Settings file does not exist, creating default.")
             fs.writeFileSync(this.settingsPath, JSON.stringify(seed, null, 2));
         }
         this.settings = require(this.settingsPath);
@@ -44,13 +46,7 @@ class Settings {
                     reject(err);
                 } else {
                     resolve(this.settings);
-                    // this.io.emit('settings:response', this.settings);
                 }
-                // if (reconnect) {
-                //     resolve("Connection parameters have been changed. Would you like to reconnect to the vehicle?");
-                // } else {
-                //     resolve(false);
-                // }
             });
         });
     }

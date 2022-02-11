@@ -1,32 +1,40 @@
 // Update with your config settings.
 module.exports = {
 
-  development: {
-    client: 'sqlite3',
-    connection: {
-      filename: './data/dev/dev.db'
+    development: {
+        client: 'pg',
+        connection: {
+            host: process.env.POSTGRES_HOST || 'localhost',
+            port: 5432,
+            user: 'postgres',
+            password: 'password',
+            database: 'onboardpi-dev'
+        },
+        seeds: {
+            directory: `${__dirname}/seeds`
+        },
+        migrations: {
+            directory: `${__dirname}/migrations`
+        },
+        useNullAsDefault: true
     },
-    seeds: {
-      directory: './data/seeds'
-    },
-    migrations: {
-      directory: './data/migrations'
-    },
-    useNullAsDefault: true
-  },
 
-  production: {
-    client: 'sqlite3',
-    connection: {
-      filename: '/etc/obpi/obpi.db'
-    },
-    seeds: {
-      directory: './data/seeds'
-    },
-    migrations: {
-      directory: './data/migrations'
-    },
-    useNullAsDefault: true
-  }
+    production: {
+        client: 'pg',
+        connection: {
+            host: process.env.POSTGRES_HOST || 'localhost',
+            port: 5432,
+            user: 'postgres',
+            password: 'password',
+            database: 'onboardpi'
+        },
+        seeds: {
+            directory: `${__dirname}/seeds`
+        },
+        migrations: {
+            directory: `${__dirname}/migrations`
+        },
+        useNullAsDefault: true
+    }
 
 };

@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
+import { OBDSocket } from 'src/app/app.module';
 import { DisplayService } from 'src/app/shared/services/display.service';
 import { ConnectionParameters, Settings } from '../../models/settings.model';
 import { SettingsService } from '../../services/settings.service';
@@ -22,6 +23,8 @@ export class LogLevelComponent implements OnInit, OnDestroy {
     'DEBUG',
     // 'NOTSET'
   ];
+
+  getLogUrl = (type: string) => `http://${window.location.hostname}:60000/${type}/obd-log`
 
   settings$: Promise<Settings>;
   connection$: Promise<ConnectionParameters>

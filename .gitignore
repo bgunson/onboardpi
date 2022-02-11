@@ -1,2 +1,4 @@
 elm*.log
 obd.log
+settings.json
+.vscode

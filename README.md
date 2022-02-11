@@ -123,6 +123,7 @@ npm run build
 ```
 To run OnBoardPi
 ```
+cd web
 node web/server.js
 ```
 From there you can define a systemd service to run OnBoardPi as a service.

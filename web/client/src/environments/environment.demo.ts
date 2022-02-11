@@ -8,5 +8,5 @@ export const environment = {
     demo: true,
     appSocket: DemoAppSocket,
     obdSocket: DemoOBDSocket,
-    dataURL: 'https://raw.githubusercontent.com/bgunson/onboardpi/main/data'
+    dataURL: 'https://raw.githubusercontent.com/bgunson/onboardpi/main/web/data'
 }

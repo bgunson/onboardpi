@@ -1,5 +1,4 @@
 const si = require('systeminformation');
-const fs = require('fs');
 
 class SysInfo {
 
@@ -15,6 +14,7 @@ class SysInfo {
 
     get valueObject() {
         return {
+            time: '*',
             currentLoad: 'currentLoad',
             cpuTemperature: 'main',
             cpuCurrentSpeed: 'avg',
@@ -26,9 +26,9 @@ class SysInfo {
         }
     }
 
-    serializeData(data) {
+    _serializeData(data) {
         var info = {}
-        // console.log(data)
+        info.time = data.time;
         info.cpu = {
             load: data.currentLoad.currentLoad,
             speed: data.cpuCurrentSpeed.avg,
@@ -49,24 +49,24 @@ class SysInfo {
         return info;
     }
 
-    join() {
+    join(client) {
+        client.join(this.roomName);
         this.roomSize++;
         if (!this.observer) {
             this.observer = si.observe(this.valueObject, 1000, (data) => {
-                let info = this.serializeData(data);
-                this.socket.emit(this.roomName, info);
+                let info = this._serializeData(data);
+                this.socket.to(this.roomName).emit(this.roomName, info);
             });
         }
-        return Promise.resolve();
     }
 
-    leave() {
+    leave(client) {
+        client.leave(this.roomName);
         this.roomSize = Math.max(0, this.roomSize - 1);
         if (this.roomSize == 0) {
             clearInterval(this.observer);
             this.observer = null;
         }
-        return Promise.resolve();
     }
 
 }
