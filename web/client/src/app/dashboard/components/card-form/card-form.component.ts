@@ -2,8 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { OBDCommand } from 'src/app/shared/models/obd.model';
 import { OBDService } from 'src/app/shared/services/obd.service';
-import { DashboardCard } from '../../models/dashboard.model';
-import { DashboardService } from '../../services/dashboard.service';
+import { DashboardCard } from '../../dashboard.model';
+import { DashboardService } from '../../dashboard.service';
 
 interface DialogData {
   new?: boolean;
@@ -36,6 +36,7 @@ export class CardFormComponent implements OnInit {
   ) { }
 
   removeCard() {
+    this.obd.unwatch([this.card.command])
     this.dashboardService.deleteCard(this.card);
   }
 

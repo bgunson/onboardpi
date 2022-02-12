@@ -16,25 +16,15 @@ class Settings {
         this.settings = require(this.settingsPath);
     }
 
-    create() {
+    create(client) {
         throw new Error("Settings can only be read or updated");
     }
 
-    /**
-     * Fix this.
-     * Pluck the current settings by property 
-     * @param  {string[]} properties array of properties to pluck
-     * @returns The value of the current settings for the given properties, if any 
-     */
-    read(...properties) {
-        // let current = this.settings;
-        // properties.forEach(p => {
-        //     current = current[p];
-        // });
+    read(client) {
         return Promise.resolve(this.settings);
     }
 
-    update(updated) {
+    update(client, updated) {
         return new Promise((resolve, reject) => {
             var reconnect = false;
             if (!_.isEqual(this.settings.connection, updated.connection)) 
@@ -51,7 +41,7 @@ class Settings {
         });
     }
 
-    delete() {
+    delete(client) {
         throw new Error("Settings cannot be deleted");
     }
 

@@ -9,8 +9,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 // import { MatFormFieldModule } from '@angular/material/form-field';
 // import {MatInputModule} from '@angular/material/input';
-import { VehicleStreamComponent } from './components/vehicle-stream/vehicle-stream.component';
-import { SystemStreamComponent } from './components/system-stream/system-stream.component';
+import { VehicleStreamComponent } from './vehicle-stream/vehicle-stream.component';
+import { SystemStreamComponent } from './system-stream/system-stream.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 

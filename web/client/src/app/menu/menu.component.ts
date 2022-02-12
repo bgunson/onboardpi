@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { Subscription } from 'rxjs';
 import { ActionService } from 'src/app/shared/services/action.service';
-import { CarConnectionComponent } from './components/car-connection/car-connection.component';
+import { CarConnectionComponent } from './car-connection/car-connection.component';
 
 interface View {
   name: string;

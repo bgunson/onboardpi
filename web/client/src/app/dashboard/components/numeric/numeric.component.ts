@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 import { pluck } from 'rxjs/operators';
 import { OBDResponse } from 'src/app/shared/models/obd.model';
 import { OBDService } from 'src/app/shared/services/obd.service';
-import { DashboardCard } from '../../models/dashboard.model';
-import { DashboardService } from '../../services/dashboard.service';
+import { DashboardCard } from '../../dashboard.model';
+import { DashboardService } from '../../dashboard.service';
 
 
 @Component({

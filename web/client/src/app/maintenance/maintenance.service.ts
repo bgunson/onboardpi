@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AppSocket } from 'src/app/app.module';
 import { CrudService } from 'src/app/shared/services/crud.service';
-import { MaintenanceRecord } from '../models/maintenance.model';
+import { MaintenanceRecord } from './maintenance.model';
 
 @Injectable({
   providedIn: 'root'

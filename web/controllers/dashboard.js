@@ -8,7 +8,7 @@ class Dashboard extends Crud {
         this.knex = knex;
     }
 
-    reorder(cards) {
+    reorder(_, cards) {
         const queries = [];
         cards.forEach(card => {
             const query = this.getTable()

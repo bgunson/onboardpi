@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MaintenanceRecord } from '../../models/maintenance.model';
-import { MaintenanceService } from '../../services/maintenance.service';
+import { MaintenanceRecord } from '../maintenance.model';
+import { MaintenanceService } from '../maintenance.service';
 
 interface DialogData {
   record?: MaintenanceRecord

@@ -5,7 +5,7 @@ import { pluck, throttleTime } from 'rxjs/operators';
 import { OBDResponse } from 'src/app/shared/models/obd.model';
 import { DisplayService } from 'src/app/shared/services/display.service';
 import { OBDService } from 'src/app/shared/services/obd.service';
-import { CurveDataService } from './services/curve-data.service';
+import { CurveDataService } from './curve-data.service';
 
 @Component({
   selector: 'app-realtime-curves',
@@ -75,9 +75,7 @@ export class RealtimeCurvesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
-    this.obd.getConnection();
-    
+        
     if (this.curveOptions.lines) {
       this.curveOptions.lines[0].color = this.display.defaultColor;
       this.curveOptions.lines[0].areaColor = this.display.defaultColor;

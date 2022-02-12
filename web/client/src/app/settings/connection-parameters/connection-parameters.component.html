@@ -13,18 +13,20 @@
             <mat-radio-button [color]="display.palette" [checked]="!connection.auto"></mat-radio-button>
         </mat-list-item>
     </mat-card>
-    <br>
+    <p style="color: grey;">
+        Reconnect to the vehicle for changes to take effect
+    </p>
     <mat-card class="settings-card" *ngIf="!connection.auto">
         <mat-list-item>
             Serial Port
             <span style="flex: 1 1 auto"></span>
-            <input matInput class="settings-input" [(ngModel)]="connection.parameters.portstr" placeholder="None"/>
+            <input matInput class="settings-input" [(ngModel)]="connection.parameters.portstr" placeholder="None" />
             <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
         <mat-list-item>
             Baudrate
             <span style="flex: 1 1 auto"></span>
-            <input matInput class="settings-input" [(ngModel)]="connection.parameters.baudrate" placeholder="None"/>
+            <input matInput class="settings-input" [(ngModel)]="connection.parameters.baudrate" placeholder="None" />
             <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
         <mat-list-item>
@@ -35,11 +37,11 @@
                     <mat-option [value]="null">
                         NONE
                     </mat-option>
-                <mat-option *ngFor="let p of protocols | keyvalue" [value]="p.key">
-                    {{ p.value }}
-                </mat-option>
+                    <mat-option *ngFor="let p of protocols | keyvalue" [value]="p.key">
+                        {{ p.value }}
+                    </mat-option>
                 </mat-select>
-            </mat-form-field>  
+            </mat-form-field>
         </mat-list-item>
     </mat-card>
 </mat-list>

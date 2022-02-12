@@ -8,7 +8,7 @@ import { OBDService } from 'src/app/shared/services/obd.service';
 @Component({
   selector: 'app-freeze-data',
   templateUrl: './freeze-data.component.html',
-  styleUrls: ['./freeze-data.component.scss', '../../diagnostics.component.scss']
+  styleUrls: ['./freeze-data.component.scss', '../diagnostics.component.scss']
 })
 export class FreezeDataComponent implements OnInit, OnDestroy {
 

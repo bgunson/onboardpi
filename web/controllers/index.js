@@ -21,24 +21,24 @@ class Crud {
     //     return this.getTable().where({id: id});
     // }
 
-    create(item) {
+    create(client, item) {
         return this.getTable()
             .insert(item)
             .then(() => this.getTable());
     }
 
-    read() {
+    read(client) {
         return this.getTable();
     }
 
-    update(item) {
+    update(client, item) {
         return this.getTable()
             .where({ id: item.id })
             .update(item)
             .then(() => this.getTable());
     }
 
-    delete(item) {
+    delete(client, item) {
         return this.getTable()
             .where({ id: item.id })
             .del()

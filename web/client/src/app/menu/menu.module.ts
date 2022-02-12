@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
-import { CarConnectionComponent } from './components/car-connection/car-connection.component';
+import { CarConnectionComponent } from './car-connection/car-connection.component';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 
 

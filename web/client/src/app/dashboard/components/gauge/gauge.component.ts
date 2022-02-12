@@ -5,8 +5,8 @@ import { pluck } from 'rxjs/operators';
 import { OBDResponse } from 'src/app/shared/models/obd.model';
 import { DisplayService } from 'src/app/shared/services/display.service';
 import { OBDService } from 'src/app/shared/services/obd.service';
-import { DashboardCard } from '../../models/dashboard.model';
-import { DashboardService } from '../../services/dashboard.service';
+import { DashboardCard } from '../../dashboard.model';
+import { DashboardService } from '../../dashboard.service';
 
 export const GAUGE_CONFIG: {[cmd: string]: any} = {
 

@@ -1,13 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatRadioChange } from '@angular/material/radio';
 import { DisplayService } from 'src/app/shared/services/display.service';
-import { ConnectionParameters, Settings } from '../../models/settings.model';
-import { SettingsService } from '../../services/settings.service';
+import { ConnectionParameters, Settings } from '../settings.model';
+import { SettingsService } from '../settings.service';
 
 @Component({
   selector: 'settings-connection-parameters',
   templateUrl: './connection-parameters.component.html',
-  styleUrls: ['./connection-parameters.component.scss', '../../settings.component.scss']
+  styleUrls: ['./connection-parameters.component.scss', '../settings.component.scss']
 })
 export class ConnectionParametersComponent implements OnInit, OnDestroy {
 

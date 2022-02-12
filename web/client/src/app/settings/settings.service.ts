@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AppSocket } from 'src/app/app.module';
 import { CrudService } from 'src/app/shared/services/crud.service';
-import { Settings } from '../models/settings.model';
+import { Settings } from './settings.model';
 
 @Injectable({
   providedIn: 'root'

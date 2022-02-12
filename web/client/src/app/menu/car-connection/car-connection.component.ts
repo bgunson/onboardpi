@@ -13,8 +13,7 @@ export class CarConnectionComponent implements OnInit {
 
   obdStatus$: Observable<string>;
   obdConnected$: Observable<boolean>;
-
-
+  
   constructor(
     public obd: OBDService, 
     private appSocket: AppSocket,
@@ -22,12 +21,12 @@ export class CarConnectionComponent implements OnInit {
   ) { }
 
   connectOBD() {
-    this.appSocket.emit('obd:reconnect');
+    this.obd.connect();
     this.obd.getConnection();
   }
 
   disconnectOBD() {
-    this.appSocket.emit('obd:disconnect');
+    this.obd.disconnect();
   }
 
   ngOnInit(): void {

@@ -13,8 +13,8 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatRadioModule} from '@angular/material/radio';
-import { ConnectionParametersComponent } from './components/connection-parameters/connection-parameters.component';
-import { LogLevelComponent } from './components/log-level/log-level.component';
+import { LogLevelComponent } from './log-level/log-level.component';
+import { ConnectionParametersComponent } from './connection-parameters/connection-parameters.component';
 
 
 

@@ -1,10 +1,10 @@
-import { BehaviorSubject, interval, merge, Observable } from "rxjs";
-import { map, shareReplay, startWith, switchMap } from "rxjs/operators";
-import { DashboardCard } from "src/app/dashboard/models/dashboard.model";
-import { SysInfo } from "src/app/data-stream/models/sys-info.model";
-import { MaintenanceRecord } from "src/app/maintenance/models/maintenance.model";
+import { BehaviorSubject, interval, Observable } from "rxjs";
+import { map, shareReplay, switchMap } from "rxjs/operators";
+import { DashboardCard } from "src/app/dashboard/dashboard.model";
+import { SysInfo } from "src/app/data-stream/system-stream/system-stream.component";
+import { MaintenanceRecord } from "src/app/maintenance/maintenance.model";
 import { environment } from "src/environments/environment";
-import { Settings } from "../../settings/models/settings.model";
+import { Settings } from "../../settings/settings.model";
 import { DemoSocket } from "./demo-socket";
 
 

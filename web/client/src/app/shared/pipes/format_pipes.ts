@@ -23,6 +23,20 @@ export class OBDValuePipe implements PipeTransform {
   
 }
 
+@Pipe({
+  name: 'elapsed'
+})
+export class ElapsedPipe implements PipeTransform {
+
+  transform(numSec: number) {
+    let hours: string = String(Math.floor(numSec / 3600)).padStart(2, '0');
+    let minutes: string = String(Math.floor((numSec / 60) % 60)).padStart(2, '0');
+    let seconds: string = String(Math.floor(numSec % 60)).padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
+  }
+  
+}
+
 /**
  * Format a given number of bytes to its largest unit as string
  */

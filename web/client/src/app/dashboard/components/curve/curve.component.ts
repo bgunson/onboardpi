@@ -3,11 +3,11 @@ import { RealtimeChartData, RealtimeChartOptions } from 'ngx-graph';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { pluck } from 'rxjs/operators';
 import { OBDResponse } from 'src/app/shared/models/obd.model';
-import { CurveDataService } from 'src/app/realtime-curves/services/curve-data.service';
+import { CurveDataService } from 'src/app/realtime-curves/curve-data.service';
 import { DisplayService } from 'src/app/shared/services/display.service';
 import { OBDService } from 'src/app/shared/services/obd.service';
-import { DashboardCard } from '../../models/dashboard.model';
-import { DashboardService } from '../../services/dashboard.service';
+import { DashboardCard } from '../../dashboard.model';
+import { DashboardService } from '../../dashboard.service';
 
 @Component({
   selector: 'dashboard-curve',

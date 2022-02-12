@@ -20,8 +20,6 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.json());
 app.use(compression());
 
-const settings = new Settings(io);
-
 const isCrud = (action) => ['create', 'read', 'update', 'delete'].includes(action);
 
 database.configure(knex => {
@@ -32,7 +30,7 @@ database.configure(knex => {
 
     const socketAPIs = {};
 
-    socketAPIs.settings = settings;
+    socketAPIs.settings = new Settings(io);;
     socketAPIs.dashboard_cards = new Dashboard(io, knex);
     socketAPIs.maintenance = new Crud('maintenance', io, knex);
     socketAPIs.sysInfo = new SysInfo(io);
@@ -44,9 +42,8 @@ database.configure(knex => {
         console.log(`Client connected from ${socket.handshake.address}`);
         socket.onAny((eventName, args) => {
             let [api, action] = eventName.split(':');
-            if (api && action) {
-                if (isCrud(action)) {
-                    socketAPIs[api][action](args)
+            if (socketAPIs[api] && action) {
+                socketAPIs[api][action](socket, args)
                     .then((res) => {
                         if (action === 'read') {
                             // If request was a read then we only need to respond to the individual client
@@ -56,10 +53,7 @@ database.configure(knex => {
                             io.emit(`${api}:response`, res);
                         }
                     })
-                    .catch((err) => socket.emit(`${api}:error`, err));      // tell the individual client what they did failed 
-                } else {
-                    socketAPIs[api][action](socket, args);
-                }
+                    .catch((err) => socket.emit(`${action}:error`, { ...err, api: api }));      // tell the individual client what they did failed 
             }
         });
     });

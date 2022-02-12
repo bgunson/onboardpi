@@ -3,14 +3,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { DemoGuard } from './demo/demo.guard';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DataStreamComponent } from './data-stream/data-stream.component';
-import { FreezeDataComponent } from './diagnostics/components/freeze-data/freeze-data.component';
+import { FreezeDataComponent } from './diagnostics/freeze-data/freeze-data.component';
 import { DiagnosticsComponent } from './diagnostics/diagnostics.component';
 import { MaintenanceComponent } from './maintenance/maintenance.component';
 import { MenuComponent } from './menu/menu.component';
 import { RealtimeCurvesComponent } from './realtime-curves/realtime-curves.component';
-import { ConnectionParametersComponent } from './settings/components/connection-parameters/connection-parameters.component';
-import { LogLevelComponent } from './settings/components/log-level/log-level.component';
+import { LogLevelComponent } from './settings/log-level/log-level.component';
 import { SettingsComponent } from './settings/settings.component';
+import { ConnectionParametersComponent } from './settings/connection-parameters/connection-parameters.component';
 
 
 const routes: Routes = [

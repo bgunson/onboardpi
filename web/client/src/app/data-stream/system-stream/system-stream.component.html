@@ -21,6 +21,7 @@
         <mat-card class="info-card">
             <mat-list-item>
                 Used<span style="flex: 1 1 auto"></span>{{ info.mem.active | bytes:'1.1-2' }} ({{ ((info.mem.active / info.mem.total)*100 | number:'1.1-1') ?? 'N/A'}} %)
+                <mat-divider class="app-divider"></mat-divider>
             </mat-list-item>
             <mat-list-item>
                 Total<span style="flex: 1 1 auto"></span>{{ (info.mem.total | bytes:'1.1-1') ?? 'N/A'}}
@@ -77,6 +78,17 @@
                 </mat-list-item>
             </mat-card>
         </ng-container>
+
+        <div mat-subheader><mat-icon>schedule</mat-icon>&nbsp;Time</div>
+        <mat-card class="info-card">
+            <mat-list-item>
+                Up (drive) time<span style="flex: 1 1 auto"></span>{{ info.time.uptime | elapsed }}
+                <mat-divider class="app-divider"></mat-divider>
+            </mat-list-item>
+            <mat-list-item>
+                Server Clock<span style="flex: 1 1 auto"></span>{{ info.time.current | date:'mediumTime' }}
+            </mat-list-item>
+        </mat-card>
 
     </mat-list>
 </ng-container>

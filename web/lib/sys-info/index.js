@@ -58,6 +58,7 @@ class SysInfo {
                 this.socket.to(this.roomName).emit(this.roomName, info);
             });
         }
+        return Promise.resolve();
     }
 
     leave(client) {
@@ -67,6 +68,7 @@ class SysInfo {
             clearInterval(this.observer);
             this.observer = null;
         }
+        return Promise.resolve();
     }
 
 }

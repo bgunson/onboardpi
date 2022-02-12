@@ -7,7 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
-import { FreezeDataComponent } from './components/freeze-data/freeze-data.component';
+import { FreezeDataComponent } from './freeze-data/freeze-data.component';
 import { MatRippleModule } from '@angular/material/core';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { SharedModule } from 'src/app/shared/shared.module';

@@ -12,7 +12,7 @@ import {MatTableModule} from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSortModule } from '@angular/material/sort';
-import { RecordFormComponent } from './components/record-form/record-form.component';
+import { RecordFormComponent } from './record-form/record-form.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SharedModule } from 'src/app/shared/shared.module';
 // import { MaintenanceRoutingModule } from './maintenance-routing.module';

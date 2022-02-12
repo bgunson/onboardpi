@@ -6,9 +6,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { ActionService } from 'src/app/shared/services/action.service';
 import { DisplayService } from 'src/app/shared/services/display.service';
-import { RecordFormComponent } from './components/record-form/record-form.component';
-import { MaintenanceRecord } from './models/maintenance.model';
-import { MaintenanceService } from './services/maintenance.service';
+import { RecordFormComponent } from './record-form/record-form.component';
+import { MaintenanceRecord } from './maintenance.model';
+import { MaintenanceService } from './maintenance.service';
 
 @Component({
   selector: 'app-maintenance',

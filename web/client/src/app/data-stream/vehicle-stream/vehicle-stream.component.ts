@@ -39,7 +39,6 @@ export class VehicleStreamComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.obd.getConnection();
     this.carConnected$ = this.obd.isConnected();
     this.watch$ = this.obd.getWatching().pipe(throttleTime(1000));
 

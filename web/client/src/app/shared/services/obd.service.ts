@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { share, takeWhile, timeout } from 'rxjs/operators';
 import { OBDSocket } from 'src/app/app.module';
@@ -24,11 +25,21 @@ export class OBDService {
 
   connectingNow: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);    // TODO: maybe make this server side from appSocket event so other clients know if connecting
 
-  constructor(private socket: OBDSocket) { 
+  constructor(private socket: OBDSocket, private snackBar: MatSnackBar) { 
     socket.on('unwatch', () => this.watch([...this._watchList]));
 
     socket.fromEvent<string>('status').subscribe(v => this._status$.next(v));
     socket.fromEvent<boolean>('is_connected').subscribe(v => this._isConnected$.next(v));
+
+    socket.on('obd_closed', () => {
+      this.isConnected();
+      this.getStatus();
+    });
+
+    socket.on('obd_connecting', () => {
+      this.getStatus();
+      this.isConnected();
+    });
 
     socket.on('disconnect', () => {
       this._isConnected$.next(false);
@@ -42,6 +53,8 @@ export class OBDService {
   }
 
   getConnection(): void {
+    this.isConnected();
+    this.getStatus();
     if (!this.connectingNow.getValue()) {
       this.connectingNow.next(true);
       this.getStatus();
@@ -53,11 +66,19 @@ export class OBDService {
           () => {},
           () => {
             this.connectingNow.next(false);
-            alert("Unable to connect to the vehicle. Please check your OBD adapter and connection parameters in settings.")
+            this.snackBar.open("Unable to connect to the vehicle", "Dismiss", { verticalPosition: 'top', duration: 4000 })
           },
           () => this.connectingNow.next(false)
         );
     }
+  }
+
+  connect(): void {
+    this.socket.emit('connect_obd');
+  }
+
+  disconnect(): void {
+    this.socket.emit('close');
   }
 
   getStatus(): BehaviorSubject<string> {

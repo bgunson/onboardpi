@@ -3,8 +3,8 @@ import { Observable, Subscription } from 'rxjs';
 import { DisplayService } from 'src/app/shared/services/display.service';
 import { ActionService } from 'src/app/shared/services/action.service';
 import { OBDService } from 'src/app/shared/services/obd.service';
-import { DashboardCard } from './models/dashboard.model';
-import { DashboardService } from './services/dashboard.service';
+import { DashboardCard } from './dashboard.model';
+import { DashboardService } from './dashboard.service';
 import { CdkDragDrop, CdkDragEnter, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
 import { CardFormComponent } from './components/card-form/card-form.component';
@@ -109,8 +109,6 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     this.action.setAction('dashboard_customize');
     this.setDimensions();
-    
-    this.obd.getConnection();
     this.vehicleConnected$ = this.obd.isConnected();
 
     // Subscribe to sreen orientation

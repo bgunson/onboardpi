@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DisplayService } from 'src/app/shared/services/display.service';
 import { environment } from 'src/environments/environment';
-import { Settings } from './models/settings.model';
-import { SettingsService } from './services/settings.service';
+import { Settings } from './settings.model';
+import { SettingsService } from './settings.service';
 
 
 @Component({

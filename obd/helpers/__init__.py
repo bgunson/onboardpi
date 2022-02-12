@@ -7,7 +7,7 @@ def get_params():
     if os.path.isfile(SETTINGS_PATH):
         file = open(SETTINGS_PATH)
         data = json.load(file)
-        if data['connection']['auto']:
+        if data['connection']['auto'] == False:
             return data['connection']['parameters']
     return {}
 

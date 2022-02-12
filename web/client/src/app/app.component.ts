@@ -27,14 +27,14 @@ export class AppComponent implements OnInit, AfterViewInit {
     private router: Router,
   ) {
 
-    this.appSocket.on('obd:reconnect', (msg: string) => {
-      var reconnect;
-      if (msg)
-        reconnect = window.confirm(msg);
-      if (reconnect) 
-        this.appSocket.emit('obd:reconnect');
-        this.obd.getConnection();
-    });
+    // this.appSocket.on('obd:reconnect', (msg: string) => {
+    //   var reconnect;
+    //   if (msg)
+    //     reconnect = window.confirm(msg);
+    //   if (reconnect) 
+    //     this.appSocket.emit('obd:reconnect');
+    //     this.obd.getConnection();
+    // });
 
   }
 
@@ -53,7 +53,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     } else {
       urlSeg.pop();
     }
-    this.router.navigate(urlSeg);
+    console.log(urlSeg)
+    this.router.navigateByUrl(urlSeg.join('/'));
   }
 
   ngAfterViewInit(): void {
