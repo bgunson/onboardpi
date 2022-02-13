@@ -17,7 +17,7 @@ class Settings {
     }
 
     create(client) {
-        throw new Error("Settings can only be read or updated");
+        Promise.reject(new Error("Settings can only be read or updated"));
     }
 
     read(client) {
@@ -42,7 +42,7 @@ class Settings {
     }
 
     delete(client) {
-        throw new Error("Settings cannot be deleted");
+        return Promise.reject(new Error("Settings cannot be deleted"));
     }
 
 }

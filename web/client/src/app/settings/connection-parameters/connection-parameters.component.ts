@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Protocol } from 'src/app/shared/models/obd.model';
 import { DisplayService } from 'src/app/shared/services/display.service';
+import { OBDService } from 'src/app/shared/services/obd.service';
 import { ConnectionParameters, Settings } from '../settings.model';
 import { SettingsService } from '../settings.service';
 
@@ -10,25 +12,15 @@ import { SettingsService } from '../settings.service';
 })
 export class ConnectionParametersComponent implements OnInit, OnDestroy {
 
-  protocols = {
-    '1': 'SAE J1850 PWM',
-    '2': 'SAE J1850 VPW',
-    '3' : 'AUTO, ISO 9141-2',
-    '4': 'ISO 14230-4 (KWP 5BAUD)',
-    '5': 'ISO 14230-4 (KWP FAST)',
-    '6': 'ISO 15765-4 (CAN 11/500)',
-    '7': 'ISO 15765-4 (CAN 29/500)',
-    '8': 'ISO 15765-4 (CAN 11/250)',
-    '9': 'ISO 15765-4 (CAN 29/250)',
-    'A': 'SAE J1939 (CAN 29/250)'
-  }
+  protocols$: Promise<Protocol[]>;
 
   connection$: Promise<ConnectionParameters>;
   settings$: Promise<Settings>;
 
-  constructor(private settingsService: SettingsService, public display: DisplayService) { }
+  constructor(private settingsService: SettingsService, public display: DisplayService, private obd: OBDService) { }
 
   ngOnInit(): void {
+    this.protocols$ = this.obd.allProtocols();
     this.settings$ = this.settingsService.getSettings();
     this.connection$ = this.settings$.then(s => s.connection);
   }

@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { share, takeWhile, timeout } from 'rxjs/operators';
 import { OBDSocket } from 'src/app/app.module';
-import { OBDCommand, OBDResponse, ResponseSet } from '../models/obd.model';
+import { OBDCommand, OBDResponse, Protocol, ResponseSet } from '../models/obd.model';
 
 
 /**
@@ -123,6 +123,16 @@ export class OBDService {
   getSupported(): Promise<OBDCommand[]> {
     this.socket.emit('supported_commands');
     return this.socket.fromOneTimeEvent<any>('supported_commands');
+  }
+
+  allDTCs(): Promise<{[key: string]: string}> {
+    this.socket.emit('all_dtcs');
+    return this.socket.fromOneTimeEvent<{[key: string]: string}>('all_dtcs');
+  }
+
+  allProtocols(): Promise<Protocol[]> {
+    this.socket.emit('all_protocols');
+    return this.socket.fromOneTimeEvent<Protocol[]>('all_protocols');
   }
 
   allCommands(): Promise<OBDCommand[][]> {

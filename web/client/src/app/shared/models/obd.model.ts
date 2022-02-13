@@ -16,3 +16,8 @@ export interface OBDResponse {
 export interface ResponseSet {
     [cmd: string]: OBDResponse
 }
+
+export interface Protocol {
+    id: string;
+    name: string;
+}

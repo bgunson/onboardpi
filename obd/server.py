@@ -1,6 +1,6 @@
 import obd
 import obdio
-from helpers import *
+from obpi import *
 
 class OBDServer():
 
@@ -11,9 +11,9 @@ class OBDServer():
 
     def __init__(self):
         """ Immedieately attempt to connect to the vehcile on instantiation and define the socketio events and handlers """
-        obd.logger.setLevel(get_log_level())
+        obd.logger.setLevel(Configure.get_log_level())
         self.io = obdio.OBDio()
-        self.io.connect_obd(**get_params())
+        self.io.connect_obd(**Configure.get_params())
         sio = self.io.create_server(cors_allowed_origins='*', json=obdio)
 
         """ Begin mounting additional events and overrides """
@@ -56,6 +56,26 @@ class OBDServer():
             if not self.watch_loop_running:
                 self.watch_loop_running = True
                 await sio.start_background_task(self.watch_loop)
+
+        @sio.event
+        async def all_protocols(sid):
+            all = [
+                obd.protocols.ISO_14230_4_5baud,
+                obd.protocols.ISO_14230_4_fast,
+                obd.protocols.ISO_15765_4_11bit_250k,
+                obd.protocols.ISO_15765_4_11bit_500k,
+                obd.protocols.ISO_15765_4_29bit_250k,
+                obd.protocols.ISO_15765_4_29bit_500k,
+                obd.protocols.ISO_9141_2,
+                obd.protocols.SAE_J1850_PWM,
+                obd.protocols.SAE_J1850_VPW,
+                obd.protocols.SAE_J1939
+            ]
+            await sio.emit('all_protocols', sorted(all, key=lambda p: p.ELM_ID), room=sid)
+
+        @sio.event
+        async def all_dtcs(sid):
+            await sio.emit('all_dtcs', obd.codes.DTC, room=sid)
                 
         @sio.event
         async def all_commands(sid):
@@ -68,7 +88,7 @@ class OBDServer():
         @sio.event
         async def connect_obd(sid):
             await sio.emit('obd_connecting')
-            self.io.connect_obd(**get_params())
+            self.io.connect_obd(**Configure.get_params())
 
         """ End of events """
 
@@ -102,7 +122,11 @@ class OBDServer():
 
     def start(self):
         """ This starts the socketio assgi server """
-        self.io.run_server(host='0.0.0.0', port=60000, log_level='info')
+        self.io.serve_static({
+            '/view/obd-log': {'filename': 'obd.log', 'content_type': 'text/plain'},
+            '/download/obd-log': 'obd.log'
+        })
+        self.io.run_server(host='0.0.0.0', port=60000, log_level='critical')
 
 
 if __name__ == '__main__':

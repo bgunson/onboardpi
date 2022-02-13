@@ -3,36 +3,36 @@ services:
   db:
     image: timescale/timescaledb:latest-pg14
     restart: always
-    ports: 
-      - "5432:5432"
     environment:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=onboardpi
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - /var/lib/postgresql/data:/var/lib/postgresql/data
   web:
-    build: ./web
+    image: bgunson/onboardpi-web
     ports: 
-      - "8080:8080"
+      - "80:8080"
     volumes: 
-      - onboardpi_data:/var/lib/onboardpi/data
+      - /var/lib/onboardpi/data:/var/lib/onboardpi/data
     environment:
       - POSTGRES_HOST=db
+      - POSTGRES_DB=onboardpi
+      - POSTGRES_PASSWORD=password
       - SETTINGS_DIR=/var/lib/onboardpi/data
     depends_on:
       - db
   obd:
-    build: ./obd
+    image: bgunson/onboardpi-obd
     ports: 
       - "60000:60000"
     volumes:
-      - onboardpi_data:/var/lib/onboardpi/data:ro
+      - /var/lib/onboardpi/data:/var/lib/onboardpi/data:ro
       - /dev:/dev
+    # If you know your obd adapter's serial port will not change (i.e. USB adapter w/ no other serial devices which may connect first) 
+    # use device mapping for ttyUSB0 and comment out '/dev:/dev' under volumes
+    # devices: 
+    #   - "/dev/ttyUSB0:/dev/ttyUSB0"
     environment:
       - SETTINGS_DIR=/var/lib/onboardpi/data
     depends_on:
       - web
-
-volumes:
-  db_data:
-  onboardpi_data:

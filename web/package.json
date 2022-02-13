@@ -17,8 +17,5 @@
     "pg": "^8.7.3",
     "socket.io": "^4.0.0",
     "systeminformation": "^5.9.4"
-  },
-  "devDependencies": {
-    "sqlite3": "^5.0.2"
   }
 }

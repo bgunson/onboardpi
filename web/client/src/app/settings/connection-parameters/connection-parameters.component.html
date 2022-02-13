@@ -35,10 +35,10 @@
             <mat-form-field>
                 <mat-select [(ngModel)]="connection.parameters.protocol">
                     <mat-option [value]="null">
-                        NONE
+                        AUTO
                     </mat-option>
-                    <mat-option *ngFor="let p of protocols | keyvalue" [value]="p.key">
-                        {{ p.value }}
+                    <mat-option *ngFor="let p of protocols$ | async" [value]="p.id">
+                        {{ p.name }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>

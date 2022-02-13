@@ -82,11 +82,11 @@
         <div mat-subheader><mat-icon>schedule</mat-icon>&nbsp;Time</div>
         <mat-card class="info-card">
             <mat-list-item>
-                Up (drive) time<span style="flex: 1 1 auto"></span>{{ info.time.uptime | elapsed }}
+                Up (drive) time<span style="flex: 1 1 auto"></span>{{ (info.time.uptime | elapsed) || 'N/A' }}
                 <mat-divider class="app-divider"></mat-divider>
             </mat-list-item>
             <mat-list-item>
-                Server Clock<span style="flex: 1 1 auto"></span>{{ info.time.current | date:'mediumTime' }}
+                Server Clock<span style="flex: 1 1 auto"></span>{{ (info.time.current | date:'mediumTime') || 'N/A' }}
             </mat-list-item>
         </mat-card>
 

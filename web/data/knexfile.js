@@ -4,7 +4,7 @@ module.exports = {
     development: {
         client: 'pg',
         connection: {
-            host: process.env.POSTGRES_HOST || 'localhost',
+            host: 'localhost',
             port: 5432,
             user: 'postgres',
             password: 'password',
@@ -25,8 +25,8 @@ module.exports = {
             host: process.env.POSTGRES_HOST || 'localhost',
             port: 5432,
             user: 'postgres',
-            password: 'password',
-            database: 'onboardpi'
+            password: process.env.POSTGRES_PASSWORD,
+            database: process.env.POSTGRES_DB
         },
         seeds: {
             directory: `${__dirname}/seeds`

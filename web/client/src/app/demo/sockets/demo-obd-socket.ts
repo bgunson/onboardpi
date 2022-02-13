@@ -37,6 +37,7 @@ export class DemoOBDSocket extends DemoSocket {
         'port_name': Promise.resolve('/dev/demo/port'),
         'protocol_name': Promise.resolve('DEMO'),
         'all_commands': this.get<OBDCommand[]>(environment.dataURL + '/obd/all_commands.json').toPromise(),
+        'all_protocols': this.get<OBDCommand[]>(environment.dataURL + '/obd/all_protocols.json').toPromise(),
         'supported_commands': this.get(environment.dataURL + '/obd/supported_commands.json').toPromise()
     }
 
