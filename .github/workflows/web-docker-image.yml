@@ -35,7 +35,7 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           flavor: latest=auto
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/onboardpi
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/onboardpi-web
           tags: type=semver,pattern={{version}}
       -
         name: Set up Docker Buildx
