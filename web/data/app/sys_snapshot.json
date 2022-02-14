@@ -52,5 +52,11 @@
         "use": 16.92,
         "mount": "/"
       }
-    ]
+    ],
+    "time": {
+        "current": 1644801016859,
+        "timezone": "GTM+0000",
+        "timezoneName": "UTC",
+        "uptime": 3600
+    }
   }

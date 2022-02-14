@@ -10,6 +10,7 @@ services:
       - /var/lib/postgresql/data:/var/lib/postgresql/data
   web:
     image: bgunson/onboardpi-web
+    restart: always
     ports: 
       - "80:8080"
     volumes: 
@@ -23,6 +24,7 @@ services:
       - db
   obd:
     image: bgunson/onboardpi-obd
+    restart: always
     ports: 
       - "60000:60000"
     volumes:
