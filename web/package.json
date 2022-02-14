@@ -2,10 +2,10 @@
   "name": "onboardpi-web",
   "version": "0.2.0",
   "description": "OnBoardPi web server",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js --ignore ./db/dev --ignore ../client-src"
+    "dev": "nodemon server.js --ignore ./client"
   },
   "keywords": [],
   "author": "Bennett Gunson",
