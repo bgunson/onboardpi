@@ -2,12 +2,12 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { OBDCommand } from 'src/app/shared/models/obd.model';
 import { OBDService } from 'src/app/shared/services/obd.service';
-import { DashboardCard } from '../../dashboard.model';
+import { Sensor } from '../../dashboard.model';
 import { DashboardService } from '../../dashboard.service';
 
 interface DialogData {
   new?: boolean;
-  card: DashboardCard;
+  card: Sensor;
 }
 
 @Component({
@@ -17,7 +17,7 @@ interface DialogData {
 })
 export class CardFormComponent implements OnInit {
 
-  card: DashboardCard;
+  card: Sensor;
 
   cardTypes = {
     'Gauge - Full': 'gauge.full',

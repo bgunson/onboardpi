@@ -1,10 +1,10 @@
-const cards = require('../app/dashboard_cards.json');
+const cards = require('../app/sensor.json');
 
 exports.seed = function(knex) {
-  return knex('dashboard_cards')
+  return knex('sensor')
     .then(rows => {
       if (rows.length === 0) {
-        return knex('dashboard_cards').insert(cards);
+        return knex('sensor').insert(cards);
       }
     });
 };

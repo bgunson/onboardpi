@@ -16,7 +16,7 @@ Open another terminal and run:
 python3 -m pip install ELM327-emulator
 elm -s car
 ```
-Take not of the pseudo port it uses, an example is `/dev/pts/6`. You need to configure the server
+Take note of the pseudo port it uses, an example is `/dev/pts/6`. You need to configure the server
 to use that serial port explicitly in `settings.json` to properly connect to the simulation.
 
 Example `settings.json` (located in the project root):

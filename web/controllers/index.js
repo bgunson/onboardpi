@@ -1,10 +1,9 @@
 
 
-class Crud {
+class Controller {
 
-    constructor(tableName, io, knex) {
+    constructor(tableName, knex) {
         this.tableName = tableName;
-        this.io = io;
         this.knex = knex;
     }
 
@@ -46,4 +45,4 @@ class Crud {
     }
 }
 
-module.exports = Crud;
+module.exports = Controller;

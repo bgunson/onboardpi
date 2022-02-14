@@ -1,6 +1,6 @@
 import { BehaviorSubject, interval, Observable } from "rxjs";
 import { map, shareReplay, switchMap } from "rxjs/operators";
-import { DashboardCard } from "src/app/dashboard/dashboard.model";
+import { Sensor } from "src/app/dashboard/dashboard.model";
 import { SysInfo } from "src/app/data-stream/system-stream/system-stream.component";
 import { MaintenanceRecord } from "src/app/maintenance/maintenance.model";
 import { environment } from "src/environments/environment";
@@ -11,11 +11,11 @@ import { DemoSocket } from "./demo-socket";
 export class DemoAppSocket extends DemoSocket {
 
 
-  private _dashboardCards$: BehaviorSubject<DashboardCard[]> = new BehaviorSubject<DashboardCard[]>([]);
+  private _sensors$: BehaviorSubject<Sensor[]> = new BehaviorSubject<Sensor[]>([]);
   private _maintenanceRecords$: BehaviorSubject<MaintenanceRecord[]> = new BehaviorSubject<MaintenanceRecord[]>([]);
 
   private _crud: {[name: string]: BehaviorSubject<any[]>} = {
-    'dashboard_cards': this._dashboardCards$,
+    'sensor': this._sensors$,
     'maintenance':this._maintenanceRecords$
   }
 
@@ -44,18 +44,18 @@ export class DemoAppSocket extends DemoSocket {
   }
 
   fromEvents: { [event: string]: Observable<any> } = {
-    'dashboard_cards:response': this.getList('dashboard_cards'),
+    'sensor:response': this.getList('sensor'),
     'maintenance:response': this.getList('maintenance'),
     'sysInfo': this._sysInfo$
   }
   
   emits: { [event: string]: Function } = {
-    'dashboard_cards:update': (args: any[]) => this.update(args[0], 'dashboard_cards'),
-    'dashboard_cards:create': (args: any[]) => this.create(args[0], 'dashboard_cards'),
-    'dashboard_cards:delete': (args: any[]) => this.delete(args[0], 'dashboard_cards'),
-    'dashboard_cards:reorder': (args: any[]) => {
-      this._crud['dashboard_cards'].next((args[0])); 
-      localStorage.setItem('dashboard_cards', JSON.stringify(this._crud['dashboard_cards'].getValue())) 
+    'sensor:update': (args: any[]) => this.update(args[0], 'sensor'),
+    'sensor:create': (args: any[]) => this.create(args[0], 'sensor'),
+    'sensor:delete': (args: any[]) => this.delete(args[0], 'sensor'),
+    'sensor:reorder': (args: any[]) => {
+      this._crud['sensor'].next((args[0])); 
+      localStorage.setItem('sensor', JSON.stringify(this._crud['sensor'].getValue())) 
     },
     'maintenance:update': (args: any[]) => this.update(args[0], 'maintenance'),
     'maintenance:create': (args: any[]) => this.create(args[0], 'maintenance'),
@@ -69,14 +69,14 @@ export class DemoAppSocket extends DemoSocket {
   }
 
 
-  create(item: MaintenanceRecord | DashboardCard, crudList: string) {
+  create(item: MaintenanceRecord | Sensor, crudList: string) {
     let list: BehaviorSubject<any[]> = this._crud[crudList];
     list.getValue().push(item);
     list.next(list.getValue());
     localStorage.setItem(crudList, JSON.stringify(list.getValue()));
   }
 
-  update(update: MaintenanceRecord | DashboardCard, crudList: string) {
+  update(update: MaintenanceRecord | Sensor, crudList: string) {
     let list: BehaviorSubject<any[]> = this._crud[crudList];
     const updated = list.getValue().map(element => {
       if (element.id === update.id) {
@@ -88,7 +88,7 @@ export class DemoAppSocket extends DemoSocket {
     localStorage.setItem(crudList, JSON.stringify(list.getValue()));
   }
 
-  delete(item: MaintenanceRecord | DashboardCard, crudList: string) {
+  delete(item: MaintenanceRecord | Sensor, crudList: string) {
     let list: BehaviorSubject<any[]> = this._crud[crudList];
     list.next(list.getValue().filter(val => val.id !== item.id));
     localStorage.setItem(crudList, JSON.stringify(list.getValue()));
@@ -100,7 +100,7 @@ export class DemoAppSocket extends DemoSocket {
       if (localList) {
         this._crud[crudList].next(JSON.parse(localList));
       } else {
-        this.get<DashboardCard[]>(`${environment.dataURL}/app/${crudList}.json`).subscribe(res => this._crud[crudList].next(res));
+        this.get<Sensor[]>(`${environment.dataURL}/app/${crudList}.json`).subscribe(res => this._crud[crudList].next(res));
       }
     }
     return this._crud[crudList].asObservable();

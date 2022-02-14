@@ -6,7 +6,7 @@ import { OBDResponse } from 'src/app/shared/models/obd.model';
 import { CurveDataService } from 'src/app/realtime-curves/curve-data.service';
 import { DisplayService } from 'src/app/shared/services/display.service';
 import { OBDService } from 'src/app/shared/services/obd.service';
-import { DashboardCard } from '../../dashboard.model';
+import { Sensor } from '../../dashboard.model';
 import { DashboardService } from '../../dashboard.service';
 
 @Component({
@@ -16,7 +16,7 @@ import { DashboardService } from '../../dashboard.service';
 })
 export class CurveComponent implements OnInit {
 
-  @Input() card: DashboardCard;
+  @Input() card: Sensor;
 
   live$: Observable<OBDResponse>;
   loaded$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);

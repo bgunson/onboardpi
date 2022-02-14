@@ -1,10 +1,9 @@
-const Crud = require(".");
+const Controller = require(".");
 
-class Dashboard extends Crud {
+class Sensor extends Controller {
 
-    constructor(io, knex) {
-        super('dashboard_cards', io, knex);
-        this.io = io;
+    constructor(knex) {
+        super('sensor', knex);
         this.knex = knex;
     }
 
@@ -21,4 +20,4 @@ class Dashboard extends Crud {
 
 }
 
-module.exports = Dashboard;
+module.exports = Sensor;

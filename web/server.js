@@ -8,9 +8,11 @@ const compression = require('compression');
 
 // Lib modules
 const SysInfo = require('./lib/sys-info');
+
+// API Controllers
+const Controller = require('./controllers');    // Parent/base
+const Sensor = require('./controllers/sensor');
 const Settings = require('./controllers/settings');
-const Dashboard = require('./controllers/dashboard');
-const Crud = require('./controllers');
 
 // Database 
 const database = require('./data/config');
@@ -20,8 +22,6 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.json());
 app.use(compression());
 
-const isCrud = (action) => ['create', 'read', 'update', 'delete'].includes(action);
-
 database.configure(knex => {
 
     httpServer.listen(port, () => {
@@ -30,9 +30,9 @@ database.configure(knex => {
 
     const socketAPIs = {};
 
-    socketAPIs.settings = new Settings(io);;
-    socketAPIs.dashboard_cards = new Dashboard(io, knex);
-    socketAPIs.maintenance = new Crud('maintenance', io, knex);
+    socketAPIs.settings = new Settings();
+    socketAPIs.sensor = new Sensor(knex);
+    socketAPIs.maintenance = new Controller('maintenance', knex);
     socketAPIs.sysInfo = new SysInfo(io);
 
     app.set('API', socketAPIs);

@@ -5,8 +5,7 @@ const seed = require('../data/app/settings.json');
 
 class Settings {
 
-    constructor(io) {
-        this.io = io;
+    constructor() {
         this.settingsPath = path.join(process.env.SETTINGS_DIR || process.cwd(), 'settings.json');
         console.log(`Using ${this.settingsPath} for settings configuration.`);
         if (!fs.existsSync(this.settingsPath)) {

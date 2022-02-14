@@ -5,7 +5,7 @@ import { shareReplay } from 'rxjs/operators';
 import { AppSocket } from 'src/app/app.module';
 import { CrudService } from 'src/app/shared/services/crud.service';
 import { CardFormComponent } from './components/card-form/card-form.component';
-import { DashboardCard } from './dashboard.model';
+import { Sensor } from './dashboard.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class DashboardService {
   rowWidth: number;
   numCols: number;
 
-  private _dashboard$: Observable<DashboardCard[]>
+  private _dashboard$: Observable<Sensor[]>
 
   constructor(
     private dialog: MatDialog,
@@ -25,14 +25,14 @@ export class DashboardService {
   ) { }
 
   getDashboard() {
-    this.crud.read<DashboardCard[]>('dashboard_cards');
+    this.crud.read<Sensor[]>('sensor');
     if (!this._dashboard$) {
-      this._dashboard$ = this.appSocket.fromEvent<DashboardCard[]>('dashboard_cards:response').pipe(shareReplay(1));
+      this._dashboard$ = this.appSocket.fromEvent<Sensor[]>('sensor:response').pipe(shareReplay(1));
     }
     return this._dashboard$;
   }
 
-  editCard(card: DashboardCard) {
+  editCard(card: Sensor) {
     this.dialog.open(CardFormComponent, {
       data: {
         new: false,
@@ -41,20 +41,20 @@ export class DashboardService {
     });
   }
 
-  addCard(card: DashboardCard) {
-    this.crud.create<DashboardCard>('dashboard_cards', card);
+  addCard(card: Sensor) {
+    this.crud.create<Sensor>('sensor', card);
   }
 
-  updateCard(card: DashboardCard) {
-    this.crud.update<DashboardCard>('dashboard_cards', card);
+  updateCard(card: Sensor) {
+    this.crud.update<Sensor>('sensor', card);
   }
 
-  deleteCard(card: DashboardCard) {
-    this.crud.delete<DashboardCard>('dashboard_cards', card);
+  deleteCard(card: Sensor) {
+    this.crud.delete<Sensor>('sensor', card);
   }
 
-  updateDashboard(cards: DashboardCard[]) {
-    this.appSocket.emit('dashboard_cards:reorder', cards);
+  updateDashboard(cards: Sensor[]) {
+    this.appSocket.emit('sensor:reorder', cards);
   }
 
 

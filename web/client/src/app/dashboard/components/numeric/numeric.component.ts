@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { pluck } from 'rxjs/operators';
 import { OBDResponse } from 'src/app/shared/models/obd.model';
 import { OBDService } from 'src/app/shared/services/obd.service';
-import { DashboardCard } from '../../dashboard.model';
+import { Sensor } from '../../dashboard.model';
 import { DashboardService } from '../../dashboard.service';
 
 
@@ -14,7 +14,7 @@ import { DashboardService } from '../../dashboard.service';
 })
 export class NumericComponent implements OnInit {
 
-  @Input() card: DashboardCard;
+  @Input() card: Sensor;
   
   live$: Observable<OBDResponse>;
 

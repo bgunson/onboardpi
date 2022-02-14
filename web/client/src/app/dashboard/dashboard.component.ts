@@ -3,7 +3,7 @@ import { Observable, Subscription } from 'rxjs';
 import { DisplayService } from 'src/app/shared/services/display.service';
 import { ActionService } from 'src/app/shared/services/action.service';
 import { OBDService } from 'src/app/shared/services/obd.service';
-import { DashboardCard } from './dashboard.model';
+import { Sensor } from './dashboard.model';
 import { DashboardService } from './dashboard.service';
 import { CdkDragDrop, CdkDragEnter, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
@@ -19,7 +19,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() data: any;
 
-  dashboard: DashboardCard[];
+  dashboard: Sensor[];
   watchList: string[];
   subscriptions: Subscription = new Subscription();
   
@@ -43,7 +43,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     private dialog: MatDialog
   ) { }
 
-  track = (index: number, card: DashboardCard) => card.command + card.index + card.type;
+  track = (index: number, card: Sensor) => card.command + card.index + card.type;
 
   setDimensions() {
     if (window.innerWidth < window.innerHeight) {
@@ -57,7 +57,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  getColspan(card: DashboardCard) {
+  getColspan(card: Sensor) {
     if (card.type === 'curve') {
       return 2;
     } else {
@@ -65,7 +65,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  getRowspan(card: DashboardCard) {
+  getRowspan(card: Sensor) {
     if (card.type === 'numeric') {
       return 1;
     } else {
@@ -73,11 +73,11 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
   
-  isGauge(card: DashboardCard) {
+  isGauge(card: Sensor) {
     return card.type.startsWith('gauge');
   }
 
-  edit(card: DashboardCard) {
+  edit(card: Sensor) {
     this.dialog.open(CardFormComponent, {
       data: {
         new: false,

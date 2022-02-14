@@ -38,7 +38,7 @@ export class DiagnosticsComponent implements OnInit, OnDestroy {
     // this.action.setActionBtn('delete_sweep'); // Clear code button on toolbar maybe?
     this.carConnected$ = this.obd.isConnected();
     this.obd.watch(this.diagnosticCmds);
-    this.dtcLookup$ = this.obd.allDTCs();
+    // this.dtcLookup$ = this.obd.allDTCs();
     this.dtcs$ = this.obd.getWatching();
   }
 

@@ -1,6 +1,6 @@
 
 exports.up = function(knex) {
-    return knex.schema.createTable('dashboard_cards', table => {
+    return knex.schema.createTable('sensor', table => {
         table.increments('id'),
         table.integer('index'),
         table.string('type'),   // gauge.full | gauge.semi | gauge.arch | numeric | curve
