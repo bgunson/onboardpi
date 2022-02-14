@@ -7,6 +7,23 @@ OnBoardPi is the perfect project if you have a Raspiberry Pi (or other SBC) coll
 
 ![](_img/obpi_splash.png)
 
+## Quick Install
+**Requires**
+- Docker: `curl -sSL https://get.docker.com | sh`
+    - See [optional post-install steps](https://docs.docker.com/engine/install/linux-postinstall/) to manage Docker as a non-root user if desired.
+- Docker Compose: `pip install docker-compose`
+```
+mkdir onboardpi && cd onboardpi
+curl https://raw.githubusercontent.com/bgunson/onboardpi/main/docker-compose.yml > docker-compose.yml
+docker-compose up -d
+```
+
+Open a browser and navigate to [http://raspberrypi.local](http://raspberrypi.local).
+
+If your Pi's hostname is different from the default then use that in place of 'raspberrypi'. For example, set the hostname to 'onboardpi'.
+
+*mDNS (hostname IP resolution) does not work on all operating systems such as Android so you will need to navigate using the Pi's IP address*
+
 ## Features
 
 - Access from any device that runs a modern and capable web broswer, no need to download any unknown OBDII apps
@@ -54,83 +71,21 @@ Thanks to [MockuPhone](https://mockuphone.com/) for the device mock-ups.
 
 </div>
 
-
-
-
 ### Maintenance
 - Store your vehicle maintenance in a convenient table (stored in a database on the Raspberry Pi)
 
 <img src="_img/screenshots/maintenance_light.png">
 
 
+## Roadmap
+- Datalogging using [TimescaleDB](https://www.timescale.com/)
+    - Log sys info
+    - Log OBD commands
+    - Client-side visualization, leaning toward Highcharts
+- Clear diagnostic codes - I currently do not have any CEL to test this on ;)
+- Multiple dashboards
+- Cloud backups somewhere down the line
 
-## Set Up
-
-This project is intended to be cost effective, while you do not need the most expensive hardware it is still recommended that you use reliable components and only cheap out where possible.
-
-### What's Needed
-
-- **A Raspiberry Pi** or comparable Single Board Computer with >= 1 GB of RAM.
-- **An OBDII adapter**, I recommend the [OBDLink SX](https://www.obdlink.com/products/obdlink-sx/) which provides a reliable USB connection to the Pi. Bluetooth models may be used from Amazon for example but I have not had great success paring them with the Pi.
-- **A 12VDC to 5VDC power converter** - car batteries will fry any SBC without a way to step the voltage down to ~5V. Here are a few examples of converters:
-    - [DC-DC Buck Converter](https://www.amazon.ca/gp/product/B074J4DLWQ/ref=ppx_yo_dt_b_asin_title_o07_s00?ie=UTF8&psc=1) - adjustable, cheap and effiecient.
-    - [DC-DC 12V to 5V 3A](https://www.amazon.ca/gp/product/B07H7X37T6/ref=ppx_yo_dt_b_asin_title_o01_s00?ie=UTF8&psc=1) - non-adjustable but enclosed (somewhat waterproof) and micro-USB, so a micro-USB to USB C adapter is needed.
-
-- **A relay, switch or button** to implement a graceful shutdown circuit for the Pi. If the Pi is powered via ignition you risk corruption when you shut the car (and the Pi) off with the key. So you need to alert the Pi beforehand with accessory power (ACC) that it is time to safely shutdown.
-    - Read my [blog post](https://bengunson.me/blog/software/hardware/2022/01/13/shutdown-circuits.html) on how I set up a graceful shutdown circuit.
-
-### Installation
-Once your Pi is physically ready to be installed in your car there are a few things that need to be worked out. Since OnBoardPi uses a web-server to push OBD data to connected devices, you will need some sort of LAN within your car. We have a few options:
-
-1. You have an Android car stereo or a vehicle with a WiFi hotspot. This method does not take any more setup than the Pi and the software itself, just connect your Pi to the existing network and you are good to go.
-2. Use your phone's cellular hotspot. At the moment, OnBoardPi does not require any internet connection so it will not use your data plan. Set up your personal hotspot on your phone and connect the Pi, you will need to know the IP address of the Pi for this method to work so use an app like [Network Analyzer](https://techet.net/netanalyzer/) to scan for devices connected to the hotspot. Further you can configure the Pi to have a static IP on ths hotspot so you do not have to scan for it each time. This option will be handy in the future when OnBoardPi supports cloud backups so it can use a cellular plan for internet access.
-3. Use the Pi itself as a wireless hotspot. I use [Autohotspot](https://www.raspberryconnect.com/projects/65-raspberrypi-hotspot-accesspoints/183-raspberry-pi-automatic-hotspot-and-static-hotspot-installer) which allows you to configure the Pi to connect to any known network within range and fallback to being a hotspot. So when you are parked at home in your router's range, the Pi can have internet access, but if you are driving around the Pi will create its own network allowing you to access the OnBoardPi web page.
-
-#### Using Docker
-If you like and use Docker you can pull the latest [OnBoardPi image from DockerHub](https://hub.docker.com/repository/docker/bgunson/onboardpi). Then run it as a systemd service like [this](https://gist.github.com/bgunson/690b5024fcc11d8f824196950ebb0609).
-```
-docker pull bgunson/onboardpi:latest
-```
-To run the image:
-```
-docker run --rm --network host -v /etc/obpi:/etc/obpi -v /dev:/dev --name OBPI bgunson/onboardpi:latest
-```
-- `-v /etc/obpi:/etc/obpi` mounts the location for the databse and settings, thus all data will be on the Pi @ `/etc/obpi` locally.
-    - You may also use a regular docker volume if desired.
-- `-v /dev:/dev` makes the serial port for (OBD adapter) accessble within the container, DO NOT remove or alter.
-- If you want to use a port other than `8080` use `-e PORT=<port>`when running the container.
-
-#### From the Source
-
-**Requires**
-- Node>=v14 (and npm)
-- python>=3.8 (and python3-pip)
-
-First clone this repository
-```
-git clone <repo>
-```
-Change directories to the cloned folder. Next install needed node and python modules.
-```
-cd web && npm install
-cd obd-server && pip install -r requirements.txt
-```
-Now for the client.
-```
-cd web/client
-npm install
-npm run build
-```
-To run OnBoardPi
-```
-cd web
-node web/server.js
-```
-From there you can define a systemd service to run OnBoardPi as a service.
-
-When running, determine the IP address of the Pi once connected to the same network it is on and navigate to the web page in  a browser by inputting the Pi's IP address and port of the web server, such as `192.168.1.101:8080`. From there you can connect to the car via OBDII.
-
-Tip: after successfully navigating to the web page bookmark the site to your home screen which caches the site and opens it as a standalone PWA (progressive web app).
 
 ## Related Projects and Thanks to
 OnBoardPi is not possible without open-source culture and the projects below but not limited to:
