@@ -1,0 +1,38 @@
+.top {
+    width: 100%;
+}
+
+.table {
+    width: 100%;
+    min-width: 800px;
+    border-radius: 5px;
+}
+
+
+.table-div {
+    margin-top: 10px;
+    overflow-x: auto;
+    border-radius: 5px;
+    width: 100%;
+}
+
+td {
+    max-width: 200px;
+    overflow-wrap: break-word;
+}
+
+.action-col {
+    max-width: 1vw;
+    min-width: 12px;
+    text-align: center;
+    padding-left: 5px;
+    padding-right: 15px !important;
+}
+
+
+
+@media screen and (max-width: 800px) {
+    .action-btn {
+        border-left: 1px solid lightgray;
+    }
+}

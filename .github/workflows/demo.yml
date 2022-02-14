@@ -19,7 +19,7 @@ jobs:
       uses: AhsanAyaz/angular-deploy-gh-pages-actions@v1.3.2
       with:
         github_access_token: ${{ secrets.GITHUB_TOKEN }} # see the Configuration section for how you can create secrets
-        angular_project_dir: ./client-src
+        angular_project_dir: ./web/client
         build_configuration: demo # The build environment for the app. please look configurations in your angular.json
         base_href: /onboardpi/   # make sure this corresponds to https://<your_username>.github.io/<base_href>/
         deploy_branch: gh-pages # The branch the action should deploy to.

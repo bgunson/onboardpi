@@ -1,0 +1,21 @@
+{
+  "name": "onboardpi-web",
+  "version": "0.2.0",
+  "description": "OnBoardPi web server",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js --ignore ./db/dev --ignore ../client-src"
+  },
+  "keywords": [],
+  "author": "Bennett Gunson",
+  "license": "GPL-2.0-only",
+  "dependencies": {
+    "compression": "^1.7.4",
+    "express": "^4.17.1",
+    "knex": "^0.95.14",
+    "pg": "^8.7.3",
+    "socket.io": "^4.0.0",
+    "systeminformation": "^5.9.4"
+  }
+}

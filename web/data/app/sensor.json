@@ -1,0 +1,43 @@
+[
+    {
+
+        "index": 0,
+        "type": "curve",
+        "command": "RPM"
+    },
+    {
+        "index": 1,
+        "type": "gauge.arch",
+        "command": "SPEED"
+    },
+    {
+        "index": 2,
+        "type": "gauge.full",
+        "command": "ENGINE_LOAD"
+    },
+    {
+        "index": 3,
+        "type": "gauge.full",
+        "command": "THROTTLE_POS"
+    },
+    {
+        "index": 4,
+        "type": "numeric",
+        "command": "ELM_VOLTAGE"
+    },
+    {
+        "index": 5,
+        "type": "numeric",
+        "command": "INTAKE_TEMP"
+    },
+    {
+        "index": 6,
+        "type": "numeric",
+        "command": "MAF"
+    },
+    {
+        "index": 7,
+        "type": "numeric",
+        "command": "COOLANT_TEMP"
+    }
+]

@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+  db:
+    image: timescale/timescaledb:latest-pg14
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=onboardpi
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  web:
+    build: ./web
+    ports: 
+      - "8080:8080"
+    volumes: 
+      - onboardpi_data:/var/lib/onboardpi/data
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=onboardpi
+      - SETTINGS_DIR=/var/lib/onboardpi/data
+    depends_on:
+      - db
+  obd:
+    build: ./obd
+    ports: 
+      - "60000:60000"
+    volumes:
+      - onboardpi_data:/var/lib/onboardpi/data:ro
+      - /dev:/dev
+    environment:
+      - SETTINGS_DIR=/var/lib/onboardpi/data
+    depends_on:
+      - web
+
+volumes:
+  db_data:
+  onboardpi_data:

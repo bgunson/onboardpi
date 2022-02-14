@@ -1,0 +1,4 @@
+**/__pycache__
+*.pyc
+.gitignore
+obd-socketio

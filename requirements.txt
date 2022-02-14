@@ -1,3 +1,0 @@
-obd-socketio
-obd
-asyncio

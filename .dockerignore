@@ -1,7 +1,0 @@
-node_modules
-npm-debug.log
-.gitignore
-Dockerfile
-client-src
-README.md
-_img

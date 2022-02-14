@@ -1,0 +1,28 @@
+<mat-list *ngIf="connection$ | async as connection">
+    <mat-card class="settings-card">
+        <mat-list-item *ngFor="let level of levels; let last = last" (click)="connection.log_level = level" style="cursor: pointer;" matRipple>
+            {{ level | titlecase }}
+            <span style="flex: 1 1 auto;"></span>
+            <mat-radio-button [color]="display.palette" [checked]="connection.log_level === level"></mat-radio-button>
+            <mat-divider class="app-divider" *ngIf="!last"></mat-divider>
+        </mat-list-item>
+    </mat-card>
+</mat-list>
+
+<mat-nav-list>
+    <mat-card class="settings-card">
+        <mat-list-item>
+            <a [href]="getLogUrl('view')" target="_blank" style="width: 100%;">
+                View Log<span style="float: right;"><mat-icon class="settings-chevron">launch</mat-icon></span>
+            </a>
+            <mat-divider [inset]="true" class="app-divider"></mat-divider>
+        </mat-list-item>
+        <mat-list-item>
+            <a [href]="getLogUrl('download')" target="_blank" style="width: 100%;">
+                Download Log<span style="float: right;"><mat-icon class="settings-chevron">download</mat-icon></span>
+            </a>
+        </mat-list-item>
+    </mat-card>
+
+</mat-nav-list>
+    

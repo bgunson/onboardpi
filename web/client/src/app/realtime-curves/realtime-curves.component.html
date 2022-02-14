@@ -1,0 +1,29 @@
+<div class="main">
+    <div style="height: 200px;">
+      <mat-form-field class="curve-select" appearance="outline">
+        <mat-label>
+          <mat-icon>show_chart</mat-icon>
+          Realtime Curve
+        </mat-label>
+        <mat-select [(value)]="curvePid" (selectionChange)="setCurvePid()">
+          <mat-option *ngFor="let cmd of commands$ | async" [value]="cmd">
+            {{ cmd }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>    
+        <div class="live">
+          <span class="live-value" *ngIf="!(value$ | async)">N/A</span>
+          <span class="live-value" *ngIf="value$ | async as value">{{ value.value | obdValue:'1.0-0' }}</span>
+          <br>
+          <span class="live-unit" *ngIf="value$ | async as value">{{ value.unit | prettyUnit }}</span>
+        </div>    
+    </div>
+    <div class="curve-div" *ngIf="curveLoaded$ | async; else loading">
+        <ngx-realtime-chart [options]="curveOptions" [data]="curveData"></ngx-realtime-chart>
+    </div>
+</div>
+
+<ng-template #loading>
+  <mat-spinner style="margin: 0 auto; margin-top: 10vh;" [color]="display.palette"></mat-spinner>
+</ng-template>
+

@@ -1,0 +1,22 @@
+<div style="display: block;">
+    <shared-filter (keyup)="applyFilter($event)"></shared-filter>
+</div>
+<mat-list *ngIf="live$ | async as live; else waiting" style="position: relative;">
+    <mat-card class="code-card">
+        <mat-list-item *ngFor="let cmd of filteredCommands$ | async; let last = last">
+            {{ cmd.name.slice(4) }}
+            <span style="flex: 1 1 auto"></span>
+            <ng-container *ngIf="live[cmd.name] as live; else notApplicable">
+                {{ live.value | obdValue:'1.1-2' }}
+            </ng-container>
+            <ng-template #notApplicable>N/A</ng-template>
+            <mat-divider *ngIf="!last" style="margin-left: 15px;"></mat-divider>
+        </mat-list-item>
+    </mat-card>
+</mat-list>
+<ng-template #waiting>
+    <div style="text-align: center; margin-top: 25vh;">
+        <mat-spinner style="margin: 0 auto;" [color]="display.palette"></mat-spinner>
+        <div style="margin-top: 10px;">Waiting for vehicle</div>
+    </div>
+</ng-template>
