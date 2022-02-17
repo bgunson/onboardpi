@@ -25,6 +25,7 @@ services:
   obd:
     image: bgunson/onboardpi-obd
     restart: always
+    privileged: true
     ports: 
       - "60000:60000"
     volumes:
