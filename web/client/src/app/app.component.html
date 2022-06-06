@@ -23,7 +23,7 @@
         </button>
     </mat-toolbar>
 
-    <mat-sidenav-container class="sidenav-container" [ngClass]="{ 'mobile-container': (display.isPortrait$ | async) }">
+    <mat-sidenav-container class="sidenav-container" [ngClass]="{ 'portrait-container': (display.isPortrait$ | async) }">
         <mat-sidenav #drawer
             autosize 
             color="primary" 
@@ -49,7 +49,7 @@
         
         <mat-sidenav-content class="content" [ngClass]="{ 'portrait-content': (display.isPortrait$ | async) }">
             <router-outlet></router-outlet>
-            <div style="height: 20px;"></div>
+            <div style="height: 54px;"></div>
         </mat-sidenav-content>
 
     </mat-sidenav-container>
