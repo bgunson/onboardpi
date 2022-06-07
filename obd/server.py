@@ -8,12 +8,14 @@ class OBDServer():
     socket = None
     watching = {}
     watch_loop_running = False
+    params = {}
 
     def __init__(self):
         """ Immedieately attempt to connect to the vehcile on instantiation and define the socketio events and handlers """
         obd.logger.setLevel(Configure.get_log_level())
         self.io = obdio.OBDio()
-        self.io.connect_obd(**Configure.get_params())
+        self.params = Configure.get_params()
+        self.io.connect_obd(**self.params)
         sio = self.io.create_server(cors_allowed_origins='*', json=obdio)
 
         """ Begin mounting additional events and overrides """
@@ -88,7 +90,8 @@ class OBDServer():
         @sio.event
         async def connect_obd(sid):
             await sio.emit('obd_connecting')
-            self.io.connect_obd(**Configure.get_params())
+            self.params = Configure.get_params()
+            self.io.connect_obd(**self.params)
 
         """ End of events """
 
@@ -113,7 +116,7 @@ class OBDServer():
         """
         while self.io.connection.running and self.io.connection.is_connected():
             # data = dict(self.watching)      # Copy the watching dictionary
-            await self.socket.sleep(0.25)
+            await self.socket.sleep(self.params['delay_cmds'])
             await self.socket.emit('watching', self.watching, room='watch')
 
     def cache(self, response):

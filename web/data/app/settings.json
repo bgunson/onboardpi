@@ -11,7 +11,8 @@
         "parameters": {
             "portstr": null,
             "baudrate": null,
-            "protocol": null
+            "protocol": null,
+            "delay_cmds": 100
         },
         "log_level": "INFO"
     }

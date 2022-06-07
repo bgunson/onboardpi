@@ -1,4 +1,17 @@
 <mat-list *ngIf="connection$ | async as connection">
+    <mat-card class="settings-card">
+        <mat-list-item>
+            Delay Commands
+            <span style="flex: 1 1 auto"></span>
+            <input matInput class="settings-input" [value]="100" [(ngModel)]="connection.parameters.delay_cmds" type="number" min="0"/>
+        </mat-list-item>
+    </mat-card>
+    <p style="color: grey;">
+        The delay in milliseconds between successive OBD command queries. 
+    </p>
+</mat-list>
+
+<mat-list *ngIf="connection$ | async as connection">
 
     <mat-card class="settings-card">
         <mat-list-item matRipple (click)="connection.auto = true" style="cursor: pointer;">
@@ -14,7 +27,7 @@
         </mat-list-item>
     </mat-card>
     <p style="color: grey;">
-        Reconnect to the vehicle for changes to take effect
+        Reconnect to the vehicle for changes to take effect.
     </p>
     <mat-card class="settings-card" *ngIf="!connection.auto">
         <mat-list-item>

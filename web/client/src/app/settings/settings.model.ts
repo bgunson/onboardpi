@@ -14,6 +14,7 @@ export interface Vehicle {
 export interface ConnectionParameters {
     auto: boolean;
     parameters: {
+        delay_cmds: number;
         portstr: string | null;
         baudrate: number | null;
         protocol: string | null;
