@@ -19,11 +19,11 @@ class Settings {
         Promise.reject(new Error("Settings can only be read or updated"));
     }
 
-    read(client) {
+    read(client=null) {
         return Promise.resolve(this.settings);
     }
 
-    update(client, updated) {
+    update(client=null, updated) {
         return new Promise((resolve, reject) => {
             var reconnect = false;
             if (!_.isEqual(this.settings.connection, updated.connection)) 

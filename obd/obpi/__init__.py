@@ -1,1 +1,1 @@
-from .configure import Configure
+from .configure import *

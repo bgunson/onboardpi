@@ -12,9 +12,9 @@ class OBDServer():
 
     def __init__(self):
         """ Immedieately attempt to connect to the vehcile on instantiation and define the socketio events and handlers """
-        obd.logger.setLevel(Configure.get_log_level())
+        obd.logger.setLevel(get_log_level())
         self.io = obdio.OBDio()
-        self.params = Configure.get_params()
+        self.params = get_params()
         self.io.connect_obd(**self.params)
         sio = self.io.create_server(cors_allowed_origins='*', json=obdio)
 
