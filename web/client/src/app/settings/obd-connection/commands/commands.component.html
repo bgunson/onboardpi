@@ -1,0 +1,12 @@
+<mat-list *ngIf="connection$ | async as connection">
+    <mat-card class="settings-card">
+        <mat-list-item>
+            Supported only
+            <span style="flex: 1 1 auto"></span>
+            <mat-slide-toggle [(ngModel)]="connection.supported_only"></mat-slide-toggle>
+        </mat-list-item>
+    </mat-card>
+    <p style="color: grey;">
+        Only show OBD PIDs in dropdowns, selection lists, and data stream which are supoprted by the vehicle.
+    </p>
+</mat-list>

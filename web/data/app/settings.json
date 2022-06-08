@@ -1,4 +1,8 @@
 {
+    "appearance": {
+        "rhd": false
+    },
+
     "vehicle": {
         "make": null,
         "model": null,
@@ -14,6 +18,7 @@
             "protocol": null,
             "delay_cmds": 100
         },
-        "log_level": "INFO"
+        "log_level": "INFO",
+        "supported_only": true
     }
 }

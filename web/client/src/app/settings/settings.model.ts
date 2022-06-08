@@ -20,4 +20,5 @@ export interface ConnectionParameters {
         protocol: string | null;
     },
     log_level: string; 
+    supported_only: boolean;
 }

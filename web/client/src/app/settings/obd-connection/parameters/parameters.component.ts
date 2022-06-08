@@ -2,15 +2,15 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Protocol } from 'src/app/shared/models/obd.model';
 import { DisplayService } from 'src/app/shared/services/display.service';
 import { OBDService } from 'src/app/shared/services/obd.service';
-import { ConnectionParameters, Settings } from '../settings.model';
-import { SettingsService } from '../settings.service';
+import { ConnectionParameters, Settings } from '../../settings.model';
+import { SettingsService } from '../../settings.service';
 
 @Component({
-  selector: 'settings-connection-parameters',
-  templateUrl: './connection-parameters.component.html',
-  styleUrls: ['./connection-parameters.component.scss', '../settings.component.scss']
+  selector: 'obd-connection-parameters',
+  templateUrl: './parameters.component.html',
+  styleUrls: ['./parameters.component.scss', '../../settings.component.scss']
 })
-export class ConnectionParametersComponent implements OnInit, OnDestroy {
+export class ParametersComponent implements OnInit, OnDestroy {
 
   protocols$: Promise<Protocol[]>;
 

@@ -8,9 +8,10 @@ import { DiagnosticsComponent } from './diagnostics/diagnostics.component';
 import { MaintenanceComponent } from './maintenance/maintenance.component';
 import { MenuComponent } from './menu/menu.component';
 import { RealtimeCurvesComponent } from './realtime-curves/realtime-curves.component';
-import { LogLevelComponent } from './settings/log-level/log-level.component';
+import { LogLevelComponent } from './settings/obd-connection/log-level/log-level.component';
 import { SettingsComponent } from './settings/settings.component';
-import { ConnectionParametersComponent } from './settings/connection-parameters/connection-parameters.component';
+import { ParametersComponent } from './settings/obd-connection/parameters/parameters.component';
+import { CommandsComponent } from './settings/obd-connection/commands/commands.component';
 
 
 const routes: Routes = [
@@ -44,10 +45,13 @@ const routes: Routes = [
         path: '', component: SettingsComponent
       },
       {
-        path: 'connection-parameters', component: ConnectionParametersComponent
+        path: 'connection-parameters', component: ParametersComponent
       },
       {
         path: 'log-level', component: LogLevelComponent
+      },
+      {
+        path: 'obd-commands', component: CommandsComponent
       }
     ]
   },
