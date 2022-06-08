@@ -1,13 +1,15 @@
-<mat-selection-list [multiple]="false">
-    <mat-list-option *ngFor="let route of routes" [routerLink]="route.link">
-        <mat-icon mat-list-icon>{{ route.icon }}</mat-icon>
-        {{ route.name }}
-        <!-- <div style="display: flex;">
-            {{ route.name }}
-            <span style="flex: 1 1 auto;"></span>
-            <mat-icon>chevron_right</mat-icon>
-        </div> -->
-    </mat-list-option>
-</mat-selection-list>
-
-<!-- <menu-connection class="car"></menu-connection> -->
+<mat-grid-list [cols]="(display.isPortrait$ | async) ? 2 : 3" [rowHeight]="rowHeight">
+    <mat-grid-tile *ngFor="let route of routes">
+        <mat-card matRipple class="menu-card" [routerLink]="route.link">
+            <mat-card-header style="margin-left: -10px">
+                <mat-card-title>
+                    {{ route.name }}
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="menu-card-content">
+                <mat-icon class="menu-icon" mat-list-icon>{{ route.icon }}</mat-icon>
+                <!-- <h2>{{ route.name }}</h2> -->
+            </mat-card-content>
+        </mat-card>
+    </mat-grid-tile>
+</mat-grid-list>

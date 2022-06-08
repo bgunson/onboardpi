@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { Subscription } from 'rxjs';
 import { ActionService } from 'src/app/shared/services/action.service';
+import { DisplayService } from '../shared/services/display.service';
 import { CarConnectionComponent } from './car-connection/car-connection.component';
 
 interface View {
@@ -57,11 +58,14 @@ export class MenuComponent implements OnInit, OnDestroy {
 
   routes = VIEWS;
 
+  rowHeight = (window.innerWidth < window.innerHeight) ? Math.floor((window.innerHeight / 3) * 0.7) :   Math.floor((window.innerHeight / 2) * 0.96);
+
   subscription: Subscription = new Subscription();
 
   constructor(
     private action: ActionService,
-    private bottomSheet: MatBottomSheet
+    private bottomSheet: MatBottomSheet,
+    public display: DisplayService
   ) { }
 
 
