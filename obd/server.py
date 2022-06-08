@@ -92,7 +92,7 @@ class OBDServer():
         @sio.event
         async def connect_obd(sid):
             await sio.emit('obd_connecting')
-            self.params = Configure.get_params()
+            self.params = get_params()
             self.io.connect_obd(**self.params)
 
         """ End of events """
