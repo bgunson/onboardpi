@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RealtimeChartData } from 'ngx-graph';
+import { throttleTime } from 'rxjs/operators';
 import { OBDService } from 'src/app/shared/services/obd.service';
 
 interface Curves {
@@ -21,7 +22,7 @@ export class CurveDataService {
   }
 
   pushData() {
-    this.obd.getWatching().subscribe(data => {
+    this.obd.getWatching().pipe(throttleTime(250)).subscribe(data => {
       // console.log(this._curveData);
       [...this._curves].forEach((cmd: string) => {
 
