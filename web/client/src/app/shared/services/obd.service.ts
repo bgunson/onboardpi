@@ -150,8 +150,11 @@ export class OBDService {
     return this.socket.fromOneTimeEvent<any>('all_commands');
   }
 
-  /**
+  /** 
    * Check if user has 'Supported only' setting chosen under OBD Connection settings
+   * 
+   * TODO: this should be implemented server side (OBDServer)
+   * 
    * @returns All OBD commands or only those supported if the seeting is true
    */
   async usersCommands(): Promise<OBDCommand[][]> {

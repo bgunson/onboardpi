@@ -70,8 +70,10 @@ export class MenuComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.action.setAction('directions_car');
-    this.subscription = this.action.actionClick.subscribe(() => this.bottomSheet.open(CarConnectionComponent));
+    setTimeout(() => {
+      this.action.setAction('directions_car');
+      this.subscription = this.action.actionClick.subscribe(() => this.bottomSheet.open(CarConnectionComponent));
+    });
   }
 
   ngOnDestroy(): void {
