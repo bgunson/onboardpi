@@ -40,7 +40,7 @@ export class VehicleStreamComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.carConnected$ = this.obd.isConnected();
-    this.watch$ = this.obd.getWatching().pipe(throttleTime(1000));
+    this.watch$ = this.obd.getWatching().pipe(throttleTime(500));
 
     this.commands$ = this.obd.allCommands().then(all => {
       let modeOne: OBDCommand[] = all[1];
