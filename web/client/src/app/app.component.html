@@ -23,9 +23,10 @@
         </button>
     </mat-toolbar>
 
-    <mat-sidenav-container class="sidenav-container" [ngClass]="{ 'mobile-container': (display.isPortrait$ | async) }">
+    <mat-sidenav-container class="sidenav-container" [ngClass]="{ 'portrait-container': (display.isPortrait$ | async) }">
         <mat-sidenav #drawer
             autosize 
+            [position]="display.getSidenavPosition() || 'start'"
             color="primary" 
             class="sidenav" 
             [attr.role]="(display.isHandset$ | async) ? 'dialog' : 'navigation'"
@@ -34,13 +35,13 @@
 
             <mat-nav-list style="overflow-x: hidden;">
                 <mat-list-item (click)="back()" *ngIf="route">
-                    <mat-icon mat-list-icon >chevron_left</mat-icon>
+                    <mat-icon mat-list-icon style="color: white">chevron_left</mat-icon>
                 </mat-list-item>
                 <mat-list-item (click)="refresh()" *ngIf="!(display.isHandset$ | async)">
-                    <mat-icon mat-list-icon >refresh</mat-icon>
+                    <mat-icon mat-list-icon style="color: white">refresh</mat-icon>
                 </mat-list-item>
                 <mat-list-item [ngClass]="{ 'bottom' : (display.isHandset$ | async) }" *ngIf="action.icon | async as icon" (click)="action.click()">
-                    <mat-icon mat-list-icon>{{ icon }}</mat-icon>
+                    <mat-icon mat-list-icon style="color: white">{{ icon }}</mat-icon>
                 </mat-list-item>
             </mat-nav-list>
 
@@ -49,7 +50,7 @@
         
         <mat-sidenav-content class="content" [ngClass]="{ 'portrait-content': (display.isPortrait$ | async) }">
             <router-outlet></router-outlet>
-            <div style="height: 20px;"></div>
+            <div style="height: 15px;"></div>
         </mat-sidenav-content>
 
     </mat-sidenav-container>

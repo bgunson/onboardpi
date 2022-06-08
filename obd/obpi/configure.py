@@ -11,8 +11,11 @@ class Configure():
             file = open(SETTINGS_PATH)
             data = json.load(file)
             if data['connection']['auto'] == False:
+                data['connection']['parameters']['delay_cmds'] = data['connection']['parameters']['delay_cmds'] / 1000
                 return data['connection']['parameters']
-        return {}
+        return {
+            'delay_cmds': (data['connection']['parameters']['delay_cmds'] or 100) / 1000
+        }
 
     @staticmethod
     def get_log_level():

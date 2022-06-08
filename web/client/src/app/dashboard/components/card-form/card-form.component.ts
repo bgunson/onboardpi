@@ -50,7 +50,7 @@ export class CardFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.card = this.data.card;
-    this.commands$ = this.obd.allCommands().then(all => all[1].map(cmd => cmd.name).sort());
+    this.commands$ = this.obd.usersCommands().then(all => all[1].map(cmd => cmd.name).sort());
   }
 
 }

@@ -4,6 +4,7 @@ import { ActionService } from './shared/services/action.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { SettingsService } from './settings/settings.service';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     public display: DisplayService, 
     public action: ActionService,
     private router: Router,
+    private settingsService: SettingsService
   ) { }
 
   get route() {

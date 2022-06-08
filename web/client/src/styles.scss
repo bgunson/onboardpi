@@ -20,7 +20,7 @@ $dark-theme: mat-dark-theme($theme-primary, $theme-accent, $theme-app-warn);
 
 html, body { height: 100vh; overflow: auto;}
 body { 
-    overflow-y: hidden;
+    overflow-y: auto;
     overflow-x: hidden;
     margin: 0; 
     font-family: Roboto, "Helvetica Neue", sans-serif;

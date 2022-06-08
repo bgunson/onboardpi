@@ -13,19 +13,24 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatRadioModule} from '@angular/material/radio';
-import { LogLevelComponent } from './log-level/log-level.component';
-import { ConnectionParametersComponent } from './connection-parameters/connection-parameters.component';
+import { LogLevelComponent } from './obd-connection/log-level/log-level.component';
+import { ParametersComponent } from './obd-connection/parameters/parameters.component';
+import { CommandsComponent } from './obd-connection/commands/commands.component';
+import { SharedModule } from '../shared/shared.module';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 
 
 @NgModule({
   declarations: [
     SettingsComponent,
-    ConnectionParametersComponent,
-    LogLevelComponent
+    ParametersComponent,
+    LogLevelComponent,
+    CommandsComponent,
   ],
   imports: [
     CommonModule,
+    SharedModule,
     MatSlideToggleModule,
     AppRoutingModule,
     MatIconModule,
@@ -38,7 +43,8 @@ import { ConnectionParametersComponent } from './connection-parameters/connectio
     MatSelectModule,
     MatProgressSpinnerModule,
     MatRippleModule,
-    MatRadioModule
+    MatRadioModule,
+    MatExpansionModule
   ]
 })
 export class SettingsModule { }

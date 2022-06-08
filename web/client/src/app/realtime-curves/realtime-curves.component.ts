@@ -81,8 +81,7 @@ export class RealtimeCurvesComponent implements OnInit, OnDestroy {
       this.curveOptions.lines[0].areaColor = this.display.defaultColor;
     }
 
-    this.commands$ = this.obd.allCommands()
-      .then(all => all[1].map(cmd => cmd.name).sort());
+    this.commands$ = this.obd.usersCommands().then(cmds => cmds[1].map(c => c.name).sort());
 
     this.curvePid = localStorage.getItem('curvePid') || "ENGINE_RPM";
     this.setCurvePid();

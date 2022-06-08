@@ -9,6 +9,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { CarConnectionComponent } from './car-connection/car-connection.component';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatCardModule } from '@angular/material/card';
+import { MatRippleModule } from '@angular/material/core';
 
 
 
@@ -22,7 +25,10 @@ import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
     MatListModule,
     MatProgressSpinnerModule,
     MatButtonModule,
-    MatBottomSheetModule
+    MatBottomSheetModule,
+    MatGridListModule,
+    MatCardModule,
+    MatRippleModule
   ]
 })
 export class MenuModule { }

@@ -3,3 +3,23 @@
     bottom: 10px;
     width: 99%;
 }
+
+.menu-card {
+    position: absolute;
+    inset: 2px;
+}
+
+
+.menu-card-content {
+    text-align: center;
+}
+
+.menu-icon {
+    font-size: 3em;
+    width: 3em;
+    position:absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 5rem;
+}

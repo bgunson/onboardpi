@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DisplayService } from 'src/app/shared/services/display.service';
 import { environment } from 'src/environments/environment';
+import { OBDService } from '../shared/services/obd.service';
 import { Settings } from './settings.model';
 import { SettingsService } from './settings.service';
 
@@ -14,13 +15,16 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 
   isDarkTheme: boolean;
+  isRHD: boolean;
   settings$: Promise<Settings>;
+  numCommandsSupported: number;
 
   version = environment.version;
 
   constructor(
     public display: DisplayService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private obd: OBDService
   ) { }
 
   switchTheme() {
@@ -33,7 +37,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.settings$ = this.settingsService.getSettings();
-    this.isDarkTheme = this.display.theme == 'dark';
+    this.isDarkTheme = this.display.theme === 'dark';
+    this.isRHD = this.display.getSidenavPosition() === 'end';
+    this.obd.getSupported().then(cmds => this.numCommandsSupported = cmds.length);
   }
 
   ngOnDestroy() {

@@ -2,8 +2,12 @@
 export interface OBDCommand {
     name: string;
     desc: string;
-    decoder?: string | null;
-    mode?: number | null;
+    decoder?: string;
+    mode?: number;
+    bytes?: string;
+    fast?: boolean;
+    ecu?: string;
+    command?: string;
 }
 
 export interface OBDResponse {

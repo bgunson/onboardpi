@@ -52,7 +52,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
       this.dashboardService.rowWidth = (window.innerWidth / this.dashboardService.numCols) - 6;
     } else {
       this.dashboardService.numCols = 3;
-      this.dashboardService.rowHeight = (window.innerWidth + 60) / 8;
+      this.dashboardService.rowHeight = window.innerWidth / 8;
       this.dashboardService.rowWidth = (window.innerWidth / this.dashboardService.numCols) - 21;
     }
   }

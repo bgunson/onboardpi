@@ -4,6 +4,10 @@
     // min-height: calc(100% + env(safe-area-inset-top));
 }
 
+.portrait-container {
+    height: calc(100vh - 56px);     // subract the height of the toolbar
+}
+
 .mobile-container {
     padding-top: 0px !important;
 }
@@ -14,8 +18,8 @@
 
 
 .portrait-toolbar {
-    // position: fixed;
-    top: 0;
+    position: sticky;
+    top: 0px;
     z-index: 1000;
     padding-top: calc(env(safe-area-inset-top) + 10px);
     padding-bottom: env(safe-area-inset-bottom);
@@ -29,12 +33,6 @@
 .content {
     overflow-x: hidden;
     padding: 8px !important;
-    // padding-bottom: 60px;
-}
-
-
-.portrait-content {
-    overflow-x: hidden;
 }
 
 .bottom {

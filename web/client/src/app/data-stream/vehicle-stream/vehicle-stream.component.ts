@@ -31,18 +31,18 @@ export class VehicleStreamComponent implements OnInit, OnDestroy {
   constructor(private obd: OBDService, public display: DisplayService) { }
 
   applyFilter(value: string) {
-    const filterValue = value.toLocaleLowerCase().trim();
+    const filterValue = value.toLowerCase().trim();
     this.filteredCommands$ = this.commands$
       .then(commands => {
         return commands.filter(cmd => cmd.name.toLowerCase().includes(filterValue) || cmd.desc.toLowerCase().includes(filterValue));
-      })
+      });
   }
 
   ngOnInit(): void {
     this.carConnected$ = this.obd.isConnected();
-    this.watch$ = this.obd.getWatching().pipe(throttleTime(1000));
+    this.watch$ = this.obd.getWatching().pipe(throttleTime(500));
 
-    this.commands$ = this.obd.allCommands().then(all => {
+    this.commands$ = this.obd.usersCommands().then(all => {
       let modeOne: OBDCommand[] = all[1];
       this.watchList = modeOne.map(cmd => cmd.name);
       this.obd.watch(this.watchList);

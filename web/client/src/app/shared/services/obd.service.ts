@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { share, takeWhile, timeout } from 'rxjs/operators';
 import { OBDSocket } from 'src/app/app.module';
+import { SettingsService } from 'src/app/settings/settings.service';
 import { OBDCommand, OBDResponse, Protocol, ResponseSet } from '../models/obd.model';
 
 
@@ -25,7 +26,11 @@ export class OBDService {
 
   connectingNow: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);    // TODO: maybe make this server side from appSocket event so other clients know if connecting
 
-  constructor(private socket: OBDSocket, private snackBar: MatSnackBar) { 
+  constructor(
+    private socket: OBDSocket, 
+    private snackBar: MatSnackBar,
+    private settingsService: SettingsService
+  ) { 
     socket.on('unwatch', () => this.watch([...this._watchList]));
 
     socket.fromEvent<string>('status').subscribe(v => this._status$.next(v));
@@ -120,6 +125,11 @@ export class OBDService {
     return this.socket.fromOneTimeEvent<OBDCommand>('get_command');
   }
 
+  supports(cmd: OBDCommand): Promise<boolean> {
+    this.socket.emit('supports', cmd.name);
+    return this.socket.fromOneTimeEvent<boolean>('supports');
+  }
+
   getSupported(): Promise<OBDCommand[]> {
     this.socket.emit('supported_commands');
     return this.socket.fromOneTimeEvent<any>('supported_commands');
@@ -138,6 +148,24 @@ export class OBDService {
   allCommands(): Promise<OBDCommand[][]> {
     this.socket.emit('all_commands');
     return this.socket.fromOneTimeEvent<any>('all_commands');
+  }
+
+  /** 
+   * Check if user has 'Supported only' setting chosen under OBD Connection settings
+   * 
+   * TODO: this should be implemented server side (OBDServer)
+   * 
+   * @returns All OBD commands or only those supported if the seeting is true
+   */
+  async usersCommands(): Promise<OBDCommand[][]> {
+    let cmds = this.allCommands();    
+    
+    const settings = await this.settingsService.getSettings();
+    if (settings.connection.supported_only) {
+      const supported = await this.getSupported().then(cmds => cmds.map(c => c.name));
+      cmds = cmds.then(modes => modes.map(cmds => cmds.filter(c => c ? supported.includes(c.name) : false)));
+    }
+    return cmds;
   }
 
   getProtocolName(): Promise<string> {

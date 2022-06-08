@@ -5,6 +5,8 @@ import { ThemePalette } from '@angular/material/core';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 
+type SidenavPosition = 'start' | 'end';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -33,6 +35,21 @@ export class DisplayService {
     private breakpointObserver: BreakpointObserver,
     private overlay: OverlayContainer
   ) { }
+
+  getSidenavPosition() : SidenavPosition | null {
+    return <SidenavPosition>localStorage.getItem('sidenav');
+  }
+
+  toggleSidenavPosition() {
+    let current = localStorage.getItem('sidenav');
+    if (current === 'end') {
+      current = 'start';
+    } else {
+      current = 'end';
+    }
+    localStorage.setItem('sidenav', current);
+    window.location.reload();
+  }
 
   setTheme(theme: string) : void {
     this.overlay.getContainerElement().classList.remove('dark-theme');
