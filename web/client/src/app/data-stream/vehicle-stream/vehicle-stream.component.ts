@@ -31,11 +31,11 @@ export class VehicleStreamComponent implements OnInit, OnDestroy {
   constructor(private obd: OBDService, public display: DisplayService) { }
 
   applyFilter(value: string) {
-    const filterValue = value.toLocaleLowerCase().trim();
+    const filterValue = value.toLowerCase().trim();
     this.filteredCommands$ = this.commands$
       .then(commands => {
         return commands.filter(cmd => cmd.name.toLowerCase().includes(filterValue) || cmd.desc.toLowerCase().includes(filterValue));
-      })
+      });
   }
 
   ngOnInit(): void {

@@ -120,6 +120,11 @@ export class OBDService {
     return this.socket.fromOneTimeEvent<OBDCommand>('get_command');
   }
 
+  supports(cmd: OBDCommand): Promise<boolean> {
+    this.socket.emit('supports', cmd.name);
+    return this.socket.fromOneTimeEvent<boolean>('supports');
+  }
+
   getSupported(): Promise<OBDCommand[]> {
     this.socket.emit('supported_commands');
     return this.socket.fromOneTimeEvent<any>('supported_commands');

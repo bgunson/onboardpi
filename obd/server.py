@@ -81,7 +81,9 @@ class OBDServer():
                 
         @sio.event
         async def all_commands(sid):
-            await sio.emit('all_commands', obd.commands, room=sid)
+            all = list(obd.commands.modes)
+            all[0] = obd.commands.base_commands()
+            await sio.emit('all_commands', all, room=sid)
 
         @sio.event
         async def get_command(sid, cmd):

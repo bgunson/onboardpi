@@ -16,6 +16,8 @@ import {MatRadioModule} from '@angular/material/radio';
 import { LogLevelComponent } from './obd-connection/log-level/log-level.component';
 import { ParametersComponent } from './obd-connection/parameters/parameters.component';
 import { CommandsComponent } from './obd-connection/commands/commands.component';
+import { SharedModule } from '../shared/shared.module';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 
 
@@ -28,6 +30,7 @@ import { CommandsComponent } from './obd-connection/commands/commands.component'
   ],
   imports: [
     CommonModule,
+    SharedModule,
     MatSlideToggleModule,
     AppRoutingModule,
     MatIconModule,
@@ -40,7 +43,8 @@ import { CommandsComponent } from './obd-connection/commands/commands.component'
     MatSelectModule,
     MatProgressSpinnerModule,
     MatRippleModule,
-    MatRadioModule
+    MatRadioModule,
+    MatExpansionModule
   ]
 })
 export class SettingsModule { }
