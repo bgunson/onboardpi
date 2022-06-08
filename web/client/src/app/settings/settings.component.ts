@@ -14,6 +14,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 
   isDarkTheme: boolean;
+  isRHD: boolean;
   settings$: Promise<Settings>;
 
   version = environment.version;
@@ -33,7 +34,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.settings$ = this.settingsService.getSettings();
-    this.isDarkTheme = this.display.theme == 'dark';
+    this.isDarkTheme = this.display.theme === 'dark';
+    this.isRHD = this.display.getSidenavPosition() === 'end';
   }
 
   ngOnDestroy() {

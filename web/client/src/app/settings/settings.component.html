@@ -1,14 +1,22 @@
 <mat-list *ngIf="settings$ | async as settings; else loading">
 
-    <div mat-subheader><mat-icon>palette</mat-icon>&nbsp;Theme</div>
+    <div mat-subheader><mat-icon>palette</mat-icon>&nbsp;Appearance</div>
     <mat-card class="settings-card">
         <mat-list-item>
-            Appearance
+            Theme
             <span style="flex: 1 1 auto"></span>
             <div>
                 <mat-icon class="theme icon">light_mode</mat-icon>
-                <mat-slide-toggle class="theme" [(ngModel)]="isDarkTheme" (ngModelChange)="switchTheme()"></mat-slide-toggle>
+                <mat-slide-toggle class="theme"  [(ngModel)]="isDarkTheme" (ngModelChange)="switchTheme()"></mat-slide-toggle>
                 <mat-icon class="theme icon">bedtime</mat-icon>
+            </div>
+            <mat-divider class="app-divider"></mat-divider>
+        </mat-list-item>
+        <mat-list-item>
+            Right Hand Drive
+            <span style="flex: 1 1 auto"></span>
+            <div>
+                <mat-slide-toggle class="theme" [(ngModel)]="isRHD" (ngModelChange)="display.toggleSidenavPosition()"></mat-slide-toggle>
             </div>
         </mat-list-item>
     </mat-card>

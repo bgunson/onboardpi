@@ -26,6 +26,7 @@
     <mat-sidenav-container class="sidenav-container" [ngClass]="{ 'portrait-container': (display.isPortrait$ | async) }">
         <mat-sidenav #drawer
             autosize 
+            [position]="display.getSidenavPosition() || 'start'"
             color="primary" 
             class="sidenav" 
             [attr.role]="(display.isHandset$ | async) ? 'dialog' : 'navigation'"
