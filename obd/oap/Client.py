@@ -5,8 +5,8 @@
 import socket
 import struct
 import threading
-import common.Api_pb2 as oap_api
-from common.Message import Message
+import oap.Api_pb2 as oap_api
+from oap.Message import Message
 
 
 class ClientEventHandler:
