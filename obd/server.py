@@ -1,6 +1,7 @@
 import obd
 import obdio
 from obpi import *
+from oap import OAPInjector
 
 class OBDServer():
 
@@ -15,6 +16,8 @@ class OBDServer():
         
         self.watch = Watch(self.io, self.socket)
         self.watch.set_delay(self.params['delay_cmds'])
+
+        #self.oap_injector = OAPInjector()
 
         """ Begin mounting additional events and overrides """
 

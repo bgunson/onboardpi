@@ -26,6 +26,8 @@ services:
     image: bgunson/onboardpi-obd
     restart: always
     privileged: true
+    environment:
+      -APP_ENV=production
     ports: 
       - "60000:60000"
     volumes:

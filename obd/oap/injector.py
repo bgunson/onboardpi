@@ -31,8 +31,13 @@ class OAPInjector():
         Parse the OAP PID configuration file and construct a list of python-OBD OBDCommands which 
         correspond to the OpenAuto pids in the order they appear in the file.
         """
+        config_path = os.environ.get('OAP_PID_CONFIG_PATH', '/home/pi/.openauto/config/openauto_obd_pids.ini')
+        if not os.path.isfile(config_path):
+            print("Could not load OAP PID configuration file located at '{}'".format(config_path))
+            return []
+
         config = configparser.ConfigParser()
-        config.read(os.environ.get('OAP_PID_CONFIG_PATH', '/home/pi/.openauto/config/openauto_obd_pids.in'))
+        config.read(config_path)
         
         num_pids = int(config['ObdPids']['Count'])
         obd_commands = []
