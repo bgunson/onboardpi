@@ -23,7 +23,7 @@ export class LogLevelComponent implements OnInit, OnDestroy {
     // 'NOTSET'
   ];
 
-  getLogUrl = (type: string) => `http://${window.location.hostname}:60000/${type}/obd-log`
+  getLogUrl = (type: string) => `http://${window.location.hostname}:60000/${type}/obd.log`
 
   settings$: Promise<Settings>;
   connection$: Promise<ConnectionParameters>
