@@ -40,3 +40,14 @@ Example `settings.json` (located in the project root):
 }
 ```
 Protocol and baudrate are not required from my experience.
+
+
+## Testing
+Install `pytest`
+```
+pip install pytest
+```
+From this directory run:
+```
+python -m pytest
+```
