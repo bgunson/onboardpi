@@ -4,13 +4,16 @@
     The OAPInjector passes OBD values from python-OBD to OpenAuto Pro via its protobuf API
 
 """
-import time
 import common.Api_pb2 as oap_api
 from common.Client import Client, ClientEventHandler
+import configparser
 
 class OAPInjector():
 
     def __init__(self):
+        pass
+
+    def get_oap_cmds(self):
         pass
 
     def inject_values(self, obd_values):

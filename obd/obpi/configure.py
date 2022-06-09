@@ -10,9 +10,10 @@ def get_params():
         data['connection']['parameters']['delay_cmds'] = data['connection']['parameters']['delay_cmds'] / 1000  # convert delay from ms to seconds
         if data['connection']['auto'] == False:
             return data['connection']['parameters']
-    return {
-        'delay_cmds': data['connection']['parameters']['delay_cmds']    # only send delay
-    }
+        return {
+            'delay_cmds': data['connection']['parameters']['delay_cmds']    # only send delay
+        }
+    return {}
 
 def get_log_level():
     if not os.path.isfile(SETTINGS_PATH):
