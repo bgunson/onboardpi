@@ -51,7 +51,8 @@ class OAPInjector():
                 cmd = obd.commands[mode][pid]   # get the PID as OBDCommand object
                 obd_commands.append(cmd)
             except KeyError:
-                # This pid 'Query' is not defined by (python-)OBD
+                # This pid 'Query' is not defined by (python-)OBD. We still need something at this index though
+                # since we are injecting based on index from the oap pid config.
                 obd_commands.append(None)
 
         print("Read OpenAUto Pro OBD PID configuration and resulted in the following OBDCOmmands:")
@@ -73,7 +74,7 @@ class OAPInjector():
                 try:
                     self.__oap_inject.value = obd_values[cmd.name]['value']['magnitude']
                     self.__client.send(oap_api.MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE, 0,
-                            obd_inject.SerializeToString())
+                            self.__oap_inject.SerializeToString())
                 except KeyError:
                     # Command was not returned by python-OBD so is not supported, or
                     # the value is not numeric (no magnitude) so do not send

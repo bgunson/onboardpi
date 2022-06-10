@@ -7,17 +7,17 @@ class OBDServer():
 
     def __init__(self):
         """ Immedieately attempt to connect to the vehcile on instantiation and define the socketio events and handlers """
-        obd.logger.setLevel(get_log_level())
         self.io = obdio.OBDio()
-        self.params = get_params()
-        self.io.connect_obd(**self.params)
+
+        params = connection_params()
+        self.io.connect_obd(**params)
         sio = self.io.create_server(cors_allowed_origins='*', json=obdio)
         self.socket = sio
         
         self.watch = Watch(self.io, self.socket)
-        self.watch.set_delay(self.params['delay_cmds'])
+        self.watch.set_delay(params['delay_cmds'])
 
-        #self.oap_injector = OAPInjector()
+        self.oap_injector = OAPInjector()
 
         """ Begin mounting additional events and overrides """
 
@@ -73,10 +73,9 @@ class OBDServer():
         @sio.event
         async def connect_obd(sid):
             await sio.emit('obd_connecting')
-            self.params = get_params()
-            obd.logger.setLevel(get_log_level())
-            self.watch.set_delay(self.params['delay_cmds'])
-            self.io.connect_obd(**self.params)
+            params = connection_params()
+            self.watch.set_delay(params['delay_cmds'])
+            self.io.connect_obd(**params)
 
         """ End of events """
 
