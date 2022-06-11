@@ -20,5 +20,6 @@
         },
         "log_level": "INFO",
         "supported_only": true
-    }
+    },
+    "oap": true
 }

@@ -12,7 +12,7 @@
       "auto": false,
       "parameters": {
         "portstr": "/dev/pts/9",
-        "baudrate": null,
+        "baudrate": 115200,
         "protocol": null,
         "delay_cmds": 100
       },

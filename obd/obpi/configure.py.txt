@@ -5,6 +5,9 @@ import logging
 
 SETTINGS_PATH = os.environ.get('SETTINGS_DIR', os.getcwd()) + '/settings.json'
 
+class Configure():
+    pass
+
 def connection_params():
     """ Configure the OBD connection parameters given in settings.json file and set the logger. """
     log_level = 'INFO'      # default to info
@@ -21,3 +24,6 @@ def connection_params():
     obd.logger.setLevel(log_level)     
     logging.basicConfig(filename='obd.log', filemode='w', level=log_level)
     return params
+
+def get_injectors():
+    pass

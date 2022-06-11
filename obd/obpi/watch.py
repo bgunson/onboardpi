@@ -1,15 +1,16 @@
+from distutils.command.config import config
 import obd
-import socketio
-from .configure import *
+from .configuration import Configuration
 
 class Watch():
 
-    def __init__(self, obd_connection, sio):
+    def __init__(self):
+        self.config = Configuration()
         self.watching = {}
         self.watch_loop_running = False
         self.delay = 100     # default to 100ms
-        self.socket = sio
-        self.io = obd_connection
+        self.socket = self.config.get_socket()
+        self.io = self.config.get_obd_connection()
 
     async def watch_cmds(self, commands):
         # Stop the obd-async worker, add each cmd to the watch and then restart the worker

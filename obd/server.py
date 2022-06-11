@@ -1,23 +1,27 @@
 import obd
 import obdio
-from obpi import *
+from obpi import Watch, Configuration
 from oap import OAPInjector
 
 class OBDServer():
 
     def __init__(self):
         """ Immedieately attempt to connect to the vehcile on instantiation and define the socketio events and handlers """
-        self.io = obdio.OBDio()
 
-        params = connection_params()
-        self.io.connect_obd(**params)
+        self.config = Configuration()
+        self.io = obdio.OBDio()
+        self.config.set_obd_connection(self.io)
+
         sio = self.io.create_server(cors_allowed_origins='*', json=obdio)
         self.socket = sio
-        
-        self.watch = Watch(self.io, self.socket)
-        self.watch.set_delay(params['delay_cmds'])
+        self.config.set_socket(self.socket)
 
-        self.oap_injector = OAPInjector()
+        # Attempt to connect to the vehicle
+        params = self.config.connection_params()
+        self.io.connect_obd(**params)
+        
+        self.watch = Watch()
+        self.watch.set_delay(params['delay_cmds'])
 
         """ Begin mounting additional events and overrides """
 
@@ -73,7 +77,7 @@ class OBDServer():
         @sio.event
         async def connect_obd(sid):
             await sio.emit('obd_connecting')
-            params = connection_params()
+            params = self.config.connection_params()
             self.watch.set_delay(params['delay_cmds'])
             self.io.connect_obd(**params)
 
