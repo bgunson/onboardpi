@@ -3,31 +3,35 @@ import obd
 from .configuration import Configuration
 
 class Watch():
+    """ 
+    The watch class handles interaction with the python-OBD async API. Adding/removing OBDCommands
+    to be queried from the vehicle and emitting values back to external clients or injectors who join the watch room.  
+    """
 
     def __init__(self):
         self.config = Configuration()
         self.watching = {}
-        self.watch_loop_running = False
-        self.delay = 100     # default to 100ms
+        self.loop_running = False
+        self.delay = 0.1     # default to 100ms
         self.socket = self.config.get_socket()
         self.io = self.config.get_obd_connection()
 
-    async def watch_cmds(self, commands):
+        # Watch the commands needed by each injector
+        for injector in self.config.get_injectors():
+            self.watch_cmds(injector.get_commands())
+
+    def watch_cmds(self, commands):
         # Stop the obd-async worker, add each cmd to the watch and then restart the worker
         self.io.connection.stop()
         for cmd in commands:
             self.io.connection.watch(obd.commands[cmd], self.cache)
         self.io.connection.start()
+            
 
-        # Restart our watch loop if not started already
-        if not self.watch_loop_running:
-            self.watch_loop_running = True
-            await self.socket.start_background_task(self.watch_loop)
-
-    async def unwatch_cmds(self, commands):
-        # Indicate that ourt watch loop is not running since it terminates when obd-async worker is not running
+    def unwatch_cmds(self, commands):
+        # Indicate that our watch loop is not running since it terminates when obd-async worker is not running
         # A subsequent 'watch' event will have the loop restarted if needed.
-        self.watch_loop_running = False
+        self.loop_running = False
 
         # Stop obd-async worker, unwatch each cmd, then restart the obd-async worker
         self.io.connection.stop()
@@ -35,12 +39,19 @@ class Watch():
             self.io.connection.unwatch(obd.commands[cmd])
             if cmd in self.watching:
                 self.watching.pop(cmd)
-        self.io.connection.start()      # obd-async handles the case where a loop if started with no cmds gracefully so no need to implement a check
+        
+        # Re-watch commands for each injector
+        for injector in self.config.get_injectors():
+            self.watch_cmds(injector.get_commands())
+
+        # self.io.connection.start()      # obd-async handles the case where a loop if started with no cmds gracefully so no need to implement a check
 
 
     def cache(self, response):
         """ Every response from obd-async will be cached in this object's watching dictionary keyed by the OBDCommand name """
         self.watching[response.command.name] = response
+        for i in self.config.get_injectors():
+            i.inject(response)
 
     async def watch_loop(self):
         """ 

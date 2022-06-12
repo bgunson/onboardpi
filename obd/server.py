@@ -1,7 +1,6 @@
 import obd
 import obdio
-from obpi import Watch, Configuration
-from oap import OAPInjector
+from src import Watch, Configuration
 
 class OBDServer():
 
@@ -35,14 +34,18 @@ class OBDServer():
 
         @sio.event
         async def unwatch(sid, commands):
-            await self.watch.unwatch_cmds(commands)
+            self.watch.unwatch_cmds(commands)
             # This is to tell every other clients that someone else has unwatched these commands
             # Affected clients will re-emit a 'watch' for the commands they continue to need and our watch loop will be restarted
             await self.socket.emit('unwatch', commands, room='watch', skip_sid=sid)
 
         @sio.event
         async def watch(sid, commands):
-            await self.watch.watch_cmds(commands)
+            self.watch.watch_cmds(commands)
+            # Restart our watch loop if not started already
+            if not self.watch.loop_running:
+                self.watch.loop_running = True
+                await self.socket.start_background_task(self.watch.watch_loop)
 
         @sio.event
         async def all_protocols(sid):
