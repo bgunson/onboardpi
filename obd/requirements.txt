@@ -1,3 +1,6 @@
-obd-socketio
+# obd-socketio # switch to local version for dev/testingf
+python-socketio
+uvicorn
+websockets
 obd
 protobuf~=3.19

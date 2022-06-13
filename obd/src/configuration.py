@@ -81,6 +81,6 @@ class Configuration(Singleton):
         try:
             settings_file = open(SETTINGS_PATH)
             self.__settings = json.load(settings_file)
-        except FileNotFoundException:
+        except FileNotFoundError:
             self.__settings = {}
         
