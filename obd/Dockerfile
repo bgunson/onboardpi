@@ -11,4 +11,4 @@ RUN pip install -r requirements.txt
 COPY . .
 
 EXPOSE 60000
-CMD python server.py > obd.log 2>&1
+CMD ["python3", "server.py"]
