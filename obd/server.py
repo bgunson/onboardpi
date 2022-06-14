@@ -1,6 +1,5 @@
 import obd
-# import obdio
-from obd_socketio.src.obdio import *
+import obdio
 from src import Watch, Configuration
 
 class OBDServer():

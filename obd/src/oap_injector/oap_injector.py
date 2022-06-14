@@ -4,9 +4,9 @@
     The OAPInjector passes OBD values from python-OBD to OpenAuto Pro via its protobuf API
 
 """
-from ..injector import Injector
-import src.injectors.oap.Api_pb2 as oap_api
-from src.injectors.oap.Client import Client, ClientEventHandler
+from src.injector import Injector
+from .Api_pb2 import ObdInjectGaugeFormulaValue, MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE
+from .Client import Client
 import configparser
 import os
 import obd
@@ -15,13 +15,13 @@ import signal
 
 MAX_CONNECT_ATTEMPTS = 5
 
-class OAPInjector(Injector):
+class OAPInjector(Injector, Client):
 
     def __init__(self, *args, **kwargs):
+        Client.__init__(self, "OnBoardPi OBD Injector")
         print("Initializing an OpenAuto Pro injector.")
         self.oap_api_port = self.__parse_oap_api_port()
         self.__init_cmds()
-        self.__client = Client("OnBoardPi OBD Injector")
         self.__active = threading.Event()
         self.__oap_inject = None    
 
@@ -29,13 +29,13 @@ class OAPInjector(Injector):
         connection_attempts = 0
         if self.__active.is_set():
             self.stop()
-        while not self.__client._connected and connection_attempts < MAX_CONNECT_ATTEMPTS:
+        while not self._connected and connection_attempts < MAX_CONNECT_ATTEMPTS:
             print("Attempting to connect to the OAP API")
             try:
-                self.__client.connect("127.0.0.1", self.oap_api_port)
-                self.__oap_inject = oap_api.ObdInjectGaugeFormulaValue()
+                self.connect("127.0.0.1", self.oap_api_port)
+                self.__oap_inject = ObdInjectGaugeFormulaValue()
                 self.__active.set()
-                self.__wait_thread = threading.Thread(target=self.__wait, args=(self.__client, ), daemon=True)
+                self.__wait_thread = threading.Thread(target=self.__wait, daemon=True)
                 self.__wait_thread.start()
                 signal.signal(signal.SIGINT, self.stop)
                 signal.signal(signal.SIGTERM, self.stop)
@@ -47,26 +47,31 @@ class OAPInjector(Injector):
     def stop(self, *args):
         self.__oap_inject = None
         self.__active.clear()
-        self.__client.disconnect()
+        self.disconnect()
 
     def status(self):
         return {
-            'connected': self.__client._connected,
+            'connected': self._connected,
             'error': self.__error
         }
 
     def __parse_oap_api_port(self):
+        """ 
+        We can try to determine the OpenAuto Pro API port from the opanauto_system config file. This file may not exist if the user has not altered 
+        any settings in the OpenAuto GUI so in that case assume the port is 44405.
+        """
         config = configparser.ConfigParser()
         oap_sys_conf_path = os.path.join(os.path.join(os.environ.get('OAP_CONFIG_DIR', "/home/pi/.openauto/config"), "openauto_system.ini"))
         config.read(oap_sys_conf_path)
         try:
             return int(config['Api']['EndpointListenPort'])
         except KeyError:
+            # Default as defined by BlueWave Studio
             return 44405
 
-    def __wait(self, client):
+    def __wait(self):
         while self.__active:
-            client.wait_for_message()
+            self.wait_for_message()
 
     def __init_cmds(self):
         """
@@ -74,45 +79,37 @@ class OAPInjector(Injector):
         correspond to the OpenAuto pids in the order they appear in the file.
         """
         pid_config_path = os.path.join(os.environ.get('OAP_CONFIG_DIR', "/home/pi/.openauto/config"), "openauto_obd_pids.ini")
-        if not os.path.isfile(pid_config_path):
-            print("Could not load OAP PID configuration file located at '{}'".format(pid_config_path))
-            return []
-
         config = configparser.ConfigParser()
         config.read(pid_config_path)
         
-        num_pids = int(config['ObdPids']['Count'])
         self.__commands = []
 
-        for i in range(num_pids):
-            query = config['ObdPid_{}'.format(i)]['Query']
-            mode = int(query[:2])   
-            pid = int(query[2:], 16)    # pid in decimal
-
-            try:
+        try:
+            num_pids = int(config['ObdPids']['Count'])
+            for i in range(num_pids):
+                query = config['ObdPid_{}'.format(i)]['Query']
+                mode = int(query[:2])   
+                pid = int(query[2:], 16)    # pid in decimal        
                 cmd = obd.commands[mode][pid]   # get the PID as OBDCommand object
                 self.__commands.append(cmd.name)
-            except KeyError:
-                # This pid 'Query' is not defined by (python-)OBD. We still need something at this index though
-                # since we are injecting based on index from the oap pid config.
-                self.__commands.append(None)
+        except KeyError:
+            # This pid 'Query' is not defined by (python-)OBD. We still need something at this index though
+            # since we are injecting based on index from the oap pid config.
+            self.__commands.append(None)
 
-        return self.__commands
 
     def get_commands(self):
         """ Give the list of OAP commands by name """
         return self.__commands
 
     def inject(self, obd_response):
-        """
-            Inject obd reponse to the openauto API.
-        """
+        """ Inject obd reponse to the openauto API. """
         if self.__oap_inject is None:
             return 
         try:
             self.__oap_inject.formula = "getPidValue({})".format(self.__commands.index(obd_response.command.name))      # may raise a ValueError
             self.__oap_inject.value = obd_response.value.magnitude                                                      # may raise a KeyError
-            self.__client.send(oap_api.MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE, 0,
+            self.send(MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE, 0,
                             self.__oap_inject.SerializeToString())
         except ValueError:
             # This OBD response is for a command not needed by OAP. i.e. the obd_response.command is not contained in self.__commands

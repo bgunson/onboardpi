@@ -1,4 +1,4 @@
-from src.injectors import OAPInjector
+from src.oap_injector import OAPInjector
 
 oap_injector = OAPInjector()
 

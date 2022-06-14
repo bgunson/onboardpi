@@ -2,7 +2,7 @@ import os
 import json
 import obd
 import logging
-from src.injectors import *
+from .oap_injector import OAPInjector
 
 SETTINGS_PATH = os.path.join(os.environ.get("SETTINGS_DIR", os.getcwd()), "settings.json")
 
@@ -19,6 +19,7 @@ class Configuration:
         cls.__it__ = it = object.__new__(cls)
         it.init(*args, **kwds)
         return it
+    
     def init(self, *args, **kwds):
         pass
 

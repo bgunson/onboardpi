@@ -1,4 +1,4 @@
-from src.injectors import OAPInjector
+from src.oap_injector import OAPInjector
 from src import Configuration
 import obd
 import logging

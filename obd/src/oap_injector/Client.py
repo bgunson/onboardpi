@@ -5,8 +5,8 @@
 import socket
 import struct
 import threading
-import src.injectors.oap.Api_pb2 as oap_api
-from src.injectors.oap.Message import Message
+from . import Api_pb2 as oap_api
+from .Message import Message
 
 
 class ClientEventHandler:
