@@ -2,21 +2,24 @@ import os
 import json
 import obd
 import logging
+from src.injectors import *
 
-from injectors import *
+SETTINGS_PATH = os.path.join(os.environ.get("SETTINGS_DIR", os.getcwd()), "settings.json")
 
-SETTINGS_PATH = os.environ.get('SETTINGS_DIR', os.getcwd()) + '/settings.json'
+injector_map = {
+    'oap': OAPInjector
+}
 
 class Singleton(object):
-        def __new__(cls, *args, **kwds):
-            it = cls.__dict__.get("__it__")
-            if it is not None:
-                return it
-            cls.__it__ = it = object.__new__(cls)
-            it.init(*args, **kwds)
+    def __new__(cls, *args, **kwds):
+        it = cls.__dict__.get("__it__")
+        if it is not None:
             return it
-        def init(self, *args, **kwds):
-            pass
+        cls.__it__ = it = object.__new__(cls)
+        it.init(*args, **kwds)
+        return it
+    def init(self, *args, **kwds):
+        pass
 
 class Configuration(Singleton):
 
@@ -41,20 +44,25 @@ class Configuration(Singleton):
         return self.obd_io
 
     def __init_injectors(self):
-        self.__injectors = []
-        for injector in self.__settings['injectors']:
-            if injector['type'] == 'oap':
-                oap = OAPInjector()
-                self.__injectors.append(oap)
-                if injector['enabled'] == True:
-                    oap.start()
+        self.__injector_config = self.__settings['injectors']
+        self.__active_injectors = []
+
+        for type, injector in self.__injector_config.items():
+            if injector['enabled'] == True:
+                i = injector_map[type](injector['parameters'])
+                self.__active_injectors.append(i)
+                i.start()
 
     def get_injectors(self):
-        return self.__injectors
+        """ Return active injectors only"""
+        return self.__active_injectors
+
+    def get_delay(self):
+        return self.__delay
 
     def connection_params(self):
         """ Configure the OBD connection parameters given in settings.json file and set the logger. """
-        log_level = 'INFO'      # default to info
+        log_level = "INFO"      # default to info
         params = {}
         self.__read_settings()
 
@@ -68,11 +76,12 @@ class Configuration(Singleton):
                 params = self.__settings['connection']['parameters']
         # delay is defined whether manual or auto; convert delay from ms to seconds
         params['delay_cmds'] = self.__settings['connection']['parameters']['delay_cmds'] / 1000
+        self.__delay = params['delay_cmds']     # store the delay in mem so it can be shared with others
 
         # Let's also set up the logger here. This method is only called prior to obd connection
         # so we get a fresh log file each time  
         obd.logger.setLevel(log_level)     
-        logging.basicConfig(filename='obd.log', filemode='w', level=log_level)
+        logging.basicConfig(filename="obd.log", filemode='w', level=log_level)
         
         return params
 

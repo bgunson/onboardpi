@@ -21,7 +21,6 @@ class OBDServer():
         self.io.connect_obd(**params)
         
         self.watch = Watch()
-        self.watch.set_delay(params['delay_cmds'])
 
         """ Begin mounting additional events and overrides """
 
@@ -82,7 +81,6 @@ class OBDServer():
         async def connect_obd(sid):
             await sio.emit('obd_connecting')
             params = self.config.connection_params()
-            self.watch.set_delay(params['delay_cmds'])
             self.io.connect_obd(**params)
 
         """ End of events """

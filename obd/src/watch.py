@@ -55,24 +55,21 @@ class Watch():
 
     async def watch_loop(self):
         """ 
-            The watch loop continuosly emits the latest watched command responses to clients in the watch room every quarter second and is 
-            started as a socketio background task.
+        The watch loop continuosly emits the latest watched command responses to clients in the watch room every quarter second and is 
+        started as a socketio background task.
 
-            Loop invariant: The obd-async worker thread is running AND the car is connected. 
+        Loop invariant: The obd-async worker thread is running AND the car is connected. 
 
-            Rationale: The obd-async worker thread itself is a loop continuously querying commands that have been watched by the user. 
-            python-OBD handles the loop nicely in that:
-                - If no commands are currently being watched then the loop is not started
-                - If there is no connection to the then no commands can be watched
+        Rationale: The obd-async worker thread itself is a loop continuously querying commands that have been watched by the user. 
+        python-OBD handles the loop nicely in that:
+            - If no commands are currently being watched then the loop is not started
+            - If there is no connection to the then no commands can be watched
 
-            There seems to be no easy way to join a background task started with python-socketio. 
-            This watch loop is started (if not already running) with the during a watch sio event and if the worker thread continues
-            but the vehicle is turned off this loop invariant will fail no matter what and this process can be terminated more 
-            quickly and easily.
+        There seems to be no easy way to join a background task started with python-socketio. 
+        This watch loop is started (if not already running) with the during a watch sio event and if the worker thread continues
+        but the vehicle is turned off this loop invariant will fail no matter what and this process can be terminated more 
+        quickly and easily.
         """
         while self.io.connection.running and self.io.connection.is_connected():
-            await self.socket.emit('watching', self.watching, room='watch')
-            await self.socket.sleep(self.delay)
-
-    def set_delay(self, delay_ms):
-        self.delay = delay_ms
+            await self.socket.emit("watching", self.watching, room="watch")
+            await self.socket.sleep(self.config.get_delay())

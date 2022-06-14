@@ -16,11 +16,10 @@
     "log_level": "INFO",
     "supported_only": true
   },
-  "injectors": [
-    {
-      "type": "oap",
+  "injectors": {
+    "oap": {
       "enabled": true,
       "parameters": {}
     }
-  ]
+  }
 }

@@ -1,4 +1,4 @@
-
+from src.injectors import *
 
 class Injector:
     """

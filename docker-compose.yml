@@ -26,17 +26,21 @@ services:
     image: bgunson/onboardpi-obd
     restart: always
     privileged: true
-    environment:
-      -APP_ENV=production
     ports: 
       - "60000:60000"
     volumes:
       - /var/lib/onboardpi/data:/var/lib/onboardpi/data:ro
       - /dev:/dev
+      # If integrating with OpenAuto Pro use the following volume so OnBoardPi can read the OBD Pids configuration.
+      # - /home/pi/.openauto/config:/home/pi/.openauto/config:ro
+
     # If you know your obd adapter's serial port will not change (i.e. USB adapter w/ no other serial devices which may connect first) 
     # use device mapping for ttyUSB0 and comment out '/dev:/dev' under volumes
     # devices: 
     #   - "/dev/ttyUSB0:/dev/ttyUSB0"
+
+    # If the OpenAuto configuraiton dir is elsewhere on your machine, mount that location as a volume (in place of '/home/pi/.openauto/config:/home/pi/.openauto/config:ro') 
+    # and add an environment variable `OAP_CONFIG_PATH=/path/to/oap/config` below
     environment:
       - SETTINGS_DIR=/var/lib/onboardpi/data
     depends_on:

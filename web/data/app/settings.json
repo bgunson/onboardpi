@@ -18,11 +18,10 @@
         "supported_only": true
     },
 
-    "injectors": [
-        {
-            "type": "oap",
+    "injectors": {
+        "oap": {
             "enabled": false,
-            "parameters": { }
+            "parameters": {}
         }
-    ]
+    }
 }
