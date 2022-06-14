@@ -17,10 +17,9 @@ MAX_CONNECT_ATTEMPTS = 5
 
 class OAPInjector(Injector):
 
-    def __init__(self, host="127.0.0.1", port=44405):
+    def __init__(self, *args, **kwargs):
         print("Initializing an OpenAuto Pro injector.")
-        self.__host = host
-        self.__port = port
+        self.oap_api_port = self.__parse_oap_api_port()
         self.__init_cmds()
         self.__client = Client("OnBoardPi OBD Injector")
         self.__active = threading.Event()
@@ -33,7 +32,7 @@ class OAPInjector(Injector):
         while not self.__client._connected and connection_attempts < MAX_CONNECT_ATTEMPTS:
             print("Attempting to connect to the OAP API")
             try:
-                self.__client.connect(self.__host, self.__port)
+                self.__client.connect("127.0.0.1", self.oap_api_port)
                 self.__oap_inject = oap_api.ObdInjectGaugeFormulaValue()
                 self.__active.set()
                 self.__wait_thread = threading.Thread(target=self.__wait, args=(self.__client, ), daemon=True)
@@ -55,6 +54,15 @@ class OAPInjector(Injector):
             'connected': self.__client._connected,
             'error': self.__error
         }
+
+    def __parse_oap_api_port(self):
+        config = configparser.ConfigParser()
+        oap_sys_conf_path = os.path.join(os.path.join(os.environ.get('OAP_CONFIG_DIR', "/home/pi/.openauto/config"), "openauto_system.ini"))
+        config.read(oap_sys_conf_path)
+        try:
+            return int(config['Api']['EndpointListenPort'])
+        except KeyError:
+            return 44405
 
     def __wait(self, client):
         while self.__active:

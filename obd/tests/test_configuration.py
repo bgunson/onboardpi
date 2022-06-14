@@ -11,16 +11,25 @@ def test_is_singleton():
 
 def test_connection_params():
     params = config.connection_params()
-    assert params['portstr'] == "/dev/pts/9"
+    assert params['portstr'] == "/dev/pts/7"
     assert params['baudrate'] == 115200
     assert params['delay_cmds'] == 0.1
 
 def test_log_level():
     _ = config.connection_params()
-    print(obd.logger.getEffectiveLevel())
     assert obd.logger.getEffectiveLevel() == logging.INFO
 
 def test_get_injectors():
     injectors = config.get_injectors()
     assert len(injectors) == 1
-    assert isinstance(injectors[0], OAPInjector)
+    should_be_oap = injectors[0]
+    assert isinstance(should_be_oap, OAPInjector)
+    assert len(should_be_oap.get_commands()) == 5
+    
+    for i in injectors:
+        # make sure each injector is properly implement Injector
+        assert hasattr(i, "start")
+        assert hasattr(i, "stop")
+        assert hasattr(i, "get_commands")
+        assert hasattr(i, "status")
+        assert hasattr(i, "inject")

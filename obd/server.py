@@ -86,7 +86,7 @@ class OBDServer():
         """ End of events """
 
     def start(self):
-        """ This starts the socketio assgi server """
+        """ This starts the socketio asgi server """
         self.io.serve_static({
             '/view/obd.log': {'filename': 'obd.log', 'content_type': 'text/plain'},
             '/download/obd.log': 'obd.log'
