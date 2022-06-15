@@ -32,7 +32,8 @@ class OAPInjector(Injector, Client):
         while not self._connected and connection_attempts < MAX_CONNECT_ATTEMPTS:
             print("Attempting to connect to the OAP API")
             try:
-                self.connect("127.0.0.1", self.oap_api_port)
+                host = os.environ.get("OAP_HOST", "127.0.0.1")
+                self.connect(host, self.oap_api_port)
                 self.__oap_inject = ObdInjectGaugeFormulaValue()
                 self.__active.set()
                 self.__wait_thread = threading.Thread(target=self.__wait, daemon=True)
