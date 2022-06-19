@@ -1,5 +1,3 @@
-import obd
-import logging
 import obdio
 from src import Configuration, API
 
@@ -14,10 +12,6 @@ class OBDServer():
         self.config.set_obd_connection(self.io)
 
         sio = self.io.create_server(cors_allowed_origins='*', json=obdio)
-
-        obd_logger_handler = logging.FileHandler("obd.log", mode='w')
-        obd_logger_handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
-        obd.logger.addHandler(obd_logger_handler)
 
         api = API(sio)
         api.mount()

@@ -8,7 +8,6 @@ import { DiagnosticsComponent } from './diagnostics/diagnostics.component';
 import { MaintenanceComponent } from './maintenance/maintenance.component';
 import { MenuComponent } from './menu/menu.component';
 import { RealtimeCurvesComponent } from './realtime-curves/realtime-curves.component';
-import { LogLevelComponent } from './settings/obd-connection/log-level/log-level.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ParametersComponent } from './settings/obd-connection/parameters/parameters.component';
 import { CommandsComponent } from './settings/obd-connection/commands/commands.component';
@@ -45,10 +44,7 @@ const routes: Routes = [
         path: '', component: SettingsComponent
       },
       {
-        path: 'connection-parameters', component: ParametersComponent
-      },
-      {
-        path: 'log-level', component: LogLevelComponent
+        path: 'obd-connection', component: ParametersComponent
       },
       {
         path: 'obd-commands', component: CommandsComponent

@@ -178,4 +178,9 @@ export class OBDService {
     return this.socket.fromOneTimeEvent<string>('port_name');
   }
 
+  getAvailablePorts(): Promise<string[]> {
+    this.socket.emit('available_ports');
+    return this.socket.fromOneTimeEvent<string[]>('available_ports');
+  }
+
 }

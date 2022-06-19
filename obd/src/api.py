@@ -73,6 +73,10 @@ class API:
         #region OBD/ELM generic event listeners
 
         @sio.event
+        async def available_ports(sid):
+            await sio.emit('available_ports', obd.scan_serial(), room=sid)
+
+        @sio.event
         async def all_protocols(sid):
             all = [
                 obd.protocols.ISO_14230_4_5baud,

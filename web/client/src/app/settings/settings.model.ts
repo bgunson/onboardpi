@@ -1,7 +1,7 @@
 
 export interface Settings {
     vehicle: Vehicle;
-    connection: ConnectionParameters
+    connection: Connection
 }
 
 export interface Vehicle {
@@ -11,7 +11,7 @@ export interface Vehicle {
     vin: string | null;
 }
 
-export interface ConnectionParameters {
+export interface Connection {
     auto: boolean;
     parameters: {
         delay_cmds: number;

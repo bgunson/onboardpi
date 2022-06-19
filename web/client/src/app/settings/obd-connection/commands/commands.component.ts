@@ -3,7 +3,7 @@ import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { OBDCommand } from 'src/app/shared/models/obd.model';
 import { OBDService } from 'src/app/shared/services/obd.service';
-import { ConnectionParameters, Settings } from '../../settings.model';
+import { Connection, Settings } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 
 @Component({
@@ -14,7 +14,7 @@ import { SettingsService } from '../../settings.service';
 export class CommandsComponent implements OnInit, OnDestroy {
 
   settings$: Promise<Settings>;
-  connection$: Promise<ConnectionParameters>;
+  connection$: Promise<Connection>;
   modeIndex: number;
 
   commands$: Observable<OBDCommand[][]>;

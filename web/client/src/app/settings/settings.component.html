@@ -48,24 +48,22 @@
             <input matInput class="settings-input" [(ngModel)]="settings.vehicle.vin" placeholder="None"/>
         </mat-list-item>
     </mat-card>
-
-
-    <div mat-subheader><mat-icon>link</mat-icon>&nbsp;OBD Connection</div>
+    <br>
     <mat-card class="settings-card">
-        <mat-list-item routerLink="connection-parameters" matRipple style="cursor: pointer;">
-            Parameters
+        <mat-list-item routerLink="obd-connection" matRipple style="cursor: pointer;">
+            OBD Connection
             <span style="flex: 1 1 auto"></span>
-            <span style="color:grey">{{ settings.connection.auto ? 'Automatic' : 'Manual' }}<mat-icon style="vertical-align: middle;">chevron_right</mat-icon></span>
+            <span style="color:grey"><mat-icon style="vertical-align: middle;">chevron_right</mat-icon></span>
             <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
-        <mat-list-item routerLink="log-level" matRipple style="cursor: pointer;">
+        <!-- <mat-list-item routerLink="log-level" matRipple style="cursor: pointer;">
             Log Level
             <span style="flex: 1 1 auto"></span>
             <span style="color:grey">{{ (settings.connection.log_level || 'WARNING') | titlecase }}<mat-icon style="vertical-align: middle;">chevron_right</mat-icon></span>
             <mat-divider class="app-divider"></mat-divider>
-        </mat-list-item>
+        </mat-list-item> -->
         <mat-list-item routerLink="obd-commands" matRipple style="cursor: pointer;">
-            Commands
+            OBD Commands
             <span style="flex: 1 1 auto"></span>
             <span style="color:grey">{{ numCommandsSupported +  ' supported' }}<mat-icon style="vertical-align: middle;">chevron_right</mat-icon></span>
         </mat-list-item>

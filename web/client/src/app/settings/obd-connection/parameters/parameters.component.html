@@ -1,40 +1,22 @@
-<mat-list *ngIf="connection$ | async as connection">
+<mat-list *ngIf="connection">
+    <div mat-subheader>
+        <mat-icon>link</mat-icon>&nbsp;Connection Parameters
+    </div>
     <mat-card class="settings-card">
-        <mat-list-item>
-            Delay Commands
-            <span style="flex: 1 1 auto"></span>
-            <input matInput class="settings-input" [value]="100" [(ngModel)]="connection.parameters.delay_cmds"
-                type="number" min="0" />
-        </mat-list-item>
-    </mat-card>
-    <p style="color: grey;">
-        The delay in milliseconds between successive OBD command queries.
-    </p>
-</mat-list>
-
-<mat-list *ngIf="connection$ | async as connection">
-
-    <mat-card class="settings-card">
-        <mat-list-item matRipple (click)="connection.auto = true" style="cursor: pointer;">
-            Automatic
-            <span style="flex: 1 1 auto"></span>
-            <mat-radio-button [color]="display.palette" [checked]="connection.auto"></mat-radio-button>
-            <mat-divider class="app-divider"></mat-divider>
-        </mat-list-item>
-        <mat-list-item matRipple (click)="connection.auto = false" style="cursor: pointer;">
-            Manual
-            <span style="flex: 1 1 auto"></span>
-            <mat-radio-button [color]="display.palette" [checked]="!connection.auto"></mat-radio-button>
-        </mat-list-item>
-    </mat-card>
-    <p style="color: grey;">
-        Reconnect to the vehicle for changes to take effect.
-    </p>
-    <mat-card class="settings-card" *ngIf="!connection.auto">
         <mat-list-item>
             Serial Port
             <span style="flex: 1 1 auto"></span>
-            <input matInput class="settings-input" [(ngModel)]="connection.parameters.portstr" placeholder="None" />
+            <!-- <input matInput class="settings-input" [(ngModel)]="connection.parameters.portstr" placeholder="Auto Detect" /> -->
+            <input type="text" class="settings-input" placeholder="Auto detect"
+                [(ngModel)]="connection.parameters.portstr" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option [value]="null">
+                    Auto detect
+                </mat-option>
+                <mat-option *ngFor="let port of availablePorts$ | async" [value]="port">
+                    {{ port }}
+                </mat-option>
+            </mat-autocomplete>
             <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
         <mat-list-item>
@@ -66,6 +48,22 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+            <mat-divider class="app-divider"></mat-divider>
+        </mat-list-item>
+        <mat-list-item>
+            Delay Commands&nbsp;<mat-icon style="color: grey;" matTooltipPosition="right"
+                matTooltip="The time in milliseconds between successive OBD queries">help_outline</mat-icon>
+            <span style="flex: 1 1 auto"></span>
+            <input matInput class="settings-input" [value]="100" [(ngModel)]="connection.parameters.delay_cmds"
+                type="number" min="0" />
         </mat-list-item>
     </mat-card>
+    <p style="color: grey;">
+        Please reconnect to the vehicle for changes to take effect.
+    </p>
+
+    <div mat-subheader>
+        <mat-icon>description</mat-icon>&nbsp;OBD Log
+    </div>
+    <settings-log-level name="obd" [(level)]="connection.log_level"></settings-log-level>
 </mat-list>

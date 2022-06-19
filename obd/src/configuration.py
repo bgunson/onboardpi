@@ -1,7 +1,12 @@
 import os
+import logging
 import json
 import obd
 from .oap_injector import OAPInjector
+
+obd_logger_handler = logging.FileHandler("obd.log", mode='w')
+obd_logger_handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
+obd.logger.addHandler(obd_logger_handler)
 
 SETTINGS_PATH = os.path.join(os.environ.get("SETTINGS_DIR", os.getcwd()), "settings.json")
 
@@ -67,7 +72,6 @@ class Configuration:
 
     def connection_params(self):
         """ Configure the OBD connection parameters given in settings.json file and set the logger. """
-        log_level = "WARNING"      # default to warning
         params = {}
         self.__read_settings()
 
@@ -82,12 +86,6 @@ class Configuration:
         # delay is defined whether manual or auto; convert delay from ms to seconds
         self.__delay = self.__settings['connection']['parameters']['delay_cmds'] / 1000
         params['delay_cmds'] = self.__delay
-
-        log_level = self.__settings['connection']['log_level']
-
-        # Let's also set up the logger here. This method is only called prior to obd connection
-        # so we get a fresh log file each time  
-        obd.logger.setLevel(log_level)
         
         return params
 
@@ -96,6 +94,7 @@ class Configuration:
         try:
             with open(SETTINGS_PATH, mode='r') as settings_file:
                 self.__settings = json.load(settings_file)
+                obd.logger.setLevel(self.__settings['connection']['log_level'])             
         except FileNotFoundError:
             self.__settings = {}
         

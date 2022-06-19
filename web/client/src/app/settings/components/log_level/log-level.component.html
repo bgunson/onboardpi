@@ -1,13 +1,11 @@
-<mat-list *ngIf="connection$ | async as connection">
-    <mat-card class="settings-card">
-        <mat-list-item *ngFor="let level of levels; let last = last" (click)="connection.log_level = level" style="cursor: pointer;" matRipple>
-            {{ level | titlecase }}
-            <span style="flex: 1 1 auto;"></span>
-            <mat-radio-button [color]="display.palette" [checked]="connection.log_level === level"></mat-radio-button>
-            <mat-divider class="app-divider" *ngIf="!last"></mat-divider>
-        </mat-list-item>
-    </mat-card>
-</mat-list>
+<mat-card class="settings-card">
+    <mat-list-item *ngFor="let l of levels; let last = last" (click)="setLevel(l)" style="cursor: pointer;" matRipple>
+        {{ l | titlecase }}
+        <span style="flex: 1 1 auto;"></span>
+        <mat-radio-button [color]="display.palette" [checked]="l === level"></mat-radio-button>
+        <mat-divider class="app-divider" *ngIf="!last"></mat-divider>
+    </mat-list-item>
+</mat-card>
 
 <mat-nav-list>
     <mat-card class="settings-card">
