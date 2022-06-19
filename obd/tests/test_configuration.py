@@ -21,11 +21,6 @@ def test_log_level():
 
 def test_get_injectors():
     injectors = config.get_injectors()
-    assert len(injectors) == 1
-    should_be_oap = injectors[0]
-    assert isinstance(should_be_oap, OAPInjector)
-    assert len(should_be_oap.get_commands()) == 5
-    
     for i in injectors:
         # make sure each injector is properly implement Injector
         assert hasattr(i, "start")

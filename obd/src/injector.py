@@ -4,9 +4,15 @@ class Injector(ABC):
     """
     Injector template class. To provide a basis and structure for OnBoardPi's ability to export 
     OBD values to external services.
+
+    Going forward this pattern can be used for numerous types of data exportation. Once an injector knows which
+    OBD commands it needs, the watch/unwatch mechanism (alongside socketio clients) will already be implemented. 
+    - Local datalogging of OBD values to timescaledb can be made from an injector
+    - Use an injector as an MQTT client
+    - Can even add support for more protocols down the road  
     """
     @abstractmethod
-    def start(self):
+    def start(self, connect_callback):
         """ Start the data injection """
         pass
     

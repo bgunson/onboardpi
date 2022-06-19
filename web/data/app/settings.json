@@ -14,7 +14,7 @@
             "protocol": null,
             "delay_cmds": 100
         },
-        "log_level": "INFO",
+        "log_level": "WARNING",
         "supported_only": true
     },
 

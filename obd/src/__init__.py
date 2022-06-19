@@ -1,2 +1,2 @@
 from .configuration import Configuration
-from .watch import Watch
+from .api import API
