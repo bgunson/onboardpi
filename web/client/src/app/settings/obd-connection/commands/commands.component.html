@@ -38,7 +38,8 @@
                                 <mat-panel-title>
                                     {{ cmd.name }}
                                 </mat-panel-title>
-                                <mat-panel-description *ngIf="supportedCommands$ | async as supported" style="justify-content: end;">
+                                <mat-panel-description *ngIf="supportedCommands$ | async as supported">
+                                    <span style="flex: 1 1 auto"></span>
                                     <mat-icon style="color:#4caf50"  *ngIf="supported.includes(cmd.name)">check_circle</mat-icon>
                                     <mat-icon color="warn" *ngIf="!supported.includes(cmd.name)">cancel</mat-icon>
                                 </mat-panel-description>

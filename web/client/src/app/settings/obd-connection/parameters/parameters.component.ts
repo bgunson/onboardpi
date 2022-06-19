@@ -18,6 +18,8 @@ export class ParametersComponent implements OnInit, OnDestroy {
   settings$: Promise<Settings>;
   delay: number;
 
+  baudrates: number[] = [9600, 38400, 19200, 57600, 115200];
+
   constructor(private settingsService: SettingsService, public display: DisplayService, private obd: OBDService) { }
 
   ngOnInit(): void {
