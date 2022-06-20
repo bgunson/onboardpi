@@ -3,15 +3,15 @@ import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { OBDCommand } from 'src/app/shared/models/obd.model';
 import { OBDService } from 'src/app/shared/services/obd.service';
-import { Connection, Settings } from '../../settings.model';
-import { SettingsService } from '../../settings.service';
+import { Connection, Settings } from '../settings.model';
+import { SettingsService } from '../settings.service';
 
 @Component({
-  selector: 'obd-connection-commands',
-  templateUrl: './commands.component.html',
-  styleUrls: ['./commands.component.scss', '../../settings.component.scss']
+  selector: 'settings-obd-commands',
+  templateUrl: './obd-commands.component.html',
+  styleUrls: ['./obd-commands.component.scss', '../settings.component.scss']
 })
-export class CommandsComponent implements OnInit, OnDestroy {
+export class OBDCommandsComponent implements OnInit, OnDestroy {
 
   settings$: Promise<Settings>;
   connection$: Promise<Connection>;

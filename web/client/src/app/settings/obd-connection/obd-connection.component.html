@@ -6,12 +6,12 @@
         <mat-list-item>
             Serial Port
             <span style="flex: 1 1 auto"></span>
-            <!-- <input matInput class="settings-input" [(ngModel)]="connection.parameters.portstr" placeholder="Auto Detect" /> -->
-            <input type="text" class="settings-input" placeholder="Auto detect"
+            <!-- <input matInput class="settings-input" [(ngModel)]="connection.parameters.portstr" placeholder="Auto" /> -->
+            <input type="text" class="settings-input" placeholder="Auto"
                 [(ngModel)]="connection.parameters.portstr" [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete">
                 <mat-option [value]="null">
-                    Auto detect
+                    Auto
                 </mat-option>
                 <mat-option *ngFor="let port of availablePorts$ | async" [value]="port">
                     {{ port }}
@@ -22,11 +22,11 @@
         <mat-list-item>
             Baudrate
             <span style="flex: 1 1 auto"></span>
-            <input type="number" class="settings-input" placeholder="Auto detect"
+            <input type="number" class="settings-input" placeholder="Auto"
                 [(ngModel)]="connection.parameters.baudrate" [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete">
                 <mat-option [value]="null">
-                    Auto detect
+                    Auto
                 </mat-option>
                 <mat-option *ngFor="let baud of baudrates" [value]="baud">
                     {{ baud }}
@@ -41,7 +41,7 @@
             <mat-form-field>
                 <mat-select [(ngModel)]="connection.parameters.protocol">
                     <mat-option [value]="null">
-                        Auto detect
+                        Auto
                     </mat-option>
                     <mat-option *ngFor="let p of protocols$ | async" [value]="p.id">
                         {{ p.name }}

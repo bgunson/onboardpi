@@ -9,8 +9,8 @@ import { MaintenanceComponent } from './maintenance/maintenance.component';
 import { MenuComponent } from './menu/menu.component';
 import { RealtimeCurvesComponent } from './realtime-curves/realtime-curves.component';
 import { SettingsComponent } from './settings/settings.component';
-import { ParametersComponent } from './settings/obd-connection/parameters/parameters.component';
-import { CommandsComponent } from './settings/obd-connection/commands/commands.component';
+import { OBDConnectionComponent } from './settings/obd-connection/obd-connection.component';
+import { OBDCommandsComponent } from './settings/obd-commands/obd-commands.component';
 
 
 const routes: Routes = [
@@ -44,10 +44,10 @@ const routes: Routes = [
         path: '', component: SettingsComponent
       },
       {
-        path: 'obd-connection', component: ParametersComponent
+        path: 'obd-connection', component: OBDConnectionComponent
       },
       {
-        path: 'obd-commands', component: CommandsComponent
+        path: 'obd-commands', component: OBDCommandsComponent
       }
     ]
   },
