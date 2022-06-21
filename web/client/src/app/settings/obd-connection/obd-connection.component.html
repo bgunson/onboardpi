@@ -73,6 +73,13 @@
             <mat-slide-toggle [(ngModel)]="supportedOnly"></mat-slide-toggle>
             <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
+        <mat-list-item>
+            Force commands&nbsp;<mat-icon style="color: grey;" matTooltipPosition="right"
+            matTooltip="Force unsupported commands to be sent to the vehicle">help_outline</mat-icon>
+            <span style="flex: 1 1 auto"></span>
+            <mat-slide-toggle [(ngModel)]="connection.force_cmds"></mat-slide-toggle>
+            <mat-divider class="app-divider"></mat-divider>
+        </mat-list-item>
         <mat-list-item routerLink="command-lookup" matRipple style="cursor: pointer;">
             Command lookup
             <span style="flex: 1 1 auto"></span>

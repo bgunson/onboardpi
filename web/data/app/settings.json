@@ -7,15 +7,13 @@
     },
 
     "connection": {
-        "auto": true,
         "parameters": {
             "portstr": null,
             "baudrate": null,
             "protocol": null,
             "delay_cmds": 100
         },
-        "log_level": "WARNING",
-        "supported_only": true
+        "log_level": "WARNING"
     },
 
     "injectors": {

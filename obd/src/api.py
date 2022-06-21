@@ -50,7 +50,7 @@ class API:
         async def watch(sid, commands):
             self.obd_io.connection.stop()
             for cmd in commands:
-                self.obd_io.connection.watch(obd.commands[cmd], self.watch.cache)
+                self.obd_io.connection.watch(obd.commands[cmd], self.watch.cache, self.config.force_cmds)
             self.obd_io.connection.start()
             # Restart our watch loop if not started already
             if not self.watch.loop_running:

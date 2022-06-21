@@ -60,7 +60,7 @@ class Configuration:
         for cmd in injector.get_commands():
             if cmd is not None:
                 # watch the command and subscribe callback to inject, python-OBD handles multiple command callbacks
-                self.obd_io.connection.watch(obd.commands[cmd], injector.inject)
+                self.obd_io.connection.watch(obd.commands[cmd], injector.inject, self.force_cmds)
         self.obd_io.connection.start()
 
     def on_unwatch_event(self):
@@ -72,10 +72,6 @@ class Configuration:
     def get_injectors(self):
         return self.__injectors
 
-    def get_delay(self):
-        """ Delay is passed to python-OBD as well as used for delay between watch loop emissions """
-        return self.__delay
-
     def connection_params(self):
         """ Configure the OBD connection parameters given in settings.json file and set the logger. """
         params = {}
@@ -86,10 +82,15 @@ class Configuration:
             # python-OBD to do its thing and connect automatically
             return {}   
 
-        params = self.__settings['connection']['parameters']
-        # delay is defined whether manual or auto; convert delay from ms to seconds
-        self.__delay = self.__settings['connection']['parameters']['delay_cmds'] / 1000
-        params['delay_cmds'] = self.__delay
+        connection = self.__settings['connection']
+        if 'force_cmds' in connection:
+            self.force_cmds = connection['force_cmds']
+        else:
+            self.force_cmds = False
+
+        params = connection['parameters']
+        self.delay = connection['parameters']['delay_cmds'] / 1000      # convert delay from ms to seconds
+        params['delay_cmds'] = self.delay
         
         return params
 

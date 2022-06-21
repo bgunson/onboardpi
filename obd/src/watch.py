@@ -36,4 +36,4 @@ class Watch():
         """
         while self.obd_io.connection.running and self.obd_io.connection.is_connected():
             await socket.emit("watching", self.watching, room="watch")
-            await socket.sleep(self.config.get_delay())
+            await socket.sleep(self.config.delay)

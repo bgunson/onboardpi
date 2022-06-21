@@ -13,7 +13,6 @@ export interface Vehicle {
 }
 
 export interface Connection {
-    auto: boolean;
     parameters: {
         delay_cmds: number;
         portstr: string | null;
@@ -21,7 +20,7 @@ export interface Connection {
         protocol: string | null;
     },
     log_level: string; 
-    supported_only: boolean;
+    force_cmds: boolean;
 }
 
 export interface Injectors {
