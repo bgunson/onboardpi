@@ -151,17 +151,13 @@ export class OBDService {
   }
 
   /** 
-   * Check if user has 'Supported only' setting chosen under OBD Connection settings
-   * 
-   * TODO: this should be implemented server side (OBDServer)
-   * 
+   * Check if user has 'Supported only' setting chosen locally
+   *  
    * @returns All OBD commands or only those supported if the seeting is true
    */
   async usersCommands(): Promise<OBDCommand[][]> {
-    let cmds = this.allCommands();    
-    
-    const settings = await this.settingsService.getSettings();
-    if (settings.connection.supported_only) {
+    let cmds = this.allCommands();        
+    if (this.settingsService.getUserSetting('supportedOnly') === "true") {
       const supported = await this.getSupported().then(cmds => cmds.map(c => c.name));
       cmds = cmds.then(modes => modes.map(cmds => cmds.filter(c => c ? supported.includes(c.name) : false)));
     }

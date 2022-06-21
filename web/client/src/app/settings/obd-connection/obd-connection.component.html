@@ -70,7 +70,7 @@
             Supported only&nbsp;<mat-icon style="color: grey;" matTooltipPosition="right"
             matTooltip="Only show OBD PIDs in dropdowns, selection lists, and data stream which are supported by the vehicle.">help_outline</mat-icon>
             <span style="flex: 1 1 auto"></span>
-            <mat-slide-toggle [(ngModel)]="connection.supported_only"></mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="supportedOnly"></mat-slide-toggle>
             <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
         <mat-list-item routerLink="command-lookup" matRipple style="cursor: pointer;">

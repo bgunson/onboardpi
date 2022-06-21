@@ -10,6 +10,14 @@ export class SettingsService {
 
   constructor(private crud: CrudService, private socket: AppSocket) { }
 
+  getUserSetting<T>(key: string): string | null {
+    return localStorage.getItem(key);
+  }
+
+  updateUserSetting(key: string, value: any) {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
   getSettings() {
     this.crud.read<Settings>('settings');
     return this.socket.fromOneTimeEvent<Settings>('settings:response');

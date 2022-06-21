@@ -19,6 +19,8 @@ export class OBDConnectionComponent implements OnInit, OnDestroy {
   baudrates: number[] = [9600, 38400, 19200, 57600, 115200];
   availablePorts$: Promise<string[]>;
 
+  supportedOnly: boolean;
+
   constructor(private settingsService: SettingsService, public display: DisplayService, private obd: OBDService) { }
 
   async ngOnInit() {
@@ -27,9 +29,11 @@ export class OBDConnectionComponent implements OnInit, OnDestroy {
     this.settings$ = this.settingsService.getSettings();
     this.connection = (await this.settings$).connection;
     this.delay = this.connection.parameters.delay_cmds;
+    this.supportedOnly = this.settingsService.getUserSetting('supportedOnly') ? this.settingsService.getUserSetting('supportedOnly') === "true" : false;
   }
 
   ngOnDestroy(): void {
+    this.settingsService.updateUserSetting('supportedOnly', this.supportedOnly);
     this.settings$.then(s => {
       if (s.connection.parameters.delay_cmds <= 0) {
         // When user inputs a negative numbver just revert to the orignal value
