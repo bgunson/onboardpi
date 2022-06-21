@@ -1,3 +1,4 @@
+import logging
 import obd
 from .configuration import Configuration
 from .watch import Watch
@@ -58,19 +59,45 @@ class API:
 
         #endregion
 
-        #region Injector event listeners
+        #region Logger event listeners
 
         @sio.event
-        async def enable_injector(sid):
-            pass
-
-        @sio.event
-        async def disable_injector(sid):
-            pass
+        async def set_logger_level(sid, logger_name, level):
+            self.config.set_logger_level(logger_name, level)
 
         #endregion
 
-        #region OBD/ELM generic event listeners
+        #region Injector event listeners
+
+        @sio.event
+        async def enable_injector(sid, injector_type):
+            self.config.enable_injector(injector_type)
+
+        @sio.event
+        async def disable_injector(sid, injector_type):
+            if injector_type in self.config.get_injectors():
+                injector = self.config.get_injectors()[injector_type]
+                injector.stop()
+
+        @sio.event 
+        async def injector_state(sid, injector_type):
+            injector_state = {
+                'commands': [],
+                'status': {
+                    'connected': False,
+                    'active': False,
+                    'error': None
+                }
+            }
+            if injector_type in self.config.get_injectors():
+                injector = self.config.get_injectors()[injector_type]
+                injector_state['commands'] = injector.get_commands()
+                injector_state['status'] = injector.status()
+            await sio.emit('injector_state', injector_state, room=sid)
+
+        #endregion
+
+        #region OBD/ELM event listeners
 
         @sio.event
         async def available_ports(sid):

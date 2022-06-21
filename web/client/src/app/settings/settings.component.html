@@ -54,18 +54,14 @@
             OBD Connection
             <span style="flex: 1 1 auto"></span>
             <span style="color:grey"><mat-icon style="vertical-align: middle;">chevron_right</mat-icon></span>
-            <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
-        <!-- <mat-list-item routerLink="log-level" matRipple style="cursor: pointer;">
-            Log Level
+    </mat-card>
+    <br/>
+    <mat-card class="settings-card">
+        <mat-list-item routerLink="oap-injector" matRipple style="cursor: pointer;">
+            OpenAuto Pro
             <span style="flex: 1 1 auto"></span>
-            <span style="color:grey">{{ (settings.connection.log_level || 'WARNING') | titlecase }}<mat-icon style="vertical-align: middle;">chevron_right</mat-icon></span>
-            <mat-divider class="app-divider"></mat-divider>
-        </mat-list-item> -->
-        <mat-list-item routerLink="obd-commands" matRipple style="cursor: pointer;">
-            OBD Commands
-            <span style="flex: 1 1 auto"></span>
-            <span style="color:grey">{{ numCommandsSupported +  ' supported' }}<mat-icon style="vertical-align: middle;">chevron_right</mat-icon></span>
+            <span style="color:grey">{{ settings.injectors.oap.enabled ? 'Enabled' : 'Disabled' }}<mat-icon style="vertical-align: middle;">chevron_right</mat-icon></span>
         </mat-list-item>
     </mat-card>
     <br>
@@ -76,8 +72,6 @@
             <span style="color: grey;">{{ version }}</span>
         </mat-list-item>
     </mat-card>
-
-   
 </mat-list>
 
 

@@ -10,7 +10,8 @@ import { MenuComponent } from './menu/menu.component';
 import { RealtimeCurvesComponent } from './realtime-curves/realtime-curves.component';
 import { SettingsComponent } from './settings/settings.component';
 import { OBDConnectionComponent } from './settings/obd-connection/obd-connection.component';
-import { OBDCommandsComponent } from './settings/obd-commands/obd-commands.component';
+import { OapInjectorComponent } from './settings/oap-injector/oap-injector.component';
+import { CommandLookupComponent } from './settings/obd-connection/command-lookup/command-lookup.component';
 
 
 const routes: Routes = [
@@ -18,7 +19,7 @@ const routes: Routes = [
     path: 'dashboard', component: DashboardComponent
   },
   {
-    path: 'diagnostics', 
+    path: 'diagnostics',
     children: [
       {
         path: '', component: DiagnosticsComponent
@@ -44,16 +45,23 @@ const routes: Routes = [
         path: '', component: SettingsComponent
       },
       {
-        path: 'obd-connection', component: OBDConnectionComponent
+        path: 'obd-connection', children: [
+          {
+            path: '', component: OBDConnectionComponent,
+          },
+          {
+            path: 'command-lookup', component: CommandLookupComponent
+          }
+        ]
       },
       {
-        path: 'obd-commands', component: OBDCommandsComponent
+        path: 'oap-injector', component: OapInjectorComponent
       }
     ]
   },
   {
-    path: 'demo', 
-    loadChildren: () => import('./demo/demo.module').then(m => m.DemoModule), 
+    path: 'demo',
+    loadChildren: () => import('./demo/demo.module').then(m => m.DemoModule),
     canLoad: [DemoGuard]
   },
   {
@@ -62,7 +70,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {useHash: true})],
+  imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

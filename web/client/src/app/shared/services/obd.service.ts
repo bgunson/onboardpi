@@ -183,4 +183,21 @@ export class OBDService {
     return this.socket.fromOneTimeEvent<string[]>('available_ports');
   }
 
+  getInjectorState(injectorType: string): Promise<any> {
+    this.socket.emit('injector_state', injectorType);
+    return this.socket.fromOneTimeEvent<any>('injector_state');
+  }
+
+  setLoggerLevel(loggerName: string, level: string) {
+    this.socket.emit('set_logger_level', loggerName, level);
+  }
+
+  enableInjector(injectorType: string) {
+    this.socket.emit('enable_injector', injectorType);
+  }
+
+  disableInjector(injectorType: string) {
+    this.socket.emit('disable_injector', injectorType);
+  }
+
 }

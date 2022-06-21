@@ -1,7 +1,8 @@
 
 export interface Settings {
     vehicle: Vehicle;
-    connection: Connection
+    connection: Connection;
+    injectors: Injectors
 }
 
 export interface Vehicle {
@@ -21,4 +22,8 @@ export interface Connection {
     },
     log_level: string; 
     supported_only: boolean;
+}
+
+export interface Injectors {
+    [type: string]: any
 }

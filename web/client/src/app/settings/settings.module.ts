@@ -18,8 +18,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { LogLevelComponent } from './components/log_level/log-level.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OBDCommandsComponent } from './obd-commands/obd-commands.component';
 import { OBDConnectionComponent } from './obd-connection/obd-connection.component';
+import { OapInjectorComponent } from './oap-injector/oap-injector.component';
+import { CommandLookupComponent } from './obd-connection/command-lookup/command-lookup.component';
 
 
 
@@ -27,8 +28,9 @@ import { OBDConnectionComponent } from './obd-connection/obd-connection.componen
   declarations: [
     SettingsComponent,
     LogLevelComponent,
-    OBDCommandsComponent,
-    OBDConnectionComponent
+    OBDConnectionComponent,
+    OapInjectorComponent,
+    CommandLookupComponent,
   ],
   imports: [
     CommonModule,

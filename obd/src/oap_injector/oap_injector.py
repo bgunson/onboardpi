@@ -12,22 +12,15 @@ import os
 import obd
 import threading
 import signal
-import logging
 
 MAX_CONNECT_ATTEMPTS = 5
 
 class OAPInjector(Injector, Client):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, logger, *args, **kwargs):
         Client.__init__(self, "OnBoardPi OBD Injector")
-
-        handler = logging.FileHandler("oap.log", mode='w')
-        logging_formatter = logging.Formatter("%(asctime)s %(message)s")
-        handler.setFormatter(logging_formatter)
-        self.logger = logging.getLogger(__name__)
-        self.logger.setLevel(logging.INFO)
-        self.logger.addHandler(handler)
-        
+        self.logger = logger       
+        self.logger.info("======================================================")
         self.logger.info("Initializing an OpenAuto Pro injector.")
         self._oap_api_port = self.__parse_oap_api_port()
         self.__init_cmds()
@@ -57,6 +50,7 @@ class OAPInjector(Injector, Client):
 
     def stop(self, *args):
         self.logger.info("Disconnecting OAP Injector")
+        self.logger.info("======================================================")
         self.__active.clear()
         self.disconnect()
 
@@ -64,7 +58,7 @@ class OAPInjector(Injector, Client):
         return {
             'connected': self._connected,
             'active': self.__active.is_set(),
-            'error': self.__error
+            'error': str(self.__error)
         }
 
     def __parse_oap_api_port(self):

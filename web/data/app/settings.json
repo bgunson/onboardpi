@@ -21,7 +21,8 @@
     "injectors": {
         "oap": {
             "enabled": false,
-            "parameters": {}
+            "parameters": {},
+            "log_level": "INFO"
         }
     }
 }

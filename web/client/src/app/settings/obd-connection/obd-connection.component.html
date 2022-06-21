@@ -1,6 +1,6 @@
 <mat-list *ngIf="connection">
     <div mat-subheader>
-        <mat-icon>link</mat-icon>&nbsp;Connection Parameters
+        <mat-icon>link</mat-icon>&nbsp;Parameters
     </div>
     <mat-card class="settings-card">
         <mat-list-item>
@@ -63,7 +63,25 @@
     </p>
 
     <div mat-subheader>
-        <mat-icon>description</mat-icon>&nbsp;OBD Log
+        <mat-icon>data_array</mat-icon>&nbsp;Commands
+    </div>
+    <mat-card class="settings-card">
+        <mat-list-item>
+            Supported only&nbsp;<mat-icon style="color: grey;" matTooltipPosition="right"
+            matTooltip="Only show OBD PIDs in dropdowns, selection lists, and data stream which are supported by the vehicle.">help_outline</mat-icon>
+            <span style="flex: 1 1 auto"></span>
+            <mat-slide-toggle [(ngModel)]="connection.supported_only"></mat-slide-toggle>
+            <mat-divider class="app-divider"></mat-divider>
+        </mat-list-item>
+        <mat-list-item routerLink="command-lookup" matRipple style="cursor: pointer;">
+            Command lookup
+            <span style="flex: 1 1 auto"></span>
+            <span style="color:grey"><mat-icon style="vertical-align: middle;">chevron_right</mat-icon></span>
+        </mat-list-item>
+    </mat-card>
+
+    <div mat-subheader>
+        <mat-icon>description</mat-icon>&nbsp;Logging
     </div>
     <settings-log-level name="obd" [(level)]="connection.log_level"></settings-log-level>
 </mat-list>

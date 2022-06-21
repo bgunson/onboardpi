@@ -21,7 +21,7 @@ def test_log_level():
 
 def test_get_injectors():
     injectors = config.get_injectors()
-    for i in injectors:
+    for _, i in injectors.items():
         # make sure each injector is properly implement Injector
         assert hasattr(i, "start")
         assert hasattr(i, "stop")

@@ -4,10 +4,6 @@ import json
 import obd
 from .oap_injector import OAPInjector
 
-obd_logger_handler = logging.FileHandler("obd.log", mode='w')
-obd_logger_handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
-obd.logger.addHandler(obd_logger_handler)
-
 SETTINGS_PATH = os.path.join(os.environ.get("SETTINGS_DIR", os.getcwd()), "settings.json")
 
 injector_map = {
@@ -26,7 +22,10 @@ class Configuration:
         return it
 
     def init(self):
+        self.__injectors = {}
         self.__read_settings()
+        self.loggers = {}
+        self.__register_logger(obd.__name__, self.__settings['connection']['log_level'])
 
     def __init__(self):
         pass
@@ -39,16 +38,23 @@ class Configuration:
         return self.obd_io
 
     def __init_injectors(self):
-        self.__injectors = []
         if not 'injectors' in self.__settings:
             return
-
         self.__injector_config = self.__settings['injectors']
-        for type, injector in self.__injector_config.items():
+        for injector_type, injector in self.__injector_config.items():
             if injector['enabled'] == True:
-                i = injector_map[type](injector['parameters'])
-                self.__injectors.append(i)
-                i.start(self._watch_injector_cmds)
+                self.enable_injector(injector_type)
+
+    def enable_injector(self, injector_type):
+        """ Enable a particular injector by calling it's start method. If this injector type is not already known to the configuration, store it. """
+        if injector_type in self.__injectors:
+            self.__injectors[injector_type].start(self._watch_injector_cmds)
+            return
+        injector_settings = self.__settings['injectors'][injector_type]
+        logger = self.__register_logger(injector_type, injector_settings['log_level'])
+        i = injector_map[injector_type](**injector_settings['parameters'], logger=logger)
+        self.__injectors[injector_type] = i
+        i.start(self._watch_injector_cmds)
 
     def _watch_injector_cmds(self, injector):
         for cmd in injector.get_commands():
@@ -59,7 +65,7 @@ class Configuration:
 
     def on_unwatch_event(self):
         """ When a socketio client unwatches some commands we need to rewatch and re-register the injector commands and callback"""
-        for injector in self.__injectors:
+        for _, injector in self.__injectors.items():
             if injector.status()['active']:
                 self._watch_injector_cmds(injector)
 
@@ -80,21 +86,32 @@ class Configuration:
             # python-OBD to do its thing and connect automatically
             return {}   
 
-        # At this point its safe to assume the settings file exits and is not malformed 
-        if self.__settings['connection']['auto'] == False:
-                params = self.__settings['connection']['parameters']
+        params = self.__settings['connection']['parameters']
         # delay is defined whether manual or auto; convert delay from ms to seconds
         self.__delay = self.__settings['connection']['parameters']['delay_cmds'] / 1000
         params['delay_cmds'] = self.__delay
         
         return params
 
+    def __register_logger(self, name, level=logging.INFO):
+        """ Register a modules logger with config so it can be accessed and modified later. Example: log level altered by a socketio client, see self.set_logger_level """
+        logger = logging.getLogger(name)
+        logger.setLevel(level)
+        handler = logging.FileHandler("{}.log".format(name), mode='w')
+        handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
+        logger.addHandler(handler)
+        self.loggers[name] = logger
+        return logger
+
+    def set_logger_level(self, name, level):
+        logger = self.loggers[name]
+        logger.setLevel(level)
+
     def __read_settings(self):
         """ Try to open and parse the settings json file store it in memory """
         try:
             with open(SETTINGS_PATH, mode='r') as settings_file:
                 self.__settings = json.load(settings_file)
-                obd.logger.setLevel(self.__settings['connection']['log_level'])             
         except FileNotFoundError:
             self.__settings = {}
         
