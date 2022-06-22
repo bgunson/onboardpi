@@ -78,7 +78,10 @@ class OAPInjector(Injector, Client):
 
     def __wait(self):
         while self.__active:
-            self.wait_for_message()
+            try:
+                self.wait_for_message()
+            except Exception:
+                continue
 
     def __init_cmds(self):
         """
@@ -125,3 +128,6 @@ class OAPInjector(Injector, Client):
             # Non-numeric response from trying to grab the magnitude. i.e. the obd_reponse is for an O2 sensor or similar w/ a non-primitive value
             # which does not have a Pint magnitude so we are not interested since OAP only needs numeric values for its gauges(? only assuming since thats all I've seen)
             pass
+        except Exception as e:
+            self.logger.error("OAP Injector error on inject: {}".format(e))
+            self.__error = e

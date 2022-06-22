@@ -2,12 +2,7 @@
 
 <ng-container *ngIf="carConnected$ | async else waiting">
     <mat-list style="overflow-x: hidden;" *ngIf="watch$ | async as watch; else waiting">
-        <!-- <div mat-subheader>
-            <mat-icon class="material-icons-outlined">dynamic_form</mat-icon>&nbsp;Mode One
-            <span style="flex: 1 1 auto"></span>
-            <shared-filter [size]="12" (keyup)="applyFilter($event)"></shared-filter>
-        </div> -->
-
+        
         <mat-card style="padding: 0px;" class="mat-elevation-z2">
             <mat-list-item *ngFor="let cmd of filteredCommands$ | async; last as last">
                 {{ cmd.name }}
@@ -15,15 +10,28 @@
                 <ng-container *ngIf="watch[cmd.name] else notApplicable">
                     {{ watch[cmd.name].value | obdValue:'1.1-2' }}
                 </ng-container>
-                <ng-template #nan>NaN</ng-template>
-                <ng-template #notApplicable>N/A</ng-template>
                 <mat-divider *ngIf="!last" style="margin-left: 15px;"></mat-divider>
             </mat-list-item>
         </mat-card>
 
-        <!-- move to lookup module -->
-        <div mat-subheader><mat-icon>directions_car</mat-icon>&nbsp;OBD Connection</div>
+        <div mat-subheader>
+            <mat-icon>directions_car</mat-icon>&nbsp;OBD Connection
+        </div>
         <mat-card style="padding: 0px;" class="mat-elevation-z2">
+            <mat-list-item>
+                ELM_VERSION<span style="flex: 1 1 auto"></span>
+                <ng-container *ngIf="watch['ELM_VERSION'] else notApplicable">
+                    {{ watch['ELM_VERSION'].value | obdValue:'1.1-2' }}
+                </ng-container>
+                <mat-divider class="app-divider"></mat-divider>
+            </mat-list-item>
+            <mat-list-item>
+                ELM_VOLTAGE<span style="flex: 1 1 auto"></span>
+                <ng-container *ngIf="watch['ELM_VOLTAGE'] else notApplicable">
+                    {{ watch['ELM_VOLTAGE'].value | obdValue:'1.1-2' }}
+                </ng-container>
+                <mat-divider class="app-divider"></mat-divider>
+            </mat-list-item>
             <mat-list-item>
                 Protocol<span style="flex: 1 1 auto"></span>{{ protocolName$ | async }}
                 <mat-divider class="app-divider"></mat-divider>
@@ -31,19 +39,9 @@
             <mat-list-item>
                 Port<span style="flex: 1 1 auto"></span>{{ portName$ | async }}
             </mat-list-item>
-            <!-- <mat-expansion-panel matListItem *ngIf="supportedCmds$ | async as supported" class="mat-elevation-z0"  style="width: 100%;" [disabled]="!supported.length">
-                <mat-expansion-panel-header style="padding: 0px; padding-right: 10px;">
-                    <mat-panel-title style="margin-left: 15px;">
-                        Supported Commands
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <mat-list dense>
-                    <mat-list-item *ngFor="let cmd of supported">{{ cmd.desc }}</mat-list-item>
-                </mat-list>
-            </mat-expansion-panel> -->
         </mat-card>
     </mat-list>
-    
+
 </ng-container>
 <ng-template #waiting>
     <div style="text-align: center; margin-top: 25vh;">
@@ -51,3 +49,6 @@
         <div style="margin-top: 10px;">Waiting for vehicle</div>
     </div>
 </ng-template>
+
+<ng-template #nan>NaN</ng-template>
+<ng-template #notApplicable>N/A</ng-template>

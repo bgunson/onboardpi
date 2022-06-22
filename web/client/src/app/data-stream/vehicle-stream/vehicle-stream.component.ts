@@ -16,7 +16,7 @@ export class VehicleStreamComponent implements OnInit, OnDestroy {
   commands$: Promise<OBDCommand[]>; 
   filteredCommands$: Promise<OBDCommand[]>; 
 
-  watchList: string[];
+  watchList: string[] = ['ELM_VERSION', 'ELM_VOLTAGE'];
 
   unwatchSub: Subscription = new Subscription();
 
@@ -24,7 +24,6 @@ export class VehicleStreamComponent implements OnInit, OnDestroy {
 
   watch$: Observable<ResponseSet>;
 
-  supportedCmds$: Promise<any[]>;
   protocolName$: Promise<string>;
   portName$: Promise<string>;
 
@@ -42,16 +41,16 @@ export class VehicleStreamComponent implements OnInit, OnDestroy {
     this.carConnected$ = this.obd.isConnected();
     this.watch$ = this.obd.getWatching().pipe(throttleTime(500));
 
+    // Watch mode 1 commands
     this.commands$ = this.obd.usersCommands().then(all => {
       let modeOne: OBDCommand[] = all[1];
-      this.watchList = modeOne.map(cmd => cmd.name);
+      this.watchList = this.watchList.concat(modeOne.map(cmd => cmd.name));
       this.obd.watch(this.watchList);
       return modeOne;
     });
     this.filteredCommands$ = this.commands$;
 
     // OBD Connection section variables
-    this.supportedCmds$ = this.obd.getSupported();
     this.protocolName$ = this.obd.getProtocolName();
     this.portName$ = this.obd.getPortName();
   }

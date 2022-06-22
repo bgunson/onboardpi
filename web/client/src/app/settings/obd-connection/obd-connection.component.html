@@ -8,8 +8,8 @@
             <span style="flex: 1 1 auto"></span>
             <!-- <input matInput class="settings-input" [(ngModel)]="connection.parameters.portstr" placeholder="Auto" /> -->
             <input type="text" class="settings-input" placeholder="Auto"
-                [(ngModel)]="connection.parameters.portstr" [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete">
+                [(ngModel)]="connection.parameters.portstr" [matAutocomplete]="ports">
+            <mat-autocomplete #ports="matAutocomplete">
                 <mat-option [value]="null">
                     Auto
                 </mat-option>
@@ -23,8 +23,8 @@
             Baudrate
             <span style="flex: 1 1 auto"></span>
             <input type="number" class="settings-input" placeholder="Auto"
-                [(ngModel)]="connection.parameters.baudrate" [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete">
+                [(ngModel)]="connection.parameters.baudrate" [matAutocomplete]="bauds">
+            <mat-autocomplete #bauds="matAutocomplete">
                 <mat-option [value]="null">
                     Auto
                 </mat-option>
@@ -32,7 +32,6 @@
                     {{ baud }}
                 </mat-option>
             </mat-autocomplete>
-            <!-- <input matInput class="settings-input" [(ngModel)]="connection.parameters.baudrate" placeholder="None"/> -->
             <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
         <mat-list-item>

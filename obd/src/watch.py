@@ -15,7 +15,8 @@ class Watch():
 
     def cache(self, response):
         """ Every response from obd-async will be cached in this object's watching dictionary keyed by the OBDCommand name """
-        self.watching[response.command.name] = response
+        if not response.is_null():
+            self.watching[response.command.name] = response
 
     async def emit_loop(self, socket):
         """ 
