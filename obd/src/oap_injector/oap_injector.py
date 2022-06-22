@@ -28,7 +28,8 @@ class OAPInjector(Injector, Client):
         self.__active = threading.Event()
         self.__oap_inject = ObdInjectGaugeFormulaValue()  
         signal.signal(signal.SIGINT, self.stop)
-        signal.signal(signal.SIGTERM, self.stop)  
+        signal.signal(signal.SIGTERM, self.stop)
+        self.__error = None  
 
     def start(self, connect_callback):
         connection_attempts = 0
