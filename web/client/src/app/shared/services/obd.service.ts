@@ -151,17 +151,13 @@ export class OBDService {
   }
 
   /** 
-   * Check if user has 'Supported only' setting chosen under OBD Connection settings
-   * 
-   * TODO: this should be implemented server side (OBDServer)
-   * 
+   * Check if user has 'Supported only' setting chosen locally
+   *  
    * @returns All OBD commands or only those supported if the seeting is true
    */
   async usersCommands(): Promise<OBDCommand[][]> {
-    let cmds = this.allCommands();    
-    
-    const settings = await this.settingsService.getSettings();
-    if (settings.connection.supported_only) {
+    let cmds = this.allCommands();        
+    if (this.settingsService.getUserSetting('supportedOnly') === "true") {
       const supported = await this.getSupported().then(cmds => cmds.map(c => c.name));
       cmds = cmds.then(modes => modes.map(cmds => cmds.filter(c => c ? supported.includes(c.name) : false)));
     }
@@ -176,6 +172,28 @@ export class OBDService {
   getPortName(): Promise<string> {
     this.socket.emit('port_name');
     return this.socket.fromOneTimeEvent<string>('port_name');
+  }
+
+  getAvailablePorts(): Promise<string[]> {
+    this.socket.emit('available_ports');
+    return this.socket.fromOneTimeEvent<string[]>('available_ports');
+  }
+
+  getInjectorState(injectorType: string): Promise<any> {
+    this.socket.emit('injector_state', injectorType);
+    return this.socket.fromOneTimeEvent<any>('injector_state');
+  }
+
+  setLoggerLevel(loggerName: string, level: string) {
+    this.socket.emit('set_logger_level', loggerName, level);
+  }
+
+  enableInjector(injectorType: string) {
+    this.socket.emit('enable_injector', injectorType);
+  }
+
+  disableInjector(injectorType: string) {
+    this.socket.emit('disable_injector', injectorType);
   }
 
 }

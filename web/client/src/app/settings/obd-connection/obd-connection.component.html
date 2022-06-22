@@ -1,0 +1,94 @@
+<mat-list *ngIf="connection">
+    <div mat-subheader>
+        <mat-icon>link</mat-icon>&nbsp;Parameters
+    </div>
+    <mat-card class="settings-card">
+        <mat-list-item>
+            Serial Port
+            <span style="flex: 1 1 auto"></span>
+            <!-- <input matInput class="settings-input" [(ngModel)]="connection.parameters.portstr" placeholder="Auto" /> -->
+            <input type="text" class="settings-input" placeholder="Auto"
+                [(ngModel)]="connection.parameters.portstr" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option [value]="null">
+                    Auto
+                </mat-option>
+                <mat-option *ngFor="let port of availablePorts$ | async" [value]="port">
+                    {{ port }}
+                </mat-option>
+            </mat-autocomplete>
+            <mat-divider class="app-divider"></mat-divider>
+        </mat-list-item>
+        <mat-list-item>
+            Baudrate
+            <span style="flex: 1 1 auto"></span>
+            <input type="number" class="settings-input" placeholder="Auto"
+                [(ngModel)]="connection.parameters.baudrate" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option [value]="null">
+                    Auto
+                </mat-option>
+                <mat-option *ngFor="let baud of baudrates" [value]="baud">
+                    {{ baud }}
+                </mat-option>
+            </mat-autocomplete>
+            <!-- <input matInput class="settings-input" [(ngModel)]="connection.parameters.baudrate" placeholder="None"/> -->
+            <mat-divider class="app-divider"></mat-divider>
+        </mat-list-item>
+        <mat-list-item>
+            Protocol
+            <span style="flex: 1 1 auto"></span>
+            <mat-form-field>
+                <mat-select [(ngModel)]="connection.parameters.protocol">
+                    <mat-option [value]="null">
+                        Auto
+                    </mat-option>
+                    <mat-option *ngFor="let p of protocols$ | async" [value]="p.id">
+                        {{ p.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-divider class="app-divider"></mat-divider>
+        </mat-list-item>
+        <mat-list-item>
+            Delay Commands&nbsp;<mat-icon style="color: grey;" matTooltipPosition="right"
+                matTooltip="The time in milliseconds between successive OBD queries">help_outline</mat-icon>
+            <span style="flex: 1 1 auto"></span>
+            <input matInput class="settings-input" [value]="100" [(ngModel)]="connection.parameters.delay_cmds"
+                type="number" min="0" />
+        </mat-list-item>
+    </mat-card>
+    <p style="color: grey;">
+        Please reconnect to the vehicle for changes to take effect.
+    </p>
+
+    <div mat-subheader>
+        <mat-icon>data_array</mat-icon>&nbsp;Commands
+    </div>
+    <mat-card class="settings-card">
+        <mat-list-item>
+            Supported only&nbsp;<mat-icon style="color: grey;" matTooltipPosition="right"
+            matTooltip="Only show OBD PIDs in dropdowns, selection lists, and data stream which are supported by the vehicle.">help_outline</mat-icon>
+            <span style="flex: 1 1 auto"></span>
+            <mat-slide-toggle [(ngModel)]="supportedOnly"></mat-slide-toggle>
+            <mat-divider class="app-divider"></mat-divider>
+        </mat-list-item>
+        <mat-list-item>
+            Force commands&nbsp;<mat-icon style="color: grey;" matTooltipPosition="right"
+            matTooltip="Force unsupported commands to be sent to the vehicle">help_outline</mat-icon>
+            <span style="flex: 1 1 auto"></span>
+            <mat-slide-toggle [(ngModel)]="connection.force_cmds"></mat-slide-toggle>
+            <mat-divider class="app-divider"></mat-divider>
+        </mat-list-item>
+        <mat-list-item routerLink="command-lookup" matRipple style="cursor: pointer;">
+            Command lookup
+            <span style="flex: 1 1 auto"></span>
+            <span style="color:grey"><mat-icon style="vertical-align: middle;">chevron_right</mat-icon></span>
+        </mat-list-item>
+    </mat-card>
+
+    <div mat-subheader>
+        <mat-icon>description</mat-icon>&nbsp;Logging
+    </div>
+    <settings-log-level name="obd" [(level)]="connection.log_level"></settings-log-level>
+</mat-list>

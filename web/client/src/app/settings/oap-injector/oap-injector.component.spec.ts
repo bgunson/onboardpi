@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CommandsComponent } from './commands.component';
+import { OapInjectorComponent } from './oap-injector.component';
 
-describe('CommandsComponent', () => {
-  let component: CommandsComponent;
-  let fixture: ComponentFixture<CommandsComponent>;
+describe('OapInjectorComponent', () => {
+  let component: OapInjectorComponent;
+  let fixture: ComponentFixture<OapInjectorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CommandsComponent ]
+      declarations: [ OapInjectorComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CommandsComponent);
+    fixture = TestBed.createComponent(OapInjectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

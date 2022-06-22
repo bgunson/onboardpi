@@ -1,7 +1,8 @@
 
 export interface Settings {
     vehicle: Vehicle;
-    connection: ConnectionParameters
+    connection: Connection;
+    injectors: Injectors
 }
 
 export interface Vehicle {
@@ -11,8 +12,7 @@ export interface Vehicle {
     vin: string | null;
 }
 
-export interface ConnectionParameters {
-    auto: boolean;
+export interface Connection {
     parameters: {
         delay_cmds: number;
         portstr: string | null;
@@ -20,5 +20,9 @@ export interface ConnectionParameters {
         protocol: string | null;
     },
     log_level: string; 
-    supported_only: boolean;
+    force_cmds: boolean;
+}
+
+export interface Injectors {
+    [type: string]: any
 }

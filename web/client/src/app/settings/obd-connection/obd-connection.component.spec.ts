@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ParametersComponent } from './parameters.component';
+import { OBDConnectionComponent } from './obd-connection.component';
 
 
-describe('ParametersComponent', () => {
-  let component: ParametersComponent;
-  let fixture: ComponentFixture<ParametersComponent>;
+describe('OBDConnectionComponent', () => {
+  let component: OBDConnectionComponent;
+  let fixture: ComponentFixture<OBDConnectionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ParametersComponent ]
+      declarations: [ OBDConnectionComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ParametersComponent);
+    fixture = TestBed.createComponent(OBDConnectionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

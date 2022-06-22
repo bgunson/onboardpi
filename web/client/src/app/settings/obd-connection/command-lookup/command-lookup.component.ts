@@ -1,20 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { OBDCommand } from 'src/app/shared/models/obd.model';
 import { OBDService } from 'src/app/shared/services/obd.service';
-import { ConnectionParameters, Settings } from '../../settings.model';
-import { SettingsService } from '../../settings.service';
+import { Connection, Settings } from '../../settings.model';
 
 @Component({
-  selector: 'obd-connection-commands',
-  templateUrl: './commands.component.html',
-  styleUrls: ['./commands.component.scss', '../../settings.component.scss']
+  selector: 'app-command-lookup',
+  templateUrl: './command-lookup.component.html',
+  styleUrls: ['./command-lookup.component.scss']
 })
-export class CommandsComponent implements OnInit, OnDestroy {
+export class CommandLookupComponent implements OnInit {
 
-  settings$: Promise<Settings>;
-  connection$: Promise<ConnectionParameters>;
+  connection$: Promise<Connection>;
   modeIndex: number;
 
   commands$: Observable<OBDCommand[][]>;
@@ -22,7 +20,6 @@ export class CommandsComponent implements OnInit, OnDestroy {
   supportedCommands$: Promise<string[]>;
 
   constructor(
-    private settingsService: SettingsService,
     private obd: OBDService
   ) { }
 
@@ -35,9 +32,6 @@ export class CommandsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.modeIndex = 1;
-    this.settings$ = this.settingsService.getSettings();
-    this.connection$ = this.settings$.then(s => s.connection);
-
     
     this.commands$ = from(this.obd.allCommands());
     this.filteredCommands$ = this.commands$;
@@ -45,10 +39,4 @@ export class CommandsComponent implements OnInit, OnDestroy {
     this.supportedCommands$ = this.obd.getSupported().then(cmds => cmds.map(c => c.name));
   }
 
-  ngOnDestroy(): void {
-    this.settings$.then(s => this.settingsService.updateSettings(s));
-  }
-
 }
-
-

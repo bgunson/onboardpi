@@ -1,0 +1,44 @@
+<mat-list *ngIf="injectorSettings$ | async as injectorSettings">
+    <mat-card class="settings-card">
+        <mat-list-item>
+            Enabled
+            <span style="flex: 1 1 auto"></span>
+            <mat-slide-toggle (change)="toggleInjector($event)" [(ngModel)]="injectorSettings.enabled"></mat-slide-toggle>
+        </mat-list-item>
+    </mat-card>
+
+    <div mat-subheader><mat-icon>online_prediction</mat-icon>&nbsp;Status</div>
+    <mat-card class="settings-card" *ngIf="injectorState$ | async as state else waiting">
+        <mat-list-item>
+            Connected
+            <span style="flex: 1 1 auto"></span>
+            <span style="color: grey">{{ state.status.connected ? 'Yes' : 'No' }}</span>
+            <mat-divider class="app-divider"></mat-divider>
+        </mat-list-item>
+        <mat-list-item>
+            Active
+            <span style="flex: 1 1 auto"></span>
+            <mat-divider class="app-divider"></mat-divider>
+            <span style="color: grey">{{ state.status.active ? 'Yes' : 'No' }}</span>
+        </mat-list-item>
+        <mat-list-item>
+            Error
+            <span style="flex: 1 1 auto"></span>
+            <span style="color: grey">{{ state.status.error || 'None' }}</span>
+        </mat-list-item>
+    </mat-card>
+    <ng-template #waiting>
+        <mat-card class="settings-card">
+            <mat-list-item>
+                Waiting for response...
+            </mat-list-item>
+        </mat-card>
+    </ng-template>
+
+    <!-- Add abilitiy to change injector's log level -->
+    <div mat-subheader>
+        <mat-icon>description</mat-icon>&nbsp;Logging
+    </div>
+    <settings-log-level [name]="name" [(level)]="injectorSettings.log_level"></settings-log-level>
+    
+</mat-list>

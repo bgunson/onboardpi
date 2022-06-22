@@ -1,0 +1,25 @@
+{
+  "vehicle": {
+    "make": null,
+    "model": null,
+    "year": null,
+    "vin": null
+  },
+  "connection": {
+    "auto": false,
+    "parameters": {
+      "portstr": "/dev/pts/7",
+      "baudrate": 115200,
+      "protocol": null,
+      "delay_cmds": 100
+    },
+    "log_level": "INFO",
+    "supported_only": true
+  },
+  "injectors": {
+    "oap": {
+      "enabled": true,
+      "parameters": {}
+    }
+  }
+}
