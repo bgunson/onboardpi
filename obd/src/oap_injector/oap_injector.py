@@ -17,39 +17,30 @@ import struct
 
 MAX_CONNECT_ATTEMPTS = 5
 
-class EventHandler(ClientEventHandler):
-
-    def __init__(self, logger):
-        self.active = threading.Event()
-        self.logger = logger
-        signal.signal(signal.SIGINT, self.deactivate)
-        signal.signal(signal.SIGTERM, self.deactivate)
-    
-    def on_hello_response(self, client, message):
-        self.logger.info("Received hello response, result: {}, oap version: {}.{}, api version: {}.{}"
-            .format(message.result, message.oap_version.major,
-                    message.oap_version.minor, message.api_version.major,
-                    message.api_version.minor))
-        self.active.set()
-
-    def deactivate(self, *args):
-        self.active.clear()
-
-    def is_active(self):
-        return self.active.is_set()
 
 class OAPInjector(Injector, Client):
 
     def __init__(self, logger, *args, **kwargs):
         Client.__init__(self, "OnBoardPi OBD Injector")
+        self.__active = False
         self.logger = logger       
         self.logger.info("======================================================")
         self.logger.info("Initializing an OpenAuto Pro injector.")
-        event_handler = EventHandler(self.logger)
-        self.set_event_handler(event_handler)
+        self.set_event_handler(self)
         self._oap_api_port = self.__parse_oap_api_port()
         self.__init_cmds()
-        self.__oap_inject = ObdInjectGaugeFormulaValue()  
+        self.__oap_inject = ObdInjectGaugeFormulaValue()
+        signal.signal(signal.SIGINT, self.stop)
+        signal.signal(signal.SIGTERM, self.stop)
+
+
+    def on_hello_response(self, client, message):
+        self.logger.info("Received hello response, result: {}, oap version: {}.{}, api version: {}.{}"
+            .format(message.result, message.oap_version.major,
+                    message.oap_version.minor, message.api_version.major,
+                    message.api_version.minor))
+        # Receiving this message indicates the API is ready for injection
+        self.__active = True 
 
 
     def start(self, connect_callback):
@@ -69,18 +60,44 @@ class OAPInjector(Injector, Client):
             
 
 
-    def stop(self):
+    def stop(self, *args):
         self.logger.info("Disconnecting OAP Injector")
         self.logger.info("======================================================")
-        self._event_handler.deactivate()
+        self.__active = False
         self.disconnect()
 
 
     def status(self):
         return {
             'connected': self._connected,
-            'active': self._event_handler.is_active(),
+            'active': self.__active,
         }
+
+
+    def get_commands(self):
+        """ Give the list of OAP commands by name """
+        return self.__commands
+
+
+    def inject(self, obd_response):
+        """ Inject obd reponse to the openauto API. """
+        if obd_response.is_null() or not self.__active:
+            return 
+        try:
+            self.__oap_inject.formula = "getPidValue({})".format(self.__commands.index(obd_response.command.name))      # may raise a ValueError
+            self.__oap_inject.value = obd_response.value.magnitude                                                      # may raise a KeyError
+            self.logger.info("Injecting value: {} to PID: {} ({})".format(self.__oap_inject.value, self.__oap_inject.formula, obd_response.command.name))
+            self.send(MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE, 0, self.__oap_inject.SerializeToString())
+        except ValueError:
+            # This OBD response is for a command not needed by OAP. i.e. the obd_response.command is not contained in self.__commands
+            pass
+        except KeyError:
+            # Non-numeric response from trying to grab the magnitude. i.e. the obd_reponse is for an O2 sensor or similar w/ a non-primitive value
+            # which does not have a Pint magnitude so we are not interested since OAP only needs numeric values for its gauges(? only assuming since thats all I've seen)
+            pass
+        except Exception as e:
+            self.logger.error("OAP Injector error on inject: {}".format(e))
+
 
     def __listen(self):
         self.logger.debug("OAP Injector started receiving thread daemon")
@@ -93,8 +110,8 @@ class OAPInjector(Injector, Client):
                 can_continue = False
 
         # API said bye-bye or user disabled injector
-        self._event_handler.deactivate()
         self.logger.debug("OAP Injector reveiving thread is no longer active")
+
 
     def __parse_oap_api_port(self):
         """ 
@@ -149,29 +166,4 @@ class OAPInjector(Injector, Client):
                 self.__commands.append(None)
 
         self.logger.info("OAP injector commands are: {}".format(self.__commands))
-
-
-    def get_commands(self):
-        """ Give the list of OAP commands by name """
-        return self.__commands
-
-
-    def inject(self, obd_response):
-        """ Inject obd reponse to the openauto API. """
-        if obd_response.is_null() or not self._event_handler.is_active():
-            return 
-        try:
-            self.__oap_inject.formula = "getPidValue({})".format(self.__commands.index(obd_response.command.name))      # may raise a ValueError
-            self.__oap_inject.value = obd_response.value.magnitude                                                      # may raise a KeyError
-            self.logger.info("Injecting value: {} to PID: {} ({})".format(self.__oap_inject.value, self.__oap_inject.formula, obd_response.command.name))
-            self.send(MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE, 0, self.__oap_inject.SerializeToString())
-        except ValueError:
-            # This OBD response is for a command not needed by OAP. i.e. the obd_response.command is not contained in self.__commands
-            pass
-        except KeyError:
-            # Non-numeric response from trying to grab the magnitude. i.e. the obd_reponse is for an O2 sensor or similar w/ a non-primitive value
-            # which does not have a Pint magnitude so we are not interested since OAP only needs numeric values for its gauges(? only assuming since thats all I've seen)
-            pass
-        except Exception as e:
-            self.logger.error("OAP Injector error on inject: {}".format(e))
  

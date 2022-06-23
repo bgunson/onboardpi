@@ -32,12 +32,13 @@ class Configuration:
 
     def set_obd_connection(self, obd_io):
         self.obd_io = obd_io
-        self.__init_injectors()    
+        if obd_io.connection.is_connected():
+            self.init_injectors()    
 
     def get_obd_connection(self):
         return self.obd_io
 
-    def __init_injectors(self):
+    def init_injectors(self):
         if not 'injectors' in self.__settings:
             return
         self.__injector_config = self.__settings['injectors']
@@ -55,11 +56,6 @@ class Configuration:
         i = injector_map[injector_type](**injector_settings['parameters'], logger=logger)
         self.__injectors[injector_type] = i
         i.start(self._watch_injector_cmds)
-
-    def disable_injector(self, injector_type):
-        if injector_type not in self.__injectors:
-            return
-        injector = self.__injectors[injector_type]
 
     def _watch_injector_cmds(self, injector):
         self.obd_io.connection.stop()
