@@ -77,7 +77,16 @@ class API:
         async def disable_injector(sid, injector_type):
             if injector_type in self.config.get_injectors():
                 injector = self.config.get_injectors()[injector_type]
+                commands = injector.get_commands()
+                
+                self.obd_io.connection.stop()
+                for cmd in commands:
+                    if cmd is not None:
+                        self.obd_io.connection.unwatch(obd.commands[cmd])
+
                 injector.stop()
+                # Alert clients in the watch room of the event
+                await sio.emit('unwatch', commands, room='watch', skip_sid=sid)
 
         @sio.event 
         async def injector_state(sid, injector_type):
@@ -86,7 +95,6 @@ class API:
                 'status': {
                     'connected': False,
                     'active': False,
-                    'error': None
                 }
             }
             if injector_type in self.config.get_injectors():

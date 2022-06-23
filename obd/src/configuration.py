@@ -56,7 +56,13 @@ class Configuration:
         self.__injectors[injector_type] = i
         i.start(self._watch_injector_cmds)
 
+    def disable_injector(self, injector_type):
+        if injector_type not in self.__injectors:
+            return
+        injector = self.__injectors[injector_type]
+
     def _watch_injector_cmds(self, injector):
+        self.obd_io.connection.stop()
         for cmd in injector.get_commands():
             if cmd is not None:
                 # watch the command and subscribe callback to inject, python-OBD handles multiple command callbacks

@@ -13,13 +13,14 @@ import obd
 import threading
 import signal
 import time
+import struct
 
 MAX_CONNECT_ATTEMPTS = 5
 
 class EventHandler(ClientEventHandler):
 
     def __init__(self, logger):
-        self.__active = threading.Event()
+        self.active = threading.Event()
         self.logger = logger
         signal.signal(signal.SIGINT, self.deactivate)
         signal.signal(signal.SIGTERM, self.deactivate)
@@ -29,24 +30,13 @@ class EventHandler(ClientEventHandler):
             .format(message.result, message.oap_version.major,
                     message.oap_version.minor, message.api_version.major,
                     message.api_version.minor))
-        self.__active.set()
-        threading.Thread(target=self.wait, args=(client, ), daemon=True).start()
+        self.active.set()
 
     def deactivate(self, *args):
-        self.__active.clear()
+        self.active.clear()
 
     def is_active(self):
-        return self.__active.is_set()
-
-    def wait(self, client):
-        self.logger.debug("OAP Injector started receiving thread daemon")
-        can_continue = True
-        while can_continue and self.__active.is_set():
-            can_continue = client.wait_for_message()
-
-        # API said bye-bye or user disabled injector
-        self.__active.clear()
-        self.logger.debug("OAP Injector reveiving thread is no longer active")
+        return self.active.is_set()
 
 class OAPInjector(Injector, Client):
 
@@ -55,7 +45,8 @@ class OAPInjector(Injector, Client):
         self.logger = logger       
         self.logger.info("======================================================")
         self.logger.info("Initializing an OpenAuto Pro injector.")
-        self.set_event_handler(EventHandler(self.logger))
+        event_handler = EventHandler(self.logger)
+        self.set_event_handler(event_handler)
         self._oap_api_port = self.__parse_oap_api_port()
         self.__init_cmds()
         self.__oap_inject = ObdInjectGaugeFormulaValue()  
@@ -70,10 +61,12 @@ class OAPInjector(Injector, Client):
         while not self._connected and connection_attempts < MAX_CONNECT_ATTEMPTS:
             try:
                 self.connect(host, self._oap_api_port)
+                threading.Thread(target=self.__listen, daemon=True).start()
                 connect_callback(self)
             except Exception as e:
                 self.logger.error("OAP Injector error on start: {}".format(e))
                 connection_attempts += 1
+            
 
 
     def stop(self):
@@ -88,6 +81,20 @@ class OAPInjector(Injector, Client):
             'connected': self._connected,
             'active': self._event_handler.is_active(),
         }
+
+    def __listen(self):
+        self.logger.debug("OAP Injector started receiving thread daemon")
+        can_continue = True
+        while can_continue:
+            try:
+                can_continue = self.wait_for_message()
+            except struct.error:
+                # This happens when client disconnects while trying to receivce, user disabled injector 
+                can_continue = False
+
+        # API said bye-bye or user disabled injector
+        self._event_handler.deactivate()
+        self.logger.debug("OAP Injector reveiving thread is no longer active")
 
     def __parse_oap_api_port(self):
         """ 

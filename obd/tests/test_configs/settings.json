@@ -7,19 +7,19 @@
   },
   "connection": {
     "parameters": {
-      "portstr": "/dev/pts/9",
+      "portstr": "/dev/pts/2",
       "baudrate": null,
       "protocol": null,
       "delay_cmds": 100
     },
-    "log_level": "WARNING",
+    "log_level": "INFO",
     "force_cmds": true
   },
   "injectors": {
     "oap": {
-      "enabled": false,
+      "enabled": true,
       "parameters": {},
-      "log_level": "INFO"
+      "log_level": "DEBUG"
     }
   }
 }
