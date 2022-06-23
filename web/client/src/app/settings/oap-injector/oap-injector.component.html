@@ -21,11 +21,6 @@
             <mat-divider class="app-divider"></mat-divider>
             <span style="color: grey">{{ state.status.active ? 'Yes' : 'No' }}</span>
         </mat-list-item>
-        <mat-list-item>
-            Error
-            <span style="flex: 1 1 auto"></span>
-            <span style="color: grey">{{ state.status.error || 'None' }}</span>
-        </mat-list-item>
     </mat-card>
     <ng-template #waiting>
         <mat-card class="settings-card">
