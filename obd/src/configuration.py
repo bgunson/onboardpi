@@ -105,8 +105,9 @@ class Configuration:
         return logger
 
     def set_logger_level(self, name, level):
-        logger = self.loggers[name]
-        logger.setLevel(level)
+        if name in self.loggers:
+            logger = self.loggers[name]
+            logger.setLevel(level)
 
     def __read_settings(self):
         """ Try to open and parse the settings json file store it in memory """
