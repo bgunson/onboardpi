@@ -7,7 +7,7 @@
   },
   "connection": {
     "parameters": {
-      "portstr": "/dev/pts/2",
+      "portstr": "/dev/pts/5",
       "baudrate": null,
       "protocol": null,
       "delay_cmds": 100

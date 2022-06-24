@@ -7,7 +7,7 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=onboardpi
     volumes:
-      - /var/lib/postgresql/data:/var/lib/postgresql/data
+      - /var/lib/onboardpi/data:/var/lib/postgresql/data
   web:
     image: bgunson/onboardpi-web
     restart: always

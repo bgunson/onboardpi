@@ -1,9 +1,16 @@
 from src.oap_injector import OAPInjector
 from src import Configuration
 import obd
-import logging
+import os
+import json
 
 config = Configuration()
+
+SETTINGS_PATH = os.path.join(os.environ.get("SETTINGS_DIR", os.getcwd()), "settings.json")
+settings = {}
+with open(SETTINGS_PATH, mode='r') as settings_file:
+    settings = json.load(settings_file)
+
 
 def test_is_singleton():
     config2 = Configuration()
@@ -11,12 +18,11 @@ def test_is_singleton():
 
 def test_connection_params():
     params = config.connection_params()
-    assert params['portstr'] == "/dev/pts/9"
-    assert params['delay_cmds'] == 0.1
+    assert params['portstr'] == settings['connection']['parameters']['portstr']
+    assert params['delay_cmds'] == settings['connection']['parameters']['delay_cmds'] / 1000
 
 def test_log_level():
-    _ = config.connection_params()
-    assert obd.logger.getEffectiveLevel() == logging.WARNING
+    assert obd.logger.getEffectiveLevel() == config.loggers['obd'].getEffectiveLevel()
 
 def test_get_injectors():
     injectors = config.get_injectors()
