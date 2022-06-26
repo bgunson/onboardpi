@@ -1,32 +1,19 @@
 import obdio
 from src import Configuration, API
 
-class OBDServer():
+def main():
+    config = Configuration()
+    obd_io = obdio.OBDio()
+    config.set_obd_connection(obd_io)
+    sio = obd_io.create_server(cors_allowed_origins='*', json=obdio)
 
-    def __init__(self):
-        self.config = Configuration()
-        self.io = obdio.OBDio()
-        # Attempt to connect to the vehicle
-        params = self.config.connection_params()
-        self.io.connect_obd(**params)
-        self.config.set_obd_connection(self.io)
+    api = API(sio)
+    api.mount()
+    
+    config.init_obd_connection()
 
-        sio = self.io.create_server(cors_allowed_origins='*', json=obdio)
-
-        api = API(sio)
-        api.mount()
-
-    def start(self):
-        """ This starts the socketio asgi server """
-        self.io.serve_static({
-            '/view/obd.log': {'filename': 'obd.log', 'content_type': 'text/plain'},
-            '/download/obd.log': 'obd.log',
-            '/view/oap.log': {'filename': 'oap.log', 'content_type': 'text/plain'},
-            '/download/oap.log': 'oap.log'
-        })
-        self.io.run_server(host='0.0.0.0', port=60000, log_level='critical')
-
+    obd_io.serve_static(api.static_files())
+    obd_io.run_server(host='0.0.0.0', port=60000, log_level='critical')
 
 if __name__ == '__main__':
-    server = OBDServer()
-    server.start()
+    main()

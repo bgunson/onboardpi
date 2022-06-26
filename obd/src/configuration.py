@@ -30,10 +30,15 @@ class Configuration:
     def __init__(self):
         pass
 
+    def init_obd_connection(self):
+        """ Steps to connect to vehicle and any other local operations which are needed after successful/unsuccessful connection """
+        params = self.connection_params()
+        self.obd_io.connect_obd(**params)
+        if self.obd_io.connection.is_connected():
+            self.init_injectors()   
+
     def set_obd_connection(self, obd_io):
-        self.obd_io = obd_io
-        if obd_io.connection.is_connected():
-            self.init_injectors()    
+        self.obd_io = obd_io 
 
     def get_obd_connection(self):
         return self.obd_io

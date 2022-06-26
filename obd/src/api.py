@@ -144,8 +144,19 @@ class API:
         @sio.event
         async def connect_obd(sid):
             await sio.emit('obd_connecting')
-            params = self.config.connection_params()
-            self.config.get_obd_connection().connect_obd(**params)
-            self.config.init_injectors()    # reconnect injectors who got interrupted
+            self.config.init_obd_connection()
+            # params = self.config.connection_params()
+            # self.config.get_obd_connection().connect_obd(**params)
+            # self.config.init_injectors()    # reconnect injectors who got interrupted
 
         #endregion
+
+    
+    def static_files(self):
+        """ List routes and static content to be served by the OBD server """
+        return {
+            '/view/obd.log': {'filename': 'obd.log', 'content_type': 'text/plain'},
+            '/download/obd.log': 'obd.log',
+            '/view/oap.log': {'filename': 'oap.log', 'content_type': 'text/plain'},
+            '/download/oap.log': 'oap.log'
+        }
