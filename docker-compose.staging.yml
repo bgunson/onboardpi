@@ -7,13 +7,13 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=onboardpi
     volumes:
-      - - /var/lib/onboardpi/data:/var/lib/postgresql/data
+      - /var/lib/onboardpi/data:/var/lib/postgresql/data
   web:
     build: ./web
     ports: 
       - "8080:8080"
     volumes: 
-      - var/lib/onboardpi/data:/var/lib/onboardpi/data
+      - /var/lib/onboardpi/data:/var/lib/onboardpi/data
     environment:
       - POSTGRES_PASSWORD=password
       - POSTGRES_HOST=db
