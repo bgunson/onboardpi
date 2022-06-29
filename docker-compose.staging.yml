@@ -7,13 +7,16 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=onboardpi
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - /var/lib/onboardpi/data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
   web:
     build: ./web
+    restart: always
     ports: 
-      - "8080:8080"
+      - 8080:8080
     volumes: 
-      - onboardpi_data:/var/lib/onboardpi/data
+      - /var/lib/onboardpi/data:/var/lib/onboardpi/data
+      - /etc/localtime:/etc/localtime:ro
     environment:
       - POSTGRES_PASSWORD=password
       - POSTGRES_HOST=db
@@ -23,18 +26,15 @@ services:
       - db
   obd:
     build: ./obd
+    restart: always
+    privileged: true
     ports: 
-      - "60000:60000"
+      - 60000:60000
     volumes:
-      - onboardpi_data:/var/lib/onboardpi/data:ro
+      - /var/lib/onboardpi/data:/var/lib/onboardpi/data:ro
       - /dev:/dev
+      - /etc/localtime:/etc/localtime:ro
       # - /home/pi/.openauto/config:/home/pi/.openauto/config:ro
     environment:
       - SETTINGS_DIR=/var/lib/onboardpi/data
       - OAP_HOST=172.17.0.1
-    depends_on:
-      - web
-
-volumes:
-  db_data:
-  onboardpi_data:

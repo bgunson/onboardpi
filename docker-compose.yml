@@ -7,14 +7,16 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=onboardpi
     volumes:
-      - /var/lib/postgresql/data:/var/lib/postgresql/data
+      - /var/lib/onboardpi/data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
   web:
     image: bgunson/onboardpi-web
     restart: always
     ports: 
-      - "80:8080"
+      - 80:8080
     volumes: 
       - /var/lib/onboardpi/data:/var/lib/onboardpi/data
+      - /etc/localtime:/etc/localtime:ro
     environment:
       - POSTGRES_HOST=db
       - POSTGRES_DB=onboardpi
@@ -25,12 +27,13 @@ services:
   obd:
     image: bgunson/onboardpi-obd
     restart: always
-    privileged: true
+    privileged: true    # container needs to read/write to serial obd port
     ports: 
-      - "60000:60000"
+      - 60000:60000
     volumes:
       - /var/lib/onboardpi/data:/var/lib/onboardpi/data:ro
       - /dev:/dev
+      - /etc/localtime:/etc/localtime:ro
       # If integrating with OpenAuto Pro use the following volume so OnBoardPi can read the OBD Pids configuration, uncomment next line
       # - /home/pi/.openauto/config:/home/pi/.openauto/config:ro
 
@@ -40,9 +43,7 @@ services:
     #   - "/dev/ttyUSB0:/dev/ttyUSB0"
 
     # If the OpenAuto configuraiton dir is elsewhere on your machine, mount that location as a volume (in place of '/home/pi/.openauto/config:/home/pi/.openauto/config:ro') 
-    # and add an environment variable `OAP_CONFIG_PATH=/path/to/oap/config` below
+    # and add an environment variable `OAP_CONFIG_DIR=/path/to/.openauto/config` below
     environment:
       - SETTINGS_DIR=/var/lib/onboardpi/data
       - OAP_HOST=172.17.0.1
-    depends_on:
-      - web

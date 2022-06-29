@@ -12,19 +12,19 @@
         <mat-list-item>
             Connected
             <span style="flex: 1 1 auto"></span>
-            <span style="color: grey">{{ state.status.connected ? 'Yes' : 'No' }}</span>
+            <span style="color: grey">{{ state.connected ? 'Yes' : 'No' }}</span>
             <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
         <mat-list-item>
             Active
             <span style="flex: 1 1 auto"></span>
             <mat-divider class="app-divider"></mat-divider>
-            <span style="color: grey">{{ state.status.active ? 'Yes' : 'No' }}</span>
+            <span style="color: grey">{{ state.active ? 'Yes' : 'No' }}</span>
         </mat-list-item>
         <mat-list-item>
-            Error
+            Commands
             <span style="flex: 1 1 auto"></span>
-            <span style="color: grey">{{ state.status.error || 'None' }}</span>
+            <span style="color: grey">{{ state.commands ? 'Injecting ' + state.commands.length + ' commands' : 'None' }}</span>
         </mat-list-item>
     </mat-card>
     <ng-template #waiting>

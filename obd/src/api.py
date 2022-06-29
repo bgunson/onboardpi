@@ -77,22 +77,23 @@ class API:
         async def disable_injector(sid, injector_type):
             if injector_type in self.config.get_injectors():
                 injector = self.config.get_injectors()[injector_type]
+                commands = injector.get_commands()
+                
+                self.obd_io.connection.stop()
+                for cmd in commands:
+                    if cmd is not None:
+                        self.obd_io.connection.unwatch(obd.commands[cmd])
+                
                 injector.stop()
+                # Alert clients in the watch room of the event
+                await sio.emit('unwatch', commands, room='watch', skip_sid=sid)
 
         @sio.event 
         async def injector_state(sid, injector_type):
-            injector_state = {
-                'commands': [],
-                'status': {
-                    'connected': False,
-                    'active': False,
-                    'error': None
-                }
-            }
+            injector_state = {}
             if injector_type in self.config.get_injectors():
                 injector = self.config.get_injectors()[injector_type]
-                injector_state['commands'] = injector.get_commands()
-                injector_state['status'] = injector.status()
+                injector_state = injector.status()
             await sio.emit('injector_state', injector_state, room=sid)
 
         #endregion
@@ -136,7 +137,19 @@ class API:
         @sio.event
         async def connect_obd(sid):
             await sio.emit('obd_connecting')
-            params = self.config.connection_params()
-            self.config.get_obd_connection().connect_obd(**params)
+            self.config.init_obd_connection()
+            # params = self.config.connection_params()
+            # self.config.get_obd_connection().connect_obd(**params)
+            # self.config.init_injectors()    # reconnect injectors who got interrupted
 
         #endregion
+
+    
+    def static_files(self):
+        """ List routes and static content to be served by the OBD server """
+        return {
+            '/view/obd.log': {'filename': 'obd.log', 'content_type': 'text/plain'},
+            '/download/obd.log': 'obd.log',
+            '/view/oap.log': {'filename': 'oap.log', 'content_type': 'text/plain'},
+            '/download/oap.log': 'oap.log'
+        }
