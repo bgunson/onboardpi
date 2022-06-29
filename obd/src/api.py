@@ -90,17 +90,10 @@ class API:
 
         @sio.event 
         async def injector_state(sid, injector_type):
-            injector_state = {
-                'commands': [],
-                'status': {
-                    'connected': False,
-                    'active': False,
-                }
-            }
+            injector_state = {}
             if injector_type in self.config.get_injectors():
                 injector = self.config.get_injectors()[injector_type]
-                injector_state['commands'] = injector.get_commands()
-                injector_state['status'] = injector.status()
+                injector_state = injector.status()
             await sio.emit('injector_state', injector_state, room=sid)
 
         #endregion

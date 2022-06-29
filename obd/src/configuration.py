@@ -110,6 +110,11 @@ class Configuration:
     def __register_logger(self, name, level=logging.INFO):
         """ Register a modules logger with config so it can be accessed and modified later. Example: log level altered by a socketio client, see self.set_logger_level """
         logger = logging.getLogger(name)
+
+        # remove existing handlers from external modules to use our own
+        for handler in logger.handlers:
+            logger.removeHandler(handler)
+            
         logger.setLevel(level)
         file_handler = logging.FileHandler("{}.log".format(name), mode='w')
         file_handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))

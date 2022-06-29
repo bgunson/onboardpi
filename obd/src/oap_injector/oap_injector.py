@@ -88,6 +88,7 @@ class OAPInjector(Injector, Client):
 
     def status(self):
         return {
+            'commands': self.__commands,
             'connected': self._connected,
             'active': self.__active.is_set(),
         }
