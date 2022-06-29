@@ -6,8 +6,7 @@ logger = logging.getLogger()
 oap_injector = OAPInjector(logger)
 
 def test_oap_api_port():
-    # Test config should return 44406 instead of the default 44405
-    assert oap_injector._oap_api_port == 44406
+    assert oap_injector._oap_api_port == 44405
 
 def test_get_commands():
     oap_cmds = oap_injector.get_commands()

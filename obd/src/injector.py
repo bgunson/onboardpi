@@ -11,6 +11,10 @@ class Injector(ABC):
     - Use an injector as an MQTT client
     - Can even add support for more protocols down the road  
     """
+
+    """ Whether or not an injector can start, default to true on creation """
+    enabled: bool
+
     @abstractmethod
     def start(self, connect_callback):
         """ Start the data injection """

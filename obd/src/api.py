@@ -83,7 +83,7 @@ class API:
                 for cmd in commands:
                     if cmd is not None:
                         self.obd_io.connection.unwatch(obd.commands[cmd])
-
+                
                 injector.stop()
                 # Alert clients in the watch room of the event
                 await sio.emit('unwatch', commands, room='watch', skip_sid=sid)
