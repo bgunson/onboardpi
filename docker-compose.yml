@@ -8,7 +8,7 @@ services:
       - POSTGRES_DB=onboardpi
     volumes:
       - /var/lib/onboardpi/data:/var/lib/postgresql/data
-      - /etc/localtime:/ect/localtime:ro
+      - /etc/localtime:/etc/localtime:ro
   web:
     image: bgunson/onboardpi-web
     restart: always
@@ -16,7 +16,7 @@ services:
       - 80:8080
     volumes: 
       - /var/lib/onboardpi/data:/var/lib/onboardpi/data
-      - /etc/localtime:/ect/localtime:ro
+      - /etc/localtime:/etc/localtime:ro
     environment:
       - POSTGRES_HOST=db
       - POSTGRES_DB=onboardpi
@@ -33,7 +33,7 @@ services:
     volumes:
       - /var/lib/onboardpi/data:/var/lib/onboardpi/data:ro
       - /dev:/dev
-      - /etc/localtime:/ect/localtime:ro
+      - /etc/localtime:/etc/localtime:ro
       # If integrating with OpenAuto Pro use the following volume so OnBoardPi can read the OBD Pids configuration, uncomment next line
       # - /home/pi/.openauto/config:/home/pi/.openauto/config:ro
 

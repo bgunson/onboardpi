@@ -8,7 +8,7 @@ services:
       - POSTGRES_DB=onboardpi
     volumes:
       - /var/lib/onboardpi/data:/var/lib/postgresql/data
-      - /etc/localtime:/ect/localtime:ro
+      - /etc/localtime:/etc/localtime:ro
   web:
     build: ./web
     restart: always
@@ -16,7 +16,7 @@ services:
       - 8080:8080
     volumes: 
       - /var/lib/onboardpi/data:/var/lib/onboardpi/data
-      - /etc/localtime:/ect/localtime:ro
+      - /etc/localtime:/etc/localtime:ro
     environment:
       - POSTGRES_PASSWORD=password
       - POSTGRES_HOST=db
@@ -33,7 +33,7 @@ services:
     volumes:
       - /var/lib/onboardpi/data:/var/lib/onboardpi/data:ro
       - /dev:/dev
-      - /etc/localtime:/ect/localtime:ro
+      - /etc/localtime:/etc/localtime:ro
       # - /home/pi/.openauto/config:/home/pi/.openauto/config:ro
     environment:
       - SETTINGS_DIR=/var/lib/onboardpi/data
