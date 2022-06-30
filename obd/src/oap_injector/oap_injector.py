@@ -130,8 +130,9 @@ class OAPInjector(Injector, Client):
         while can_continue:
             try:
                 can_continue = self.wait_for_message()
-            except struct.error:
+            except Exception as e:
                 # This happens when client disconnects while trying to receivce, user disabled injector 
+                self.logger.error("An exception occurred on the OAP injector receiving thread: {}".format(e))
                 can_continue = False
 
         # API said bye-bye or user disabled injector

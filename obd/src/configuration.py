@@ -1,3 +1,4 @@
+import time
 import os
 import logging
 import json
@@ -31,11 +32,19 @@ class Configuration:
         pass
 
     def init_obd_connection(self):
-        """ Steps to connect to vehicle and any other local operations which are needed after successful/unsuccessful connection """
+        """ Steps to connect to vehicle and any other local operations which are needed after successful/unsuccessful connection. Try 3 times to fully connect to vehicle """
         params = self.connection_params()
-        self.obd_io.connect_obd(**params)
-        if self.obd_io.connection.is_connected():
-            self.init_injectors()   
+        attempts = 0
+        connected = False
+        while not connected and attempts < 3:
+            if attempts > 0:
+                time.sleep(1)
+            self.obd_io.connect_obd(**params) # Blocks server which is ok since no socketio handlers should respond unless there is some sort of connection
+            connected = self.obd_io.connection.is_connected()
+            attempts += 1
+    
+        if connected:
+            self.init_injectors()  
 
     def set_obd_connection(self, obd_io):
         self.obd_io = obd_io 

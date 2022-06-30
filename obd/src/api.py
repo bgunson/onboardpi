@@ -138,9 +138,6 @@ class API:
         async def connect_obd(sid):
             await sio.emit('obd_connecting')
             self.config.init_obd_connection()
-            # params = self.config.connection_params()
-            # self.config.get_obd_connection().connect_obd(**params)
-            # self.config.init_injectors()    # reconnect injectors who got interrupted
 
         #endregion
 
