@@ -1,4 +1,4 @@
-import time
+import threading
 import os
 import logging
 import json
@@ -23,28 +23,34 @@ class Configuration:
         return it
 
     def init(self):
-        self.__injectors = {}
         self.__read_settings()
+
+        # Create dict for our loggers
         self.loggers = {}
+        # register python-obd logger with onboardpi
         self.__register_logger(obd.__name__, self.__settings['connection']['log_level'])
+
+        # Create dict to store injectors and init them
+        self.__injectors = {}
+        self.init_injectors()
+
 
     def __init__(self):
         pass
 
     def init_obd_connection(self):
-        """ Steps to connect to vehicle and any other local operations which are needed after successful/unsuccessful connection. Try 3 times to fully connect to vehicle """
+        """ Steps to connect to vehicle and any other local operations which are needed after successful/unsuccessful connection. Try twice times to fully connect to vehicle """
         params = self.connection_params()
         attempts = 0
         connected = False
-        while not connected and attempts < 3:
-            if attempts > 0:
-                time.sleep(1)
+        while not connected and attempts < 2:
             self.obd_io.connect_obd(**params) # Blocks server which is ok since no socketio handlers should respond unless there is some sort of connection
             connected = self.obd_io.connection.is_connected()
             attempts += 1
     
         if connected:
-            self.init_injectors()  
+            for injector in self.__injectors.values():
+                injector.start() 
 
     def set_obd_connection(self, obd_io):
         self.obd_io = obd_io 
@@ -53,28 +59,28 @@ class Configuration:
         return self.obd_io
 
     def init_injectors(self):
-        """ Init injectors defined in the settings file, start those that are labeled enabled in the settings file """
+        """ Init injectors defined in the settings file which are enabled """
         if not 'injectors' in self.__settings:
             return
         self.__injector_settings = self.__settings['injectors']
         for injector_type, injector_config in self.__injector_settings.items():
+            # If the injector is to be enabled at startup (enabled == True in settings file) cache it
             if injector_config['enabled'] == True:
-                self.enable_injector(injector_type)
+                self.register_injector(injector_type)
 
-    def enable_injector(self, injector_type):
-        """ Enable a particular injector by calling it's start method. If this injector type is not already known to the configuration, create and store it. """
-        if injector_type in self.__injectors:
-            # This injector is already registered with configuration so start it up again
-            self.__injectors[injector_type].enabled = True
-            self.__injectors[injector_type].start()
-            return
 
-        # This injector is being enabled for the first time this session, create a new one
-        injector_settings = self.__settings['injectors'][injector_type]
-        logger = self.__register_logger(injector_type, injector_settings['log_level'])
-        i = injector_map[injector_type](logger=logger, connect_callback=self._watch_injector_cmds,**injector_settings['parameters'])
-        self.__injectors[injector_type] = i
-        i.start()
+    def register_injector(self, injector_type):
+        """ Create and cache a new injector instance of type. The new injectgor is assumed to be enabled """
+        injector_config = self.__settings['injectors'][injector_type]
+        # create a logger for this injector
+        logger = self.__register_logger(injector_type, injector_config['log_level'])
+        # create a new instance of this injector type via the injector map
+        injector = injector_map[injector_type](logger=logger, connect_callback=self._watch_injector_cmds,**injector_config['parameters'])
+        # cache the instance with self
+        self.__injectors[injector_type] = injector
+
+        return injector
+
 
     def _watch_injector_cmds(self, injector):
         """ Used as a callback when an injector indicates it is ready and when other socketio clients unwatch commands this method will make sure injector commands are not forgotten """
@@ -85,14 +91,17 @@ class Configuration:
                 self.obd_io.connection.watch(obd.commands[cmd], injector.inject, self.force_cmds)
         self.obd_io.connection.start()
 
+
     def on_unwatch_event(self):
         """ When a socketio client unwatches some commands we need to rewatch and re-register the injector commands and callback"""
         for _, injector in self.__injectors.items():
             if injector.status()['active'] and injector.enabled:
                 self._watch_injector_cmds(injector)
 
+
     def get_injectors(self):
         return self.__injectors
+
 
     def connection_params(self):
         """ Configure the OBD connection parameters given in settings.json file and set the logger. """
@@ -116,6 +125,7 @@ class Configuration:
         
         return params
 
+
     def __register_logger(self, name, level=logging.INFO):
         """ Register a modules logger with config so it can be accessed and modified later. Example: log level altered by a socketio client, see self.set_logger_level """
         logger = logging.getLogger(name)
@@ -136,10 +146,12 @@ class Configuration:
         self.loggers[name] = logger
         return logger
 
+
     def set_logger_level(self, name, level):
         if name in self.loggers:
             logger = self.loggers[name]
             logger.setLevel(level)
+
 
     def __read_settings(self):
         """ Try to open and parse the settings json file store it in memory """

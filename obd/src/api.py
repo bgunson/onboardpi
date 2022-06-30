@@ -71,7 +71,15 @@ class API:
 
         @sio.event
         async def enable_injector(sid, injector_type):
-            self.config.enable_injector(injector_type)
+            if injector_type in self.config.get_injectors():
+                injector = self.config.get_injectors()[injector_type]
+                # This injector is already registered with configuration so start it up again
+                injector.enabled = True
+                injector.start()
+                return
+            else:
+                injector = self.config.register_injector(injector_type)
+                injector.start()
 
         @sio.event
         async def disable_injector(sid, injector_type):
