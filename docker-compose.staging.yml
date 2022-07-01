@@ -13,7 +13,7 @@ services:
     build: ./web
     restart: always
     ports: 
-      - 8080:8080
+      - 80:8080
     volumes: 
       - /var/lib/onboardpi/data:/var/lib/onboardpi/data
       - /etc/localtime:/etc/localtime:ro

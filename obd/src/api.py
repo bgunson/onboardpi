@@ -195,13 +195,11 @@ class API:
 
         @sio.event
         async def join_notifications(sid):
-            print("{} joined notifications room".format(sid))
             sio.enter_room(sid, 'notifications')
             await sio.emit("obd_connection_status", self.get_obd_connection_status(), room="notifications")
 
         @sio.event
         async def leave_notifications(sid):
-            print("{} left notifications room".format(sid))
             sio.leave_room(sid, 'notifications')
 
     def static_files(self):
