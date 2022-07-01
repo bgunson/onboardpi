@@ -36,11 +36,11 @@ class OAPInjector(Injector):
         self._oap_api_port = self.__parse_oap_api_port()
         self.__oap_inject = ObdInjectGaugeFormulaValue()
         self.__connection_attempts = 0
-        #self.__active = threading.Event()
         self._enabled = threading.Event()
         self._enabled.set()
 
-        self.event_handler = OAPEventHandler(self._client, self._enabled, self.restart)
+        self.event_handler = OAPEventHandler(
+            self._client, self._enabled, self.restart)
         self._client.set_event_handler(self.event_handler)
 
         threading.Thread(target=self.__init_connection, daemon=True).start()
@@ -57,9 +57,8 @@ class OAPInjector(Injector):
                              daemon=True).start()
         else:
             if self._client.is_connected():
-                self.event_handler.start_listening()
+                self.event_handler.start()
                 self.callback('connected', self)
-
 
     def __connect_attempt(self):
         """ Attempt to connect to the API, ran on another thread with larger intervals as unsuccessful attempts persist """
@@ -82,16 +81,15 @@ class OAPInjector(Injector):
         self.logger.debug("Starting OAP injector, client connected: {}".format(
             self._client.is_connected()))
 
-        self.event_handler = OAPEventHandler(self._client, self._enabled, self.restart)
+        self.event_handler = OAPEventHandler(
+            self._client, self._enabled, self.restart)
         self._client.set_event_handler(self.event_handler)
         self.__init_connection()
-
 
     def stop(self):
         self.logger.info("Stopping OAP injector")
         self.logger.info(
             "======================================================")
-        #self.__active.clear()
         self._enabled.clear()
         self._client.disconnect()
 
@@ -134,7 +132,6 @@ class OAPInjector(Injector):
             pass
         except Exception as e:
             self.logger.error("OAP injector error on inject: {}".format(e))
-
 
     def __parse_oap_api_port(self):
         """ 
@@ -198,4 +195,3 @@ class OAPInjector(Injector):
     def __del__(self):
         self._enabled.clear()
         self._client.disconnect()
-        #self.__active.clear()

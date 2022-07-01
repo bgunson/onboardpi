@@ -25,10 +25,11 @@ def wait_for_server():
         except socketio.exceptions.ConnectionError:
             pass
 
+    ping_client.disconnect()
+
     _ = Configuration()
     api = API(sio)
     api.mount()
-    ping_client.disconnect()
 
 async def on_startup():
     threading.Thread(target=wait_for_server, daemon=True).start()

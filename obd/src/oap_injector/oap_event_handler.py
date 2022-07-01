@@ -7,19 +7,16 @@ import os
 logger = logging.getLogger('oap')
 
 
-class OAPEventHandler:
+class OAPEventHandler(threading.Thread):
 
     def __init__(self, client, enabled, callback):
+        super().__init__(daemon=True)
         self._client = client
-        self._icon_visible = False
         self.callback = callback
         self.active = threading.Event()
         self.enabled = enabled
-
-    def start_listening(self):
-        self.notification_thread = threading.Thread(
-            target=self._wait_for_events, args=(self._client, ), daemon=True)
-        self.notification_thread.start()
+        self._first_connect = threading.Event()
+        self._first_connect.set()
 
     def on_hello_response(self, client, message):
         logger.debug("Received hello response, result: {}, oap version: {}.{}, api version: {}.{}"
@@ -27,6 +24,13 @@ class OAPEventHandler:
                              message.oap_version.minor, message.api_version.major,
                              message.api_version.minor))
         self.active.set()
+
+        register_notification_channel_request = oap_api.RegisterNotificationChannelRequest()
+        register_notification_channel_request.name = "OnBoardPi"
+        register_notification_channel_request.description = "OnBoardPi OBD connection status channel"
+
+        client.send(oap_api.MESSAGE_REGISTER_NOTIFICATION_CHANNEL_REQUEST, 0,
+                    register_notification_channel_request.SerializeToString())
 
         register_status_icon_request = oap_api.RegisterStatusIconRequest()
         register_status_icon_request.name = "OnBoardPi Status Icon"
@@ -45,22 +49,36 @@ class OAPEventHandler:
 
         if message.result == oap_api.RegisterStatusIconResponse.REGISTER_STATUS_ICON_RESULT_OK:
             logger.debug("icon successfully registered")
-            self.toggle_icon_visibility(client)
+            change_status_icon_state = oap_api.ChangeStatusIconState()
+            change_status_icon_state.id = self._icon_id
+            change_status_icon_state.visible = True
+            self._client.send(oap_api.MESSAGE_CHANGE_STATUS_ICON_STATE, 0,
+                          change_status_icon_state.SerializeToString())
 
-    def toggle_icon_visibility(self, client):
-        self._icon_visible = not self._icon_visible
+    def show_notification(self, message):
+        show_notification = oap_api.ShowNotification()
+        show_notification.channel_id = self._notification_channel_id
+        show_notification.title = "OnBoardPi"
+        show_notification.description = message
+        show_notification.single_line = "Hello World - This is an example"
 
-        change_status_icon_state = oap_api.ChangeStatusIconState()
-        change_status_icon_state.id = self._icon_id
-        change_status_icon_state.visible = self._icon_visible
-        client.send(oap_api.MESSAGE_CHANGE_STATUS_ICON_STATE, 0,
-                    change_status_icon_state.SerializeToString())
+        with open(os.path.join(os.path.dirname(__file__), "assets/car.svg"), 'rb') as icon_file:
+            show_notification.icon = icon_file.read()
 
-    def _wait_for_events(self, oap_client):
+        self._client.send(oap_api.MESSAGE_SHOW_NOTIFICATION, 0,
+                          show_notification.SerializeToString())
 
-        oap_client._connected.wait()
+    def on_register_notification_channel_response(self, client, message):
+        logger.debug(
+            "register notification channel response, result: {}, icon id: {}".
+            format(message.result, message.id))
+        self._notification_channel_id = message.id
+
+    def run(self):
+
+        self._client._connected.wait()
         # block and wait for initial message, we are expecting api hello
-        oap_client.wait_for_message()
+        self._client.wait_for_message()
 
         # this is a socketio client for our own notifications from OnBoardPi to be relayed bto OpenAuto Pro
         sio = socketio.Client()
@@ -68,11 +86,14 @@ class OAPEventHandler:
         @sio.event
         def connect():
             # on connect join notifications room
+            if self._first_connect.is_set():
+                sio.emit("connect_obd")
+                self._first_connect.clear()
             sio.emit("join_notifications")
 
         @sio.event
         def obd_connection_status(message):
-            print(message)
+            self.show_notification(message['status'])
 
         # connection for OnBoardPi notifications API
         sio.connect("http://localhost:60000", transports=['websocket'])
@@ -80,17 +101,16 @@ class OAPEventHandler:
         can_continue = True
         while can_continue and self.enabled.is_set():
             try:
-                can_continue = oap_client.wait_for_message()
+                can_continue = self._client.wait_for_message()
             except Exception as e:
                 # This happens when client disconnects while trying to receivce, user disabled injector
                 logger.error(
                     "An exception occurred on the OAP injector receiving thread: {}. The socket was most likely disconnected while trying to receive bytes because the injector was stopped by the user.".format(e))
                 can_continue = False
 
-        oap_client.disconnect()
-
+        self._client.disconnect()
         sio.emit("leave_notifications")
         sio.disconnect()
-
+        # self.toggle_icon_visibility()
         self.active.clear()
         self.callback()
