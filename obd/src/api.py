@@ -47,7 +47,6 @@ class API:
 
         @sio.event
         async def watch(sid, commands):
-            self.config.obd_connected.wait(10)
             self.config.obd_io.stop()
             for cmd in commands:
                 self.config.obd_io.watch(obd.commands[cmd], self.watch.cache, self.config.force_cmds)
@@ -153,7 +152,7 @@ class API:
         @sio.event
         async def close(sid):
             self.config.obd_io.close()
-            self.config.obd_connected.clear()
+            await sio.emit("obd_connection_status", "OBD connection closed", room="notifications")
             await sio.emit('obd_closed')
 
         @sio.event
@@ -196,6 +195,20 @@ class API:
             await sio.start_background_task(self.config.init_obd_connection)
 
         #endregion
+
+        @sio.event
+        async def join_notifications(sid):
+            print("{} joined notifications room".format(sid))
+            sio.enter_room(sid, 'notifications')
+            if self.config.obd_io.is_connected():
+                await sio.emit("obd_connection_status", "OBD is connected", room="notifications")
+            else:
+                await sio.emit("obd_connection_status", "OBD is not connected", room="notifications")
+
+        @sio.event
+        async def leave_notifications(sid):
+            print("{} left notifications room".format(sid))
+            sio.leave_room(sid, 'notifications')
 
     
     def static_files(self):

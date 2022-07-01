@@ -1,16 +1,20 @@
 import logging
 import threading
-from .Client import ClientEventHandler
+import socketio
 from . import Api_pb2 as oap_api
 import os
 
 logger = logging.getLogger('oap')
 
-class StatusHandler(ClientEventHandler):
+class OAPEventHandler:
 
-    def __init__(self, client):
+    def __init__(self, client, active):
         self._client = client
         self._icon_visible = False
+        self._active = active
+        self.notification_thread = threading.Thread(target=self._wait_for_notifications, daemon=True)
+        self.notification_thread.start()
+        
 
     def on_hello_response(self, client, message):
         logger.debug("Received hello response, result: {}, oap version: {}.{}, api version: {}.{}"
@@ -45,11 +49,33 @@ class StatusHandler(ClientEventHandler):
         client.send(oap_api.MESSAGE_CHANGE_STATUS_ICON_STATE, 0,
                     change_status_icon_state.SerializeToString())
 
-    def on_register_notification_channel_response(self, client, message):
-        pass
 
-    def __del__(self):
-        pass
+    def _wait_for_notifications(self):
+
+        self._active.wait()
+
+        sio = socketio.Client()
+
+        @sio.event
+        def connect():
+            sio.emit("join_notifications")
+
+        @sio.event
+        def obd_connection_status(message):
+            print(message)
+
+        while not sio.connected:
+            try:
+                sio.connect("http://localhost:60000", transports=['websocket'])
+            except Exception:
+                pass
+
+        while self._active.is_set():
+            continue
+
+        sio.emit("leave_notifications")
+        sio.disconnect()
+
 
 
     

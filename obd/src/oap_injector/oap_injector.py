@@ -5,7 +5,7 @@
 
 """
 from re import L
-from .status_handler import StatusHandler
+from .oap_event_handler import OAPEventHandler
 from src.injector import Injector
 from .Api_pb2 import ObdInjectGaugeFormulaValue, MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE
 from .Client import Client
@@ -25,11 +25,10 @@ class OAPInjector(Injector):
 
     def __init__(self, logger, *args, **kwargs):
         self._client = Client("OnBoardPi OBD Injector")
-        # self._status_handler = StatusHandler(self._client)
-        self._client.set_event_handler(StatusHandler(self._client))
 
-        self.logger = logger       
-        self.logger.info("======================================================")
+        self.logger = logger
+        self.logger.info(
+            "======================================================")
         self.logger.info("Initializing an OpenAuto Pro injector.")
 
         self.__init_cmds()
@@ -39,8 +38,11 @@ class OAPInjector(Injector):
         self.__connection_attempts = 0
         self.__active = threading.Event()
         self._enabled = True
-        threading.Thread(target=self.__init_connection, daemon=True).start()
 
+        self._client.set_event_handler(
+            OAPEventHandler(self._client, self.__active))
+
+        threading.Thread(target=self.__init_connection, daemon=True).start()
 
     def __init_connection(self):
         if not self._enabled or self._client._connected:
@@ -50,15 +52,16 @@ class OAPInjector(Injector):
         except Exception as e:
             self.logger.error("OAP injector error on start: {}".format(e))
             self.__connection_attempts += 1
-            threading.Thread(target=self.__init_connection, daemon=True).start()
+            threading.Thread(target=self.__init_connection,
+                             daemon=True).start()
 
         if self._client._connected:
-            self.__listen_thread = threading.Thread(target=self.__listen, args=(self._client, ), daemon=True)
+            self.__listen_thread = threading.Thread(
+                target=self.__listen, args=(self._client, ), daemon=True)
             self.__listen_thread.start()
             self.logger.info("OAP injector is ready for data injection")
             self.__active.set()
-            
-    
+
     def __connect_attempt(self):
         """ Attempt to connect to the API, ran on another thread with larger intervals as unsuccessful attempts persist """
         time.sleep(self.__connection_attempts * 0.25)
@@ -66,52 +69,58 @@ class OAPInjector(Injector):
             # If user disabled injector between delay and actual attempt
             return
         host = os.environ.get("OAP_HOST", "127.0.0.1")
-        self.logger.info("Attempting to connect to the OAP protobuf API at {}:{}".format(host, self._oap_api_port))
+        self.logger.info("Attempting to connect to the OAP protobuf API at {}:{}".format(
+            host, self._oap_api_port))
         self._client.connect(host, self._oap_api_port)
-
 
     def start(self):
         self._enabled = True
-        self.logger.debug("Starting OAP injector, client connected: {}".format(self._client._connected))
+        self.logger.debug("Starting OAP injector, client connected: {}".format(
+            self._client._connected))
+        self._client.set_event_handler(
+            OAPEventHandler(self._client, self.__active))
         if self._client._connected:
-            threading.Thread(target=self.__listen, args=(self._client, ), daemon=True).start()
+            threading.Thread(target=self.__listen, args=(
+                self._client, ), daemon=True).start()
             self.__active.set()
         else:
             self.__init_connection()
 
-
     def stop(self):
         self.logger.info("Stopping OAP injector")
-        self.logger.info("======================================================")
+        self.logger.info(
+            "======================================================")
         self.__active.clear()
         self._enabled = False
         self._client.disconnect()
-
 
     def status(self):
         return {
             'commands': self.__commands,
             'connected': self._client._connected,
             'active': self.__active.is_set()
-        }        
-
+        }
 
     def get_commands(self):
         """ Give the list of OAP commands by name """
         return self.__commands
 
-
     def inject(self, obd_response):
         """ Inject obd reponse to the openauto API. """
         if obd_response.is_null() or not self.__active.is_set():
-            self.logger.debug("OAP injection skipped. OBDResponse is null: {}. injector active: {}".format(obd_response.is_null(), self.__active.is_set()))
-            return 
+            self.logger.debug("OAP injection skipped. OBDResponse is null: {}. injector active: {}".format(
+                obd_response.is_null(), self.__active.is_set()))
+            return
         try:
-            cmd_index = self.__commands.index(obd_response.command.name)        # The index of the command as defined in the openauto config file, may raise a ValueError
-            self.__oap_inject.formula = "getPidValue({})".format(cmd_index)      
-            self.__oap_inject.value = obd_response.value.magnitude                                                      # may raise a KeyError
-            self.logger.info("Injecting value: {} to PID: {} ({})".format(self.__oap_inject.value, obd_response.command.name, cmd_index))
-            self._client.send(MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE, 0, self.__oap_inject.SerializeToString())
+            # The index of the command as defined in the openauto config file, may raise a ValueError
+            cmd_index = self.__commands.index(obd_response.command.name)
+            self.__oap_inject.formula = "getPidValue({})".format(cmd_index)
+            # may raise a KeyError
+            self.__oap_inject.value = obd_response.value.magnitude
+            self.logger.info("Injecting value: {} to PID: {} ({})".format(
+                self.__oap_inject.value, obd_response.command.name, cmd_index))
+            self._client.send(MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE,
+                              0, self.__oap_inject.SerializeToString())
         except ValueError:
             # This OBD response is for a command not needed by OAP. i.e. the obd_response.command is not contained in self.__commands
             pass
@@ -121,7 +130,6 @@ class OAPInjector(Injector):
             pass
         except Exception as e:
             self.logger.error("OAP injector error on inject: {}".format(e))
-
 
     def __listen(self, client):
         """ 
@@ -135,15 +143,15 @@ class OAPInjector(Injector):
             try:
                 can_continue = client.wait_for_message()
             except Exception as e:
-                # This happens when client disconnects while trying to receivce, user disabled injector 
-                self.logger.error("An exception occurred on the OAP injector receiving thread: {}".format(e))
+                # This happens when client disconnects while trying to receivce, user disabled injector
+                self.logger.error(
+                    "An exception occurred on the OAP injector receiving thread: {}. The socket was most likely disconnected while trying to receive bytes because the injector was stopped by the user.".format(e))
                 can_continue = False
 
         # API said bye-bye or user disabled injector
         self.logger.debug("OAP injector reveiving thread is no longer active")
         self.__active.clear()
         self._client.disconnect()
-        self._client.set_event_handler(StatusHandler(self._client))
         if self._enabled:
             self.start()
 
@@ -153,20 +161,21 @@ class OAPInjector(Injector):
         any settings in the OpenAuto GUI so in that case assume the port is 44405.
         """
         config = configparser.ConfigParser()
-        oap_sys_conf_path = os.path.join(os.path.join(os.environ.get('OAP_CONFIG_DIR', "/home/pi/.openauto/config"), "openauto_system.ini"))
+        oap_sys_conf_path = os.path.join(os.path.join(os.environ.get(
+            'OAP_CONFIG_DIR', "/home/pi/.openauto/config"), "openauto_system.ini"))
         config.read(oap_sys_conf_path)
         return config.getint('Api', 'EndpointListenPort', fallback=44405)
-
 
     def __init_cmds(self):
         """
         Parse the OAP PID configuration file and construct a list of python-OBD OBDCommands which 
         correspond to the OpenAuto pids in the order they appear in the file.
         """
-        pid_config_path = os.path.join(os.environ.get('OAP_CONFIG_DIR', "/home/pi/.openauto/config"), "openauto_obd_pids.ini")
+        pid_config_path = os.path.join(os.environ.get(
+            'OAP_CONFIG_DIR', "/home/pi/.openauto/config"), "openauto_obd_pids.ini")
         config = configparser.ConfigParser()
         config.read(pid_config_path)
-        
+
         self.__commands = []
 
         num_pids = config.getint('ObdPids', 'Count', fallback=0)
@@ -178,8 +187,8 @@ class OAPInjector(Injector):
                 continue
 
             # Try to parse the PID from the openauto config
-            try:    
-                mode = int(query[:2])   
+            try:
+                mode = int(query[:2])
                 pid = int(query[2:], 16)    # pid in decimal
 
                 if mode < 0 or mode > 9:
@@ -192,13 +201,20 @@ class OAPInjector(Injector):
                 cmd = obd.commands[mode][pid]
             except ValueError:
                 # Check if the command is a base command such as ELM_VOLTAGE whose query is b'ATRV' (cannot be indexed from obd.commands), fallback to none
-                cmd = next(filter(lambda c: c.command == query.encode(), obd.commands.base_commands()), None)
-            
+                cmd = next(filter(lambda c: c.command ==
+                           query.encode(), obd.commands.base_commands()), None)
+
             if cmd is not None and hasattr(cmd, 'name'):
                 self.__commands.append(cmd.name)
             else:
-                self.logger.warning("OAP injector could not determine a valid OBD command for ObdPid_{} with query: {}".format(i, query))
+                self.logger.warning(
+                    "OAP injector could not determine a valid OBD command for ObdPid_{} with query: {}".format(i, query))
                 self.__commands.append(None)
 
-        self.logger.info("OAP injector commands are: {}".format(self.__commands))
- 
+        self.logger.info(
+            "OAP injector commands are: {}".format(self.__commands))
+
+    def __del__(self):
+        self.enabled = False
+        self._client.disconnect()
+        self.__active.clear()

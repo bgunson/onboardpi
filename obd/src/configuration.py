@@ -5,11 +5,13 @@ import json
 import obd
 from .oap_injector import OAPInjector
 
-SETTINGS_PATH = os.path.join(os.environ.get("SETTINGS_DIR", os.getcwd()), "settings.json")
+SETTINGS_PATH = os.path.join(os.environ.get(
+    "SETTINGS_DIR", os.getcwd()), "settings.json")
 
 injector_map = {
     'oap': OAPInjector
-}    
+}
+
 
 class Configuration:
 
@@ -24,18 +26,17 @@ class Configuration:
 
     def init(self):
         self.obd_io = obd.Async("TEMP")
-        self.obd_connected = threading.Event()
         self.__read_settings()
 
         # Create dict for our loggers
         self.loggers = {}
         # register python-obd logger with onboardpi
-        self.__register_logger(obd.__name__, self.__settings['connection']['log_level'])
+        self.__register_logger(
+            obd.__name__, self.__settings['connection']['log_level'])
 
         # Create dict to store injectors and init them
         self.__injectors = {}
         self.init_injectors()
-
 
     def __init__(self):
         pass
@@ -44,9 +45,11 @@ class Configuration:
         """ Steps to connect to vehicle and any other local operations which are needed after successful/unsuccessful connection. Try twice times to fully connect to vehicle """
         if self.obd_io is not None and self.obd_io.is_connected():
             self.obd_io.close()
-            self.obd_connected.clear()
+            await self.sio.emit("obd_connection_status", "OBD connection closed", room="notifications")
             del self.obd_io
-            
+
+        # await self.sio.emit("obd_connection_status", "OBD attempting to connect", room="notifications")
+
         params = self.connection_params()
         attempts = 0
         connected = False
@@ -55,18 +58,22 @@ class Configuration:
             self.obd_io = obd.Async(**params)
             connected = self.obd_io.is_connected()
             attempts += 1
-        
+
         if connected:
-            self.obd_connected.set()
+            await self.sio.emit("obd_connection_status", "OBD connected successfully", room="notifications")
             for injector in self.__injectors.values():
                 self.watch_injector_cmds(injector)
-
+        else:
+            await self.sio.emit("obd_connection_status", "OBD unable to connect", room="notifications")
 
     def set_obd_io(self, obd_io):
-        self.obd_io = obd_io 
+        self.obd_io = obd_io
 
     def get_obd_io(self):
         return self.obd_io
+
+    def set_socket(self, sio):
+        self.sio = sio
 
     def init_injectors(self):
         """ Init injectors defined in the settings file which are enabled """
@@ -78,14 +85,15 @@ class Configuration:
             if injector_config['enabled'] == True:
                 self.register_injector(injector_type)
 
-
     def register_injector(self, injector_type):
         """ Create and cache a new injector instance of type. The new injectgor is assumed to be enabled """
         injector_config = self.__settings['injectors'][injector_type]
         # create a logger for this injector
-        logger = self.__register_logger(injector_type, injector_config['log_level'])
+        logger = self.__register_logger(
+            injector_type, injector_config['log_level'])
         # create a new instance of this injector type via the injector map
-        injector = injector_map[injector_type](logger=logger, **injector_config['parameters'])
+        injector = injector_map[injector_type](
+            logger=logger, **injector_config['parameters'])
         # cache the instance with self
         self.__injectors[injector_type] = injector
 
@@ -93,16 +101,15 @@ class Configuration:
 
         return injector
 
-
     def watch_injector_cmds(self, injector):
         """ Used as a callback when an injector indicates it is ready and when other socketio clients unwatch commands this method will make sure injector commands are not forgotten """
         self.obd_io.stop()
         for cmd in injector.get_commands():
             if cmd is not None:
                 # watch the command and subscribe callback to inject, python-OBD handles multiple command callbacks
-                self.obd_io.watch(obd.commands[cmd], injector.inject, self.force_cmds)
+                self.obd_io.watch(
+                    obd.commands[cmd], injector.inject, self.force_cmds)
         self.obd_io.start()
-
 
     def on_unwatch_event(self):
         """ When a socketio client unwatches some commands we need to rewatch and re-register the injector commands and callback"""
@@ -110,10 +117,8 @@ class Configuration:
             if injector.status()['active']:
                 self.watch_injector_cmds(injector)
 
-
     def get_injectors(self):
         return self.__injectors
-
 
     def connection_params(self):
         """ Configure the OBD connection parameters given in settings.json file and set the logger. """
@@ -123,7 +128,7 @@ class Configuration:
         if not 'connection' in self.__settings:
             # Either we could not read settings file or something else. Return nothing and allow
             # python-OBD to do its thing and connect automatically
-            return {}   
+            return {}
 
         connection = self.__settings['connection']
         if 'force_cmds' in connection:
@@ -132,11 +137,11 @@ class Configuration:
             self.force_cmds = False
 
         params = connection['parameters']
-        self.delay = connection['parameters']['delay_cmds'] / 1000      # convert delay from ms to seconds
+        # convert delay from ms to seconds
+        self.delay = connection['parameters']['delay_cmds'] / 1000
         params['delay_cmds'] = self.delay
-        
-        return params
 
+        return params
 
     def __register_logger(self, name, level=logging.INFO):
         """ Register a modules logger with config so it can be accessed and modified later. Example: log level altered by a socketio client, see self.set_logger_level """
@@ -145,25 +150,24 @@ class Configuration:
         # remove existing handlers from external modules to use our own
         for handler in logger.handlers:
             logger.removeHandler(handler)
-            
+
         logger.setLevel(level)
         file_handler = logging.FileHandler("{}.log".format(name), mode='w')
         file_handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
         logger.addHandler(file_handler)
 
         console_handler = logging.StreamHandler()
-        console_handler.setFormatter(logging.Formatter("[%(name)s] %(message)s"))
+        console_handler.setFormatter(
+            logging.Formatter("[%(name)s] %(message)s"))
         logger.addHandler(console_handler)
 
         self.loggers[name] = logger
         return logger
 
-
     def set_logger_level(self, name, level):
         if name in self.loggers:
             logger = self.loggers[name]
             logger.setLevel(level)
-
 
     def __read_settings(self):
         """ Try to open and parse the settings json file store it in memory """
@@ -172,4 +176,3 @@ class Configuration:
                 self.__settings = json.load(settings_file)
         except FileNotFoundError:
             self.__settings = {}
-        

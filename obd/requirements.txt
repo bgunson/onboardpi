@@ -1,5 +1,8 @@
-./obd-socketio
+obd-socketio
 obd
 protobuf~=3.19
-socketio
 uvicorn
+python-socketio
+aiohttp
+requests
+websocket-client
