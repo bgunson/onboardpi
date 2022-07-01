@@ -23,6 +23,10 @@ class Injector(ABC):
         pass
 
     @abstractmethod
+    def is_enabled(self):
+        pass
+
+    @abstractmethod
     def status(self):
         """ Give the current status of the injector. Such as: connected, disabled, errors, etc """
         pass

@@ -75,7 +75,7 @@ class ClientEventHandler:
 class Client:
 
     def __init__(self, name):
-        self._connected = False
+        self._connected = threading.Event()
         self._event_handler = None
         self._name = name
         self._send_lock = threading.Lock()
@@ -85,20 +85,23 @@ class Client:
         self._event_handler = event_handler
 
     def connect(self, hostname, port):
-        if self._connected:
+        if self._connected.is_set():
             self._socket.close()
 
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._socket.connect((hostname, port))
-        self._connected = True
+        self._connected.set()
         self._send_hello(self._name)
 
+    def is_connected(self):
+        return self._connected.is_set()
+
     def disconnect(self):
-        if self._connected:
+        if self._connected.is_set():
             self.send(oap_api.MESSAGE_BYEBYE, 0, bytes())
 
             self._socket.close()
-            self._connected = False
+            self._connected.clear()
 
     def receive(self) -> Message:
         with self._receive_lock:

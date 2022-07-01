@@ -23,9 +23,9 @@ class OAPInjector(Injector):
 
     enabled = True
 
-    def __init__(self, logger, *args, **kwargs):
+    def __init__(self, logger, callback, *args, **kwargs):
         self._client = Client("OnBoardPi OBD Injector")
-
+        self.callback = callback
         self.logger = logger
         self.logger.info(
             "======================================================")
@@ -36,16 +36,17 @@ class OAPInjector(Injector):
         self._oap_api_port = self.__parse_oap_api_port()
         self.__oap_inject = ObdInjectGaugeFormulaValue()
         self.__connection_attempts = 0
-        self.__active = threading.Event()
-        self._enabled = True
+        #self.__active = threading.Event()
+        self._enabled = threading.Event()
+        self._enabled.set()
 
-        self._client.set_event_handler(
-            OAPEventHandler(self._client, self.__active))
+        self.event_handler = OAPEventHandler(self._client, self._enabled, self.restart)
+        self._client.set_event_handler(self.event_handler)
 
         threading.Thread(target=self.__init_connection, daemon=True).start()
 
     def __init_connection(self):
-        if not self._enabled or self._client._connected:
+        if not self._enabled.is_set() or self._client.is_connected():
             return
         try:
             self.__connect_attempt()
@@ -54,18 +55,16 @@ class OAPInjector(Injector):
             self.__connection_attempts += 1
             threading.Thread(target=self.__init_connection,
                              daemon=True).start()
+        else:
+            if self._client.is_connected():
+                self.event_handler.start_listening()
+                self.callback('connected', self)
 
-        if self._client._connected:
-            self.__listen_thread = threading.Thread(
-                target=self.__listen, args=(self._client, ), daemon=True)
-            self.__listen_thread.start()
-            self.logger.info("OAP injector is ready for data injection")
-            self.__active.set()
 
     def __connect_attempt(self):
         """ Attempt to connect to the API, ran on another thread with larger intervals as unsuccessful attempts persist """
         time.sleep(self.__connection_attempts * 0.25)
-        if not self._enabled:
+        if not self._enabled.is_set():
             # If user disabled injector between delay and actual attempt
             return
         host = os.environ.get("OAP_HOST", "127.0.0.1")
@@ -73,33 +72,38 @@ class OAPInjector(Injector):
             host, self._oap_api_port))
         self._client.connect(host, self._oap_api_port)
 
+    def restart(self):
+        self.callback('disconnected', self)
+        if self._enabled.is_set():
+            self.start()
+
     def start(self):
-        self._enabled = True
+        self._enabled.set()
         self.logger.debug("Starting OAP injector, client connected: {}".format(
-            self._client._connected))
-        self._client.set_event_handler(
-            OAPEventHandler(self._client, self.__active))
-        if self._client._connected:
-            threading.Thread(target=self.__listen, args=(
-                self._client, ), daemon=True).start()
-            self.__active.set()
-        else:
-            self.__init_connection()
+            self._client.is_connected()))
+
+        self.event_handler = OAPEventHandler(self._client, self._enabled, self.restart)
+        self._client.set_event_handler(self.event_handler)
+        self.__init_connection()
+
 
     def stop(self):
         self.logger.info("Stopping OAP injector")
         self.logger.info(
             "======================================================")
-        self.__active.clear()
-        self._enabled = False
+        #self.__active.clear()
+        self._enabled.clear()
         self._client.disconnect()
 
     def status(self):
         return {
             'commands': self.__commands,
-            'connected': self._client._connected,
-            'active': self.__active.is_set()
+            'connected': self._client.is_connected(),
+            'active': self.event_handler.active.is_set()
         }
+
+    def is_enabled(self):
+        return self._enabled.is_set()
 
     def get_commands(self):
         """ Give the list of OAP commands by name """
@@ -107,9 +111,9 @@ class OAPInjector(Injector):
 
     def inject(self, obd_response):
         """ Inject obd reponse to the openauto API. """
-        if obd_response.is_null() or not self.__active.is_set():
-            self.logger.debug("OAP injection skipped. OBDResponse is null: {}. injector active: {}".format(
-                obd_response.is_null(), self.__active.is_set()))
+        if obd_response.is_null() or not self.event_handler.active.is_set():
+            self.logger.debug("OAP injection skipped. OBDResponse is null: {}. injector enabled: {}".format(
+                obd_response.is_null(), self.event_handler.active.is_set()))
             return
         try:
             # The index of the command as defined in the openauto config file, may raise a ValueError
@@ -131,29 +135,29 @@ class OAPInjector(Injector):
         except Exception as e:
             self.logger.error("OAP injector error on inject: {}".format(e))
 
-    def __listen(self, client):
-        """ 
-        On another thread listen for messages from OAP API which may indicate it has gone offline or there is an unpacking error which can lead to a broken pipe. 
-        If the listening thread breaks out of its loop then deactivate any subsequent injection and try to restart
-        """
-        self.__active.wait()
-        self.logger.debug("OAP injector started receiving thread daemon")
-        can_continue = True
-        while can_continue and self.__active.is_set():
-            try:
-                can_continue = client.wait_for_message()
-            except Exception as e:
-                # This happens when client disconnects while trying to receivce, user disabled injector
-                self.logger.error(
-                    "An exception occurred on the OAP injector receiving thread: {}. The socket was most likely disconnected while trying to receive bytes because the injector was stopped by the user.".format(e))
-                can_continue = False
+    # def __listen(self, client):
+    #     """ 
+    #     On another thread listen for messages from OAP API which may indicate it has gone offline or there is an unpacking error which can lead to a broken pipe. 
+    #     If the listening thread breaks out of its loop then deactivate any subsequent injection and try to restart
+    #     """
+    #     #self.__active.wait()
+    #     self.logger.debug("OAP injector started receiving thread daemon")
+    #     can_continue = True
+    #     while can_continue and self.__active.is_set():
+    #         try:
+    #             can_continue = client.wait_for_message()
+    #         except Exception as e:
+    #             # This happens when client disconnects while trying to receivce, user disabled injector
+    #             self.logger.error(
+    #                 "An exception occurred on the OAP injector receiving thread: {}. The socket was most likely disconnected while trying to receive bytes because the injector was stopped by the user.".format(e))
+    #             can_continue = False
 
-        # API said bye-bye or user disabled injector
-        self.logger.debug("OAP injector reveiving thread is no longer active")
-        self.__active.clear()
-        self._client.disconnect()
-        if self._enabled:
-            self.start()
+    #     # API said bye-bye or user disabled injector
+    #     self.logger.debug("OAP injector reveiving thread is no longer active")
+    #     #self.__active.clear()
+    #     self._client.disconnect()
+    #     if self._enabled:
+    #         self.start()
 
     def __parse_oap_api_port(self):
         """ 
@@ -215,6 +219,6 @@ class OAPInjector(Injector):
             "OAP injector commands are: {}".format(self.__commands))
 
     def __del__(self):
-        self.enabled = False
+        self._enabled.clear()
         self._client.disconnect()
-        self.__active.clear()
+        #self.__active.clear()

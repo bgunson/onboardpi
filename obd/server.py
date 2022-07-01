@@ -1,7 +1,9 @@
 import obdio
 import socketio
+import threading
 import uvicorn
 from src import Configuration, API
+import time
 
 config = None
 sio = socketio.AsyncServer(cors_allowed_origins='*', json=obdio, async_mode='asgi')
@@ -14,22 +16,23 @@ static_files = {
         }
 
 
-def on_shutdown():
-    obd_io = config.get_obd_io()
-    obd_io.close()
+def wait_for_server():
+    ping_client = socketio.Client()
+    ping_client.connect("http://localhost:60000", transports=['websocket'])
+    
 
 
-async def on_startup():
     config = Configuration()
     config.set_socket(sio)
     api = API(sio)
     api.mount()
-    await sio.start_background_task(config.init_obd_connection)
-    # await config.init_obd_connection()    # a blocking call may be more suitable
+    config.init_obd_connection()
 
+async def on_startup():
+    threading.Thread(target=wait_for_server, daemon=True).start()
 
 def main():
-    app = socketio.ASGIApp(sio, static_files=static_files, on_startup=on_startup, on_shutdown=on_shutdown)
+    app = socketio.ASGIApp(sio, static_files=static_files, on_startup=on_startup)
     uvicorn.run(app, host='0.0.0.0', port=60000)
 
 
