@@ -13,7 +13,7 @@ services:
     build: ./web
     restart: always
     ports: 
-      - 80:8080
+      - 8080:8080
     volumes: 
       - /var/lib/onboardpi/data:/var/lib/onboardpi/data
       - /etc/localtime:/etc/localtime:ro
@@ -28,13 +28,14 @@ services:
     build: ./obd
     restart: always
     privileged: true
-    ports: 
-      - 60000:60000
+    network_mode: "host"
     volumes:
       - /var/lib/onboardpi/data:/var/lib/onboardpi/data:ro
       - /dev:/dev
       - /etc/localtime:/etc/localtime:ro
-      # - /home/pi/.openauto/config:/home/pi/.openauto/config:ro
+      - /home/pi/.openauto/config:/home/pi/.openauto/config:ro
     environment:
       - SETTINGS_DIR=/var/lib/onboardpi/data
-      - OAP_HOST=172.17.0.1
+      - OAP_HOST=192.168.1.89
+    depends_on:
+      - web

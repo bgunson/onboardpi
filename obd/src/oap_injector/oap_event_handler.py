@@ -15,6 +15,7 @@ class OAPEventHandler(threading.Thread):
         self.callback = callback
         self.active = threading.Event()
         self.enabled = enabled
+        self._notification_channel_id = None
         self._first_connect = threading.Event()
         self._first_connect.set()
 
@@ -56,6 +57,8 @@ class OAPEventHandler(threading.Thread):
                           change_status_icon_state.SerializeToString())
 
     def show_notification(self, message):
+        if self._notification_channel_id is None:
+            return
         show_notification = oap_api.ShowNotification()
         show_notification.channel_id = self._notification_channel_id
         show_notification.title = "OnBoardPi"
@@ -111,6 +114,6 @@ class OAPEventHandler(threading.Thread):
         self._client.disconnect()
         sio.emit("leave_notifications")
         sio.disconnect()
-        # self.toggle_icon_visibility()
         self.active.clear()
+        self.enabled.wait()
         self.callback()

@@ -21,8 +21,6 @@ MAX_CONNECT_ATTEMPTS = 5
 
 class OAPInjector(Injector):
 
-    enabled = True
-
     def __init__(self, logger, callback, *args, **kwargs):
         self._client = Client("OnBoardPi OBD Injector")
         self.callback = callback
@@ -81,8 +79,7 @@ class OAPInjector(Injector):
         self.logger.debug("Starting OAP injector, client connected: {}".format(
             self._client.is_connected()))
 
-        self.event_handler = OAPEventHandler(
-            self._client, self._enabled, self.restart)
+        self.event_handler = OAPEventHandler(self._client, self._enabled, self.restart)
         self._client.set_event_handler(self.event_handler)
         self.__init_connection()
 
@@ -109,7 +106,7 @@ class OAPInjector(Injector):
 
     def inject(self, obd_response):
         """ Inject obd reponse to the openauto API. """
-        if obd_response.is_null() or not self.event_handler.active.is_set():
+        if obd_response.is_null() or not self.event_handler.active.is_set() and self._enabled.is_set():
             self.logger.debug("OAP injection skipped. OBDResponse is null: {}. injector enabled: {}".format(
                 obd_response.is_null(), self.event_handler.active.is_set()))
             return
@@ -132,6 +129,8 @@ class OAPInjector(Injector):
             pass
         except Exception as e:
             self.logger.error("OAP injector error on inject: {}".format(e))
+            self._client.disconnect()
+            self.restart()
 
     def __parse_oap_api_port(self):
         """ 

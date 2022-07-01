@@ -42,3 +42,5 @@ services:
     environment:
       - SETTINGS_DIR=/var/lib/onboardpi/data
       - OAP_HOST=172.17.0.1
+    depends_on:
+      - web
