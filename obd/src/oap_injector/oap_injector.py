@@ -135,29 +135,6 @@ class OAPInjector(Injector):
         except Exception as e:
             self.logger.error("OAP injector error on inject: {}".format(e))
 
-    # def __listen(self, client):
-    #     """ 
-    #     On another thread listen for messages from OAP API which may indicate it has gone offline or there is an unpacking error which can lead to a broken pipe. 
-    #     If the listening thread breaks out of its loop then deactivate any subsequent injection and try to restart
-    #     """
-    #     #self.__active.wait()
-    #     self.logger.debug("OAP injector started receiving thread daemon")
-    #     can_continue = True
-    #     while can_continue and self.__active.is_set():
-    #         try:
-    #             can_continue = client.wait_for_message()
-    #         except Exception as e:
-    #             # This happens when client disconnects while trying to receivce, user disabled injector
-    #             self.logger.error(
-    #                 "An exception occurred on the OAP injector receiving thread: {}. The socket was most likely disconnected while trying to receive bytes because the injector was stopped by the user.".format(e))
-    #             can_continue = False
-
-    #     # API said bye-bye or user disabled injector
-    #     self.logger.debug("OAP injector reveiving thread is no longer active")
-    #     #self.__active.clear()
-    #     self._client.disconnect()
-    #     if self._enabled:
-    #         self.start()
 
     def __parse_oap_api_port(self):
         """ 

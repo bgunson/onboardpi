@@ -25,11 +25,13 @@ class Configuration:
         return it
 
     def init(self):
-        self.obd_io = obd.Async("TEMP")
-        self.__read_settings()
-
         # Create dict for our loggers
         self.loggers = {}
+        self.logger = self.__register_logger(__name__, logging.INFO)
+        self.logger.info("Initializing OnBoardPi configuration")
+        _ = self.connection_params()
+        self.obd_io = obd.Async("TEMP")
+
         # register python-obd logger with onboardpi
         self.__register_logger(
             obd.__name__, self.__settings['connection']['log_level'])
@@ -43,12 +45,9 @@ class Configuration:
 
     def init_obd_connection(self):
         """ Steps to connect to vehicle and any other local operations which are needed after successful/unsuccessful connection. Try twice times to fully connect to vehicle """
+        self.logger.info("Initializing OnBoardPi OBD connection")
         if self.obd_io is not None and self.obd_io.is_connected():
-            self.obd_io.close()
-            del self.obd_io
-
-        # await self.sio.emit("obd_connection_status", "OBD attempting to connect", room="notifications")
-
+            return 
         params = self.connection_params()
         attempts = 0
         connected = False
@@ -68,11 +67,9 @@ class Configuration:
     def get_obd_io(self):
         return self.obd_io
 
-    def set_socket(self, sio):
-        self.sio = sio
-
     def init_injectors(self):
         """ Init injectors defined in the settings file which are enabled """
+        self.logger.info("Initializing OnBoardPi data injectors")
         if not 'injectors' in self.__settings:
             return
         self.__injector_settings = self.__settings['injectors']

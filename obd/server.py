@@ -5,7 +5,6 @@ import uvicorn
 from src import Configuration, API
 import time
 
-config = None
 sio = socketio.AsyncServer(cors_allowed_origins='*', json=obdio, async_mode='asgi')
 
 static_files = {
@@ -17,16 +16,19 @@ static_files = {
 
 
 def wait_for_server():
+
     ping_client = socketio.Client()
-    ping_client.connect("http://localhost:60000", transports=['websocket'])
-    
 
+    while not ping_client.connected:
+        try:
+            ping_client.connect("http://localhost:60000", transports=['websocket'])
+        except socketio.exceptions.ConnectionError:
+            pass
 
-    config = Configuration()
-    config.set_socket(sio)
+    _ = Configuration()
     api = API(sio)
     api.mount()
-    config.init_obd_connection()
+    ping_client.disconnect()
 
 async def on_startup():
     threading.Thread(target=wait_for_server, daemon=True).start()

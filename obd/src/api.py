@@ -2,11 +2,13 @@ import obd
 from .configuration import Configuration
 from .watch import Watch
 
+
 class API:
     """
     This class defines the public socketio API listeners for the OBD-Server. Default events are defined by obd-socketio and can be 
     found here: https://github.com/bgunson/obd-socketio or ../../obd-socketio/README.md (git submodule)
     """
+
     def __init__(self, sio):
         self.socket = sio
         self.config = Configuration()
@@ -17,7 +19,7 @@ class API:
         """ Mount socketio event listeners for the OnBoardPi-OBD API """
         sio = self.socket
 
-        #region Watch event listeners
+        # region Watch event listeners
 
         @sio.event
         async def join_watch(sid):
@@ -49,24 +51,25 @@ class API:
         async def watch(sid, commands):
             self.config.obd_io.stop()
             for cmd in commands:
-                self.config.obd_io.watch(obd.commands[cmd], self.watch.cache, self.config.force_cmds)
+                self.config.obd_io.watch(
+                    obd.commands[cmd], self.watch.cache, self.config.force_cmds)
             self.config.obd_io.start()
             # Restart our watch loop if not started already
             if not self.watch.loop_running:
                 self.watch.loop_running = True
                 await sio.start_background_task(self.watch.emit_loop, sio)
 
-        #endregion
+        # endregion
 
-        #region Logger event listeners
+        # region Logger event listeners
 
         @sio.event
         async def set_logger_level(sid, logger_name, level):
             self.config.set_logger_level(logger_name, level)
 
-        #endregion
+        # endregion
 
-        #region Injector event listeners
+        # region Injector event listeners
 
         @sio.event
         async def enable_injector(sid, injector_type):
@@ -77,19 +80,19 @@ class API:
                 injector.start()
             else:
                 injector = self.config.register_injector(injector_type)
-                
+
         @sio.event
         async def disable_injector(sid, injector_type):
             if injector_type in self.config.get_injectors():
                 injector = self.config.get_injectors()[injector_type]
-                
+
                 self.config.handle_injector_event('stop', injector)
                 injector.stop()
                 # Alert clients in the watch room of the event
                 self.config.on_unwatch_event()
                 await sio.emit('unwatch', injector.get_commands(), room='watch', skip_sid=sid)
 
-        @sio.event 
+        @sio.event
         async def injector_state(sid, injector_type):
             injector_state = {}
             if injector_type in self.config.get_injectors():
@@ -97,9 +100,9 @@ class API:
                 injector_state = injector.status()
             await sio.emit('injector_state', injector_state, room=sid)
 
-        #endregion
+        # endregion
 
-        #region OBD/ELM event listeners
+        # region OBD/ELM event listeners
 
         @sio.event
         async def status(sid):
@@ -141,11 +144,11 @@ class API:
         @sio.event
         async def has_name(sid, name):
             await sio.emit('has_name', obd.commands.has_name(name), room=sid)
-        
+
         @sio.event
         async def close(sid):
             self.config.obd_io.close()
-            await sio.emit("obd_connection_status", "OBD connection closed", room="notifications")
+            await sio.emit("obd_connection_status", self.get_obd_connection_status(), room="notifications")
             await sio.emit('obd_closed')
 
         @sio.event
@@ -171,7 +174,7 @@ class API:
         @sio.event
         async def all_dtcs(sid):
             await sio.emit('all_dtcs', obd.codes.DTC, room=sid)
-                
+
         @sio.event
         async def all_commands(sid):
             all = list(obd.commands.modes)
@@ -186,28 +189,21 @@ class API:
         async def connect_obd(sid):
             await sio.emit('obd_connecting')
             self.config.init_obd_connection()
-            if self.config.obd_io.is_connected():
-                await self.sio.emit("obd_connection_status", "OBD connected successfully", room="notifications")
-            else:
-                await self.sio.emit("obd_connection_status", "OBD unable to connect", room="notifications")
+            await sio.emit("obd_connection_status", self.get_obd_connection_status(), room="notifications")
 
-        #endregion
+        # endregion
 
         @sio.event
         async def join_notifications(sid):
             print("{} joined notifications room".format(sid))
             sio.enter_room(sid, 'notifications')
-            if self.config.obd_io.is_connected():
-                await sio.emit("obd_connection_status", "OBD is connected", room="notifications")
-            else:
-                await sio.emit("obd_connection_status", "OBD is not connected", room="notifications")
+            await sio.emit("obd_connection_status", self.get_obd_connection_status(), room="notifications")
 
         @sio.event
         async def leave_notifications(sid):
             print("{} left notifications room".format(sid))
             sio.leave_room(sid, 'notifications')
 
-    
     def static_files(self):
         """ List routes and static content to be served by the OBD server """
         return {
@@ -215,4 +211,10 @@ class API:
             '/download/obd.log': 'obd.log',
             '/view/oap.log': {'filename': 'oap.log', 'content_type': 'text/plain'},
             '/download/oap.log': 'oap.log'
+        }
+
+    def get_obd_connection_status(self):
+        return {
+            'connected': self.config.obd_io.is_connected(),
+            'status': self.config.obd_io.status(),
         }

@@ -1,5 +1,7 @@
 elm.log*
 obd.log*
 oap.log*
+*.log
+
 settings.json
 .vscode

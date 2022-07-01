@@ -16,12 +16,7 @@ class OAPEventHandler:
         self.active = threading.Event()
         self.enabled = enabled
 
-        # self.notification_thread = threading.Thread(
-        #     target=self._wait_for_events, daemon=True)
-        # self.notification_thread.start()
-
     def start_listening(self):
-        # threading.Thread(target=self._client.wait_for_message, daemon=True).start()
         self.notification_thread = threading.Thread(
             target=self._wait_for_events, args=(self._client, ), daemon=True)
         self.notification_thread.start()
@@ -37,7 +32,7 @@ class OAPEventHandler:
         register_status_icon_request.name = "OnBoardPi Status Icon"
         register_status_icon_request.description = "OBD connection status from OnBoardPi"
 
-        with open(os.path.join(os.path.dirname(__file__), "assets/favicon.ico"), 'rb') as icon_file:
+        with open(os.path.join(os.path.dirname(__file__), "assets/car.svg"), 'rb') as icon_file:
             register_status_icon_request.icon = icon_file.read()
 
         client.send(oap_api.MESSAGE_REGISTER_STATUS_ICON_REQUEST, 0,
@@ -64,9 +59,11 @@ class OAPEventHandler:
     def _wait_for_events(self, oap_client):
 
         oap_client._connected.wait()
-        oap_client.wait_for_message()     # block and wait for initial message, we are expecting api hello
+        # block and wait for initial message, we are expecting api hello
+        oap_client.wait_for_message()
 
-        sio = socketio.Client()     # this is a socketio client for our own notifications from OnBoardPi to be relayed bto OpenAuto Pro
+        # this is a socketio client for our own notifications from OnBoardPi to be relayed bto OpenAuto Pro
+        sio = socketio.Client()
 
         @sio.event
         def connect():
@@ -77,7 +74,8 @@ class OAPEventHandler:
         def obd_connection_status(message):
             print(message)
 
-        sio.connect("http://localhost:60000", transports=['websocket'])     # connection for OnBoardPi notifications API
+        # connection for OnBoardPi notifications API
+        sio.connect("http://localhost:60000", transports=['websocket'])
 
         can_continue = True
         while can_continue and self.enabled.is_set():
