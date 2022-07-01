@@ -1,4 +1,3 @@
-import logging
 import obd
 from .configuration import Configuration
 from .watch import Watch
@@ -11,7 +10,7 @@ class API:
     def __init__(self, sio):
         self.socket = sio
         self.config = Configuration()
-        self.obd_io = self.config.get_obd_connection()
+        # self.obd_io = self.config.get_obd_io()
         self.watch = Watch()
 
     def mount(self):
@@ -35,9 +34,9 @@ class API:
             self.watch.loop_running = False
 
             # Stop obd-async worker, unwatch each cmd, then restart the obd-async worker
-            self.obd_io.connection.stop()
+            self.config.obd_io.stop()
             for cmd in commands:
-                self.obd_io.connection.unwatch(obd.commands[cmd])
+                self.config.obd_io.unwatch(obd.commands[cmd])
                 if cmd in self.watch.watching:
                     self.watch.watching.pop(cmd)
             # This is to tell every other clients that someone else has unwatched these commands
@@ -48,10 +47,11 @@ class API:
 
         @sio.event
         async def watch(sid, commands):
-            self.obd_io.connection.stop()
+            self.config.obd_connected.wait(10)
+            self.config.obd_io.stop()
             for cmd in commands:
-                self.obd_io.connection.watch(obd.commands[cmd], self.watch.cache, self.config.force_cmds)
-            self.obd_io.connection.start()
+                self.config.obd_io.watch(obd.commands[cmd], self.watch.cache, self.config.force_cmds)
+            self.config.obd_io.start()
             # Restart our watch loop if not started already
             if not self.watch.loop_running:
                 self.watch.loop_running = True
@@ -71,15 +71,15 @@ class API:
 
         @sio.event
         async def enable_injector(sid, injector_type):
+            injector = None
             if injector_type in self.config.get_injectors():
                 injector = self.config.get_injectors()[injector_type]
                 # This injector is already registered with configuration so start it up again
-                injector.enabled = True
                 injector.start()
-                return
             else:
                 injector = self.config.register_injector(injector_type)
-                injector.start()
+                
+            self.config.watch_injector_cmds(injector)
 
         @sio.event
         async def disable_injector(sid, injector_type):
@@ -87,13 +87,14 @@ class API:
                 injector = self.config.get_injectors()[injector_type]
                 commands = injector.get_commands()
                 
-                self.obd_io.connection.stop()
+                self.config.obd_io.stop()
                 for cmd in commands:
                     if cmd is not None:
-                        self.obd_io.connection.unwatch(obd.commands[cmd])
+                        self.config.obd_io.unwatch(obd.commands[cmd])
                 
                 injector.stop()
                 # Alert clients in the watch room of the event
+                self.config.on_unwatch_event()
                 await sio.emit('unwatch', commands, room='watch', skip_sid=sid)
 
         @sio.event 
@@ -107,6 +108,53 @@ class API:
         #endregion
 
         #region OBD/ELM event listeners
+
+        @sio.event
+        async def status(sid):
+            await sio.emit('status', self.config.obd_io.status(), room=sid)
+
+        @sio.event
+        async def is_connected(sid):
+            await sio.emit('is_connected', self.config.obd_io.is_connected(), room=sid)
+
+        @sio.event
+        async def port_name(sid):
+            await sio.emit('port_name', self.config.obd_io.port_name(), room=sid)
+
+        @sio.event
+        async def supports(sid, cmd):
+            await sio.emit('supports', self.config.obd_io.supports(obd.commands[cmd]), room=sid)
+
+        @sio.event
+        async def protocol_id(sid):
+            await sio.emit('protocol_id', self.config.obd_io.protocol_id(), room=sid)
+
+        @sio.event
+        async def protocol_name(sid):
+            await sio.emit('protocol_name', self.config.obd_io.protocol_name(), room=sid)
+
+        @sio.event
+        async def supported_commands(sid):
+            await sio.emit('supported_commands', self.config.obd_io.supported_commands, room=sid)
+
+        @sio.event
+        async def query(sid, cmd):
+            await sio.emit('query', self.config.obd_io.query(obd.commands[cmd]), room=sid)
+
+        @sio.event
+        async def unwatch_all(sid):
+            self.config.obd_io.stop()
+            self.config.obd_io.unwatch_all()
+
+        @sio.event
+        async def has_name(sid, name):
+            await sio.emit('has_name', obd.commands.has_name(name), room=sid)
+        
+        @sio.event
+        async def close(sid):
+            self.config.obd_io.close()
+            self.config.obd_connected.clear()
+            await sio.emit('obd_closed')
 
         @sio.event
         async def available_ports(sid):
@@ -145,7 +193,7 @@ class API:
         @sio.event
         async def connect_obd(sid):
             await sio.emit('obd_connecting')
-            self.config.init_obd_connection()
+            await sio.start_background_task(self.config.init_obd_connection)
 
         #endregion
 

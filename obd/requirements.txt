@@ -1,3 +1,5 @@
 ./obd-socketio
 obd
 protobuf~=3.19
+socketio
+uvicorn

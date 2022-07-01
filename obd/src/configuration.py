@@ -23,6 +23,8 @@ class Configuration:
         return it
 
     def init(self):
+        self.obd_io = obd.Async("TEMP")
+        self.obd_connected = threading.Event()
         self.__read_settings()
 
         # Create dict for our loggers
@@ -38,24 +40,32 @@ class Configuration:
     def __init__(self):
         pass
 
-    def init_obd_connection(self):
+    async def init_obd_connection(self):
         """ Steps to connect to vehicle and any other local operations which are needed after successful/unsuccessful connection. Try twice times to fully connect to vehicle """
+        if self.obd_io is not None and self.obd_io.is_connected():
+            self.obd_io.close()
+            self.obd_connected.clear()
+            del self.obd_io
+            
         params = self.connection_params()
         attempts = 0
         connected = False
         while not connected and attempts < 2:
-            self.obd_io.connect_obd(**params) # Blocks server which is ok since no socketio handlers should respond unless there is some sort of connection
-            connected = self.obd_io.connection.is_connected()
+            # self.obd_io.connect_obd(**params) # Blocks server which is ok since no socketio handlers should respond unless there is some sort of connection
+            self.obd_io = obd.Async(**params)
+            connected = self.obd_io.is_connected()
             attempts += 1
-    
+        
         if connected:
+            self.obd_connected.set()
             for injector in self.__injectors.values():
-                injector.start() 
+                self.watch_injector_cmds(injector)
 
-    def set_obd_connection(self, obd_io):
+
+    def set_obd_io(self, obd_io):
         self.obd_io = obd_io 
 
-    def get_obd_connection(self):
+    def get_obd_io(self):
         return self.obd_io
 
     def init_injectors(self):
@@ -75,28 +85,30 @@ class Configuration:
         # create a logger for this injector
         logger = self.__register_logger(injector_type, injector_config['log_level'])
         # create a new instance of this injector type via the injector map
-        injector = injector_map[injector_type](logger=logger, connect_callback=self._watch_injector_cmds,**injector_config['parameters'])
+        injector = injector_map[injector_type](logger=logger, **injector_config['parameters'])
         # cache the instance with self
         self.__injectors[injector_type] = injector
+
+        # self.watch_injector_cmds(injector)
 
         return injector
 
 
-    def _watch_injector_cmds(self, injector):
+    def watch_injector_cmds(self, injector):
         """ Used as a callback when an injector indicates it is ready and when other socketio clients unwatch commands this method will make sure injector commands are not forgotten """
-        self.obd_io.connection.stop()
+        self.obd_io.stop()
         for cmd in injector.get_commands():
             if cmd is not None:
                 # watch the command and subscribe callback to inject, python-OBD handles multiple command callbacks
-                self.obd_io.connection.watch(obd.commands[cmd], injector.inject, self.force_cmds)
-        self.obd_io.connection.start()
+                self.obd_io.watch(obd.commands[cmd], injector.inject, self.force_cmds)
+        self.obd_io.start()
 
 
     def on_unwatch_event(self):
         """ When a socketio client unwatches some commands we need to rewatch and re-register the injector commands and callback"""
         for _, injector in self.__injectors.items():
-            if injector.status()['active'] and injector.enabled:
-                self._watch_injector_cmds(injector)
+            if injector.status()['active']:
+                self.watch_injector_cmds(injector)
 
 
     def get_injectors(self):

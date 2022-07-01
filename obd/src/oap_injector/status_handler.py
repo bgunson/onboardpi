@@ -47,3 +47,9 @@ class StatusHandler(ClientEventHandler):
 
     def on_register_notification_channel_response(self, client, message):
         pass
+
+    def __del__(self):
+        pass
+
+
+    

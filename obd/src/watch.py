@@ -11,7 +11,7 @@ class Watch():
         self.watching = {}      # a dict to store the latses OBD responses from the vehicle
 
         self.config = Configuration()
-        self.obd_io = self.config.get_obd_connection()
+        # self.obd_io = self.config.get_obd_io()
 
     def cache(self, response):
         """ Every response from obd-async will be cached in this object's watching dictionary keyed by the OBDCommand name """
@@ -35,7 +35,7 @@ class Watch():
         but the vehicle is turned off this loop invariant will fail no matter what and this process can be terminated more 
         quickly and easily.
         """
-        while self.obd_io.connection.running and self.obd_io.connection.is_connected():
+        while self.config.obd_io.running and self.config.obd_io.is_connected():
             await socket.emit("watching", self.watching, room="watch")
             await socket.sleep(self.config.delay)
         self.loop_running = False
