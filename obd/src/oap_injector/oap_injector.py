@@ -15,9 +15,12 @@ import obd
 import threading
 import time
 
-MAX_RESTARTS = 5
+MAX_RESTARTS = 10
 
 class OAPInjector(Injector):
+
+    """Conrols data injection and connection to the OpenAuto Pro protobuf API (obd gauges, notifications, status icon)
+    """
 
     def __init__(self, logger, callback, *args, **kwargs):
         self._client = Client("OnBoardPi OBD Injector")
@@ -38,6 +41,8 @@ class OAPInjector(Injector):
         self.__init_connection()
 
     def __init_connection(self):
+        """Initiiate a connection interval 
+        """
         if not self._enabled.is_set() or self._client.is_connected():
             return
         try:
@@ -54,7 +59,8 @@ class OAPInjector(Injector):
                 self.callback('connected', self)
 
     def __connect_attempt(self):
-        """ Attempt to connect to the API, ran on another thread with larger intervals as unsuccessful attempts persist """
+        """Attempt to connect to the API, ran on another thread with larger intervals as unsuccessful attempts persist
+        """
         time.sleep(self.__connection_attempts * 0.25)
         if not self._enabled.is_set():
             # If user disabled injector between delay and actual attempt
@@ -64,24 +70,36 @@ class OAPInjector(Injector):
             host, self._oap_api_port))
         self._client.connect(host, self._oap_api_port)
 
-    def _restart(self):
+    def _restart(self, oap_fault):
+        """On OAP event handler failure restart if still enabled and not reached max restart attempts
+
+        Args:
+            oap_fault (bool): True if the event handler stopped because of an exception from OAP socket, false otherwise.
+        """
         self.logger.info("OAP injector stopped unexpectedly")
         self.__connection_attempts = 0  # reset connection attempts for next try
         self.callback('disconnected', self)
+        
         if self._enabled.is_set() and self.__n_restarts < MAX_RESTARTS:
             self.logger.info("OAP injector restarting...")
-            self.__n_restarts += 1
             self.start()
+            if oap_fault == True:
+                # Only increment num restarts if the event handler stopped because of oap, not the notifications socketio connection
+                self.__n_restarts += 1
 
         if self.__n_restarts >= MAX_RESTARTS:
             self.logger.info("OAP injector exceeded maxmium number of restarts. Make sure OpenAuto Pro is running and manually disable/enable me")
 
     def start(self):
+        """Start the injector from a disabled state. Not called on __init__, called at some point during runtime usually from an async event 
+        """
         self._enabled.set()
         self.logger.debug("OAP injector started by user")
         self.__init_connection()
 
     def stop(self):
+        """Stop and disable the running injection
+        """
         self.logger.info("OAP injector stopped by user")
         self.logger.info(
             "======================================================")
@@ -89,6 +107,11 @@ class OAPInjector(Injector):
         self._client.message_queue.put(Message(MESSAGE_BYEBYE, 0, bytes()))
 
     def status(self):
+        """Return the injector's status object
+
+        Returns:
+            dict: a dictionary containing connected flag, active flag and list of commands it is injecting
+        """
         return {
             'commands': self.__commands,
             'connected': self._client.is_connected(),
@@ -96,14 +119,28 @@ class OAPInjector(Injector):
         }
 
     def is_enabled(self):
+        """Whether the injecotr is currently enabled but not neccesarily active.
+
+        Returns:
+            bool: True if enabled, from settings file at start or was anabled from disabled state by user. False otherwise.
+        """
         return self._enabled.is_set()
 
     def get_commands(self):
-        """ Give the list of OAP commands by name """
+        """Get the list of OBD command names used by this injector
+
+        Returns:
+            list: List of commands in order as defined in `/home/pi/.openauto/config/openauto_obd_pids.ini`. Example: ['RPM', 'SPEED', ...] 
+                    Note: some commands may be None if the injector could not cross reference it with python-obd.
+        """
         return self.__commands
 
     def inject(self, obd_response):
-        """ Inject obd reponse to the openauto API. """
+        """Inject an obd response value to its OAP gauge
+
+        Args:
+            obd_response obd.OBDResponse: The response object returned in python-obd callback
+        """
         if obd_response.is_null() or not self._client.is_connected():
             self.logger.debug("OAP injection skipped. OBDResponse is null: {}. injector enabled: {}".format(
                 obd_response.is_null(), self.event_handler.active.is_set()))
@@ -133,9 +170,11 @@ class OAPInjector(Injector):
             self.logger.error("OAP injector error on inject: {}".format(e))
 
     def __parse_oap_api_port(self):
-        """ 
-        We can try to determine the OpenAuto Pro API port from the opanauto_system config file. This file may not exist if the user has not altered 
+        """We can try to determine the OpenAuto Pro API port from the opanauto_system config file. This file may not exist if the user has not altered 
         any settings in the OpenAuto GUI so in that case assume the port is 44405.
+
+        Returns:
+            int: The API port from the confdig file, or 44405 if not found.
         """
         config = configparser.ConfigParser()
         oap_sys_conf_path = os.path.join(os.path.join(os.environ.get(
@@ -144,9 +183,11 @@ class OAPInjector(Injector):
         return config.getint('Api', 'EndpointListenPort', fallback=44405)
 
     def __init_cmds(self):
-        """
-        Parse the OAP PID configuration file and construct a list of python-OBD OBDCommands which 
-        correspond to the OpenAuto pids in the order they appear in the file.
+        """Parse the OAP PID configuration file and construct a list of pythonOBD OBDCommands which 
+        correspond to the OpenAuto pids in the order they appear in the file. These are not expected to change at runtime.
+
+        Raises:
+            ValueError: When a command from the file is not defined by pythonOBD, but is caught and replaced with None in this injector's command list
         """
         pid_config_path = os.path.join(os.environ.get(
             'OAP_CONFIG_DIR', "/home/pi/.openauto/config"), "openauto_obd_pids.ini")
@@ -190,7 +231,3 @@ class OAPInjector(Injector):
 
         self.logger.info(
             "OAP injector commands are: {}".format(self.__commands))
-
-    def __del__(self):
-        self._enabled.clear()
-        self._client.disconnect()

@@ -64,7 +64,7 @@ class OAPEventHandler(threading.Thread):
         show_notification.channel_id = self._notification_channel_id
         show_notification.title = "OnBoardPi"
         show_notification.description = message
-        show_notification.single_line = "Hello World - This is an example"
+        show_notification.single_line = "OnBoardPi - {}".format(message)
 
         with open(os.path.join(os.path.dirname(__file__), "assets/car.svg"), 'rb') as icon_file:
             show_notification.icon = icon_file.read()
@@ -79,6 +79,17 @@ class OAPEventHandler(threading.Thread):
         self._notification_channel_id = message.id
 
     def run(self):
+
+        """Do two main things:
+        1. Try to connect to the OnBoardPi notifications api by acting as a socketio client, listen for incoming notifications and show them on the OpenAuto Pro UI.
+        2. Pop into a loop and attempt to either read incoming messages from OAP if the socket is readable, or send queued messages if the socket is writable.
+
+        If the notifications client cannot connect, the main server loop is likely not running and we allow this thread to die but callback to the injector 
+        indicating that the death is because of socketio
+
+        If the oap client faults, we tripped trying to send/recv. Most likely it is the oap-server terminating our connection (crashed) so callback with true (oap_fault).
+
+        """
 
         self._client._connected.wait()  # make sure client is connected successfully
 
@@ -99,6 +110,8 @@ class OAPEventHandler(threading.Thread):
         def obd_connection_status(message):
             self.show_notification(message['status'])
 
+        oap_fault = True    # flag to indicate whether we stopped because of the socketio connection or oap socket
+
         # connection for OnBoardPi notifications API
         try:
             sio.connect("http://localhost:60000", transports=['websocket'])
@@ -107,6 +120,7 @@ class OAPEventHandler(threading.Thread):
             # before uvicorn is accepting connections. If this happens we won't continue and instead
             # disconnect from the OAP api and callback to the injector who will restart if enabled and hopefully uvicorn will be up by then
             can_continue = False
+            oap_fault = False
 
         while can_continue:
             rlist, wlist = self._client.get_streams()
@@ -118,7 +132,7 @@ class OAPEventHandler(threading.Thread):
             except Exception as e:
                 # this happens when the tcp connection closes unexpectedly server side like 
                 # if OAP were to crash and reboot this thread will be let to die on its own
-                # and we shoudnt try to comunicate with the connection anymore
+                # and we shoudnt try to comunicate with this socket anymore
                 logger.error("OAP event handler caught an exception: {}. Deactivating...".format(e))
                 can_continue = False
 
@@ -127,4 +141,4 @@ class OAPEventHandler(threading.Thread):
         
         self.active.clear()
         self._client.disconnect()
-        self.callback()
+        self.callback(oap_fault)
