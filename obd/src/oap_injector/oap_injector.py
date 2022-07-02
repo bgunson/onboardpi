@@ -15,8 +15,7 @@ import obd
 import threading
 import time
 
-MAX_CONNECT_ATTEMPTS = 5
-
+MAX_RESTARTS = 5
 
 class OAPInjector(Injector):
 
@@ -33,6 +32,7 @@ class OAPInjector(Injector):
         self._oap_api_port = self.__parse_oap_api_port()
         self.__oap_inject = ObdInjectGaugeFormulaValue()
         self.__connection_attempts = 0
+        self.__n_restarts = 0
         self._enabled = threading.Event()
         self._enabled.set()
         self.__init_connection()
@@ -65,21 +65,26 @@ class OAPInjector(Injector):
         self._client.connect(host, self._oap_api_port)
 
     def _restart(self):
+        self.logger.info("OAP injector stopped unexpectedly")
         self.__connection_attempts = 0  # reset connection attempts for next try
         self.callback('disconnected', self)
-        if self._enabled.is_set():
+        if self._enabled.is_set() and self.__n_restarts < MAX_RESTARTS:
+            self.logger.info("OAP injector restarting...")
+            self.__n_restarts += 1
             self.start()
+
+        if self.__n_restarts >= MAX_RESTARTS:
+            self.logger.info("OAP injector exceeded maxmium number of restarts. Make sure OpenAuto Pro is running and manually disable/enable me")
 
     def start(self):
         self._enabled.set()
-        self.logger.debug("Starting OAP injector, client connected: {}".format(self._client.is_connected()))
+        self.logger.debug("OAP injector started by user")
         self.__init_connection()
 
     def stop(self):
-        self.logger.info("Stopping OAP injector")
+        self.logger.info("OAP injector stopped by user")
         self.logger.info(
             "======================================================")
-        # self.event_handler.show_notification("Disabled by user")
         self._enabled.clear()
         self._client.message_queue.put(Message(MESSAGE_BYEBYE, 0, bytes()))
 

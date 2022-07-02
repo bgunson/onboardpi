@@ -89,8 +89,8 @@ class Client:
         self._event_handler = event_handler
 
     def get_streams(self):
-        readable, writeable, exceptional = select([self._socket], [self._socket], [])
-        return readable, writeable, exceptional
+        readable, writeable, _ = select([self._socket], [self._socket], [])
+        return readable, writeable
 
     def connect(self, hostname, port):
         if self._connected.is_set():

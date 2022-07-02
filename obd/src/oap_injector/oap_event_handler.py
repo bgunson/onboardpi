@@ -109,18 +109,17 @@ class OAPEventHandler(threading.Thread):
             can_continue = False
 
         while can_continue:
-            rlist, wlist, elist = self._client.get_streams()
-            if len(rlist) > 0:
-                try:
+            rlist, wlist = self._client.get_streams()
+            try:
+                if len(rlist) > 0:
                     can_continue = self._client.wait_for_message()
-                except struct.error:
-                    # this happens when the tcp connection closes unexpectedly server side like 
-                    # if OAP were to crash and reboot this thread will be let to die on its own
-                    # and we shoudnt try to comunicate with the connection anymore
-                    can_continue = False
-            elif len(wlist) > 0:
-                can_continue = self._client.send_message()
-            elif len(elist) > 0:
+                elif len(wlist) > 0:
+                    can_continue = self._client.send_message()
+            except Exception as e:
+                # this happens when the tcp connection closes unexpectedly server side like 
+                # if OAP were to crash and reboot this thread will be let to die on its own
+                # and we shoudnt try to comunicate with the connection anymore
+                logger.error("OAP event handler caught an exception: {}. Deactivating...".format(e))
                 can_continue = False
 
         if sio.connected:
