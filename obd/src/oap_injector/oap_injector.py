@@ -106,7 +106,7 @@ class OAPInjector(Injector):
 
     def inject(self, obd_response):
         """ Inject obd reponse to the openauto API. """
-        if obd_response.is_null() or not self.event_handler.active.is_set() and self._enabled.is_set():
+        if obd_response.is_null() or not self._client.is_connected():
             self.logger.debug("OAP injection skipped. OBDResponse is null: {}. injector enabled: {}".format(
                 obd_response.is_null(), self.event_handler.active.is_set()))
             return
@@ -129,8 +129,6 @@ class OAPInjector(Injector):
             pass
         except Exception as e:
             self.logger.error("OAP injector error on inject: {}".format(e))
-            self._client.disconnect()
-            self.restart()
 
     def __parse_oap_api_port(self):
         """ 
