@@ -4,7 +4,6 @@
     The OAPInjector passes OBD values from python-OBD to OpenAuto Pro via its protobuf API
 
 """
-from re import L
 from .oap_event_handler import OAPEventHandler
 from .Message import Message
 from src.injector import Injector
@@ -15,7 +14,6 @@ import os
 import obd
 import threading
 import time
-import struct
 
 MAX_CONNECT_ATTEMPTS = 5
 
@@ -31,13 +29,13 @@ class OAPInjector(Injector):
         self.logger.info("Initializing an OpenAuto Pro injector.")
 
         self.__init_cmds()
-
+        self.event_handler = None
         self._oap_api_port = self.__parse_oap_api_port()
         self.__oap_inject = ObdInjectGaugeFormulaValue()
         self.__connection_attempts = 0
         self._enabled = threading.Event()
         self._enabled.set()
-        threading.Thread(target=self.__init_connection, daemon=True).start()
+        self.__init_connection()
 
     def __init_connection(self):
         if not self._enabled.is_set() or self._client.is_connected():
@@ -50,7 +48,7 @@ class OAPInjector(Injector):
             threading.Thread(target=self.__init_connection, daemon=True).start()
         else:
             if self._client.is_connected():
-                self.event_handler = OAPEventHandler(self._client, self.restart)
+                self.event_handler = OAPEventHandler(self._client, self._restart)
                 self._client.set_event_handler(self.event_handler)
                 self.event_handler.start()
                 self.callback('connected', self)
@@ -66,7 +64,7 @@ class OAPInjector(Injector):
             host, self._oap_api_port))
         self._client.connect(host, self._oap_api_port)
 
-    def restart(self):
+    def _restart(self):
         self.__connection_attempts = 0  # reset connection attempts for next try
         self.callback('disconnected', self)
         if self._enabled.is_set():
@@ -81,7 +79,7 @@ class OAPInjector(Injector):
         self.logger.info("Stopping OAP injector")
         self.logger.info(
             "======================================================")
-        self.event_handler.show_notification("Disabled by user")
+        # self.event_handler.show_notification("Disabled by user")
         self._enabled.clear()
         self._client.message_queue.put(Message(MESSAGE_BYEBYE, 0, bytes()))
 
@@ -89,7 +87,7 @@ class OAPInjector(Injector):
         return {
             'commands': self.__commands,
             'connected': self._client.is_connected(),
-            'active': self.event_handler.active.is_set()
+            'active': True if self.event_handler is not None and self.event_handler.active.is_set() else False
         }
 
     def is_enabled(self):

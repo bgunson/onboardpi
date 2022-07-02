@@ -84,14 +84,6 @@ class OAPEventHandler(threading.Thread):
 
         can_continue = True
 
-        while not self.active.is_set():
-            # here we are waiting for this initial hello message from oap which will indicate we are active
-            can_continue = self._client.wait_for_message()
-
-        if not can_continue:
-            # oap rejected us instantly 
-            return
-
         # this is a socketio client for our own notifications from OnBoardPi to be relayed to OpenAuto Pro
         sio = socketio.Client()
 
