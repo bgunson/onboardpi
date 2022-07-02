@@ -102,7 +102,7 @@ class OAPEventHandler(threading.Thread):
         # connection for OnBoardPi notifications API
         try:
             sio.connect("http://localhost:60000", transports=['websocket'])
-        except socketio.exceptions.ConnectionError:
+        except Exception:
             # we may not connect to the onboardpi socketio api if the injector starts
             # before uvicorn is accepting connections. If this happens we won't continue and instead
             # disconnect from the OAP api and callback to the injector who will restart if enabled and hopefully uvicorn will be up by then
@@ -123,9 +123,9 @@ class OAPEventHandler(threading.Thread):
             elif len(elist) > 0:
                 can_continue = False
 
-        sio.emit("leave_notifications")
-        sio.disconnect()
+        if sio.connected:
+            sio.disconnect()
+        
         self.active.clear()
-
         self._client.disconnect()
         self.callback()
