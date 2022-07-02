@@ -6,8 +6,9 @@
 """
 from re import L
 from .oap_event_handler import OAPEventHandler
+from .Message import Message
 from src.injector import Injector
-from .Api_pb2 import ObdInjectGaugeFormulaValue, MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE
+from .Api_pb2 import ObdInjectGaugeFormulaValue, MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE, MESSAGE_BYEBYE
 from .Client import Client
 import configparser
 import os
@@ -36,11 +37,6 @@ class OAPInjector(Injector):
         self.__connection_attempts = 0
         self._enabled = threading.Event()
         self._enabled.set()
-
-        self.event_handler = OAPEventHandler(
-            self._client, self._enabled, self.restart)
-        self._client.set_event_handler(self.event_handler)
-
         threading.Thread(target=self.__init_connection, daemon=True).start()
 
     def __init_connection(self):
@@ -49,12 +45,13 @@ class OAPInjector(Injector):
         try:
             self.__connect_attempt()
         except Exception as e:
-            self.logger.error("OAP injector error on start: {}".format(e))
+            self.logger.error("OAP injector error on start (in OAPInjector.__init_connection()): {}".format(e))
             self.__connection_attempts += 1
-            threading.Thread(target=self.__init_connection,
-                             daemon=True).start()
+            threading.Thread(target=self.__init_connection, daemon=True).start()
         else:
             if self._client.is_connected():
+                self.event_handler = OAPEventHandler(self._client, self.restart)
+                self._client.set_event_handler(self.event_handler)
                 self.event_handler.start()
                 self.callback('connected', self)
 
@@ -70,25 +67,23 @@ class OAPInjector(Injector):
         self._client.connect(host, self._oap_api_port)
 
     def restart(self):
+        self.__connection_attempts = 0  # reset connection attempts for next try
         self.callback('disconnected', self)
         if self._enabled.is_set():
             self.start()
 
     def start(self):
         self._enabled.set()
-        self.logger.debug("Starting OAP injector, client connected: {}".format(
-            self._client.is_connected()))
-
-        self.event_handler = OAPEventHandler(self._client, self._enabled, self.restart)
-        self._client.set_event_handler(self.event_handler)
+        self.logger.debug("Starting OAP injector, client connected: {}".format(self._client.is_connected()))
         self.__init_connection()
 
     def stop(self):
         self.logger.info("Stopping OAP injector")
         self.logger.info(
             "======================================================")
+        self.event_handler.show_notification("Disabled by user")
         self._enabled.clear()
-        self._client.disconnect()
+        self._client.message_queue.put(Message(MESSAGE_BYEBYE, 0, bytes()))
 
     def status(self):
         return {
@@ -116,10 +111,14 @@ class OAPInjector(Injector):
             self.__oap_inject.formula = "getPidValue({})".format(cmd_index)
             # may raise a KeyError
             self.__oap_inject.value = obd_response.value.magnitude
-            self.logger.info("Injecting value: {} to PID: {} ({})".format(
+            self.logger.debug("Injecting value: {} to PID: {} ({})".format(
                 self.__oap_inject.value, obd_response.command.name, cmd_index))
-            self._client.send(MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE,
-                              0, self.__oap_inject.SerializeToString())
+
+            msg = Message(MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE, 0, self.__oap_inject.SerializeToString())
+            self._client.message_queue.put(msg)
+            
+            # self._client.send(MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE,
+            #                   0, self.__oap_inject.SerializeToString())
         except ValueError:
             # This OBD response is for a command not needed by OAP. i.e. the obd_response.command is not contained in self.__commands
             pass

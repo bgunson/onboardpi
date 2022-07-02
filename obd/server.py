@@ -15,24 +15,10 @@ static_files = {
         }
 
 
-def wait_for_server():
-
-    ping_client = socketio.Client()
-
-    while not ping_client.connected:
-        try:
-            ping_client.connect("http://localhost:60000", transports=['websocket'])
-        except socketio.exceptions.ConnectionError:
-            pass
-
-    ping_client.disconnect()
-
+async def on_startup():
     _ = Configuration()
     api = API(sio)
     api.mount()
-
-async def on_startup():
-    threading.Thread(target=wait_for_server, daemon=True).start()
 
 def main():
     app = socketio.ASGIApp(sio, static_files=static_files, on_startup=on_startup)

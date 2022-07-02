@@ -188,7 +188,7 @@ class API:
         @sio.event
         async def connect_obd(sid):
             await sio.emit('obd_connecting')
-            self.config.init_obd_connection()
+            self.config.connect_obd()
             await sio.emit("obd_connection_status", self.get_obd_connection_status(), room="notifications")
 
         # endregion

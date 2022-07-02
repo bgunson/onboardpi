@@ -2,6 +2,9 @@
 #  Copyright (C) BlueWave Studio - All Rights Reserved
 #
 
+from email import message
+from queue import Queue
+from select import select
 import socket
 import struct
 import threading
@@ -80,14 +83,18 @@ class Client:
         self._name = name
         self._send_lock = threading.Lock()
         self._receive_lock = threading.Lock()
+        self.message_queue = Queue()
 
     def set_event_handler(self, event_handler):
         self._event_handler = event_handler
 
+    def get_streams(self):
+        readable, writeable, exceptional = select([self._socket], [self._socket], [], 5)
+        return readable, writeable, exceptional
+
     def connect(self, hostname, port):
         if self._connected.is_set():
             self._socket.close()
-
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._socket.connect((hostname, port))
         self._connected.set()
@@ -95,16 +102,16 @@ class Client:
 
     def is_connected(self):
         return self._connected.is_set()
+        
 
     def disconnect(self):
         if self._connected.is_set():
-            self.send(oap_api.MESSAGE_BYEBYE, 0, bytes())
-
             self._socket.close()
             self._connected.clear()
 
-    def receive(self) -> Message:
-        with self._receive_lock:
+
+    def _receive(self) -> Message:
+        # with self._receive_lock:
             header_size = 12
             header_data = self._socket.recv(header_size)
             (payload_size, id,
@@ -112,29 +119,40 @@ class Client:
             payload = self._socket.recv(payload_size)
             return Message(id, flags, payload)
 
-    def send(self, id, flags, payload):
-        with self._send_lock:
+    def _send(self, id, flags, payload):
+        # with self._send_lock:
             header_data = struct.pack('<III', len(payload), id, flags)
             self._socket.sendall(header_data)
             self._socket.sendall(payload)
+
+    def send_message(self):
+        if not self.message_queue.empty():
+            msg = self.message_queue.get()
+            self._send(msg.id, msg.flags, msg.payload)
+            if msg.id == oap_api.MESSAGE_BYEBYE:
+                self._socket.shutdown(socket.SHUT_WR)
+                return False
+        return True
 
     def _send_hello(self, name):
         hello_request = oap_api.HelloRequest()
         hello_request.name = name
         hello_request.api_version.major = oap_api.API_MAJOR_VERSION
         hello_request.api_version.minor = oap_api.API_MINOR_VERSION
+        self._send(oap_api.MESSAGE_HELLO_REQUEST, 0, hello_request.SerializeToString())  # this is the only message that shouldnt be queued
 
-        self.send(oap_api.MESSAGE_HELLO_REQUEST, 0,
-                  hello_request.SerializeToString())
+    def do_something(self):
+        pass
 
     def wait_for_message(self):
         can_continue = True
 
-        message = self.receive()
+        message = self._receive()
 
         if message.id == oap_api.MESSAGE_PING:
-            self.send(oap_api.MESSAGE_PONG, 0, bytes())
+            self.message_queue.put(Message(oap_api.MESSAGE_PONG, 0, bytes()))
         elif message.id == oap_api.MESSAGE_BYEBYE:
+            print("received message bye bye from oap api")
             can_continue = False
 
         if self._event_handler is not None:

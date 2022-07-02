@@ -1,6 +1,6 @@
-obd-socketio
 obd
 protobuf~=3.19
 uvicorn
-python-socketio
-python-socketio[client]
+obd-socketio
+python-socketio [client]
+ELM327-Emulator
