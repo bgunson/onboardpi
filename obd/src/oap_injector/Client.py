@@ -2,14 +2,13 @@
 #  Copyright (C) BlueWave Studio - All Rights Reserved
 #
 
-from email import message
-from queue import Queue
+from queue import PriorityQueue
 from select import select
 import socket
 import struct
 import threading
 from . import Api_pb2 as oap_api
-from .Message import Message
+from .Message import Message, QueuedMessage
 
 
 class ClientEventHandler:
@@ -83,7 +82,7 @@ class Client:
         self._name = name
         self._send_lock = threading.Lock()
         self._receive_lock = threading.Lock()
-        self.message_queue = Queue()
+        self.message_queue = PriorityQueue()
 
     def set_event_handler(self, event_handler):
         self._event_handler = event_handler
@@ -98,8 +97,9 @@ class Client:
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._socket.connect((hostname, port))
         self._connected.set()
-        self._socket.setblocking(False)
         self._send_hello(self._name)
+        # self._socket.setblocking(False)   # hmmm
+
 
     def is_connected(self):
         return self._connected.is_set()
@@ -112,28 +112,56 @@ class Client:
 
 
     def _receive(self) -> Message:
-        # with self._receive_lock:
-            header_size = 12
-            header_data = self._socket.recv(header_size)
-            (payload_size, id,
-             flags) = struct.unpack('<III', header_data[:header_size])
-            payload = self._socket.recv(payload_size)
-            return Message(id, flags, payload)
+        header_size = 12
+        header_data = self._socket.recv(header_size)
+        (payload_size, id, flags) = struct.unpack('<III', header_data[:header_size])
+        payload = self._socket.recv(payload_size)
+        return Message(id, flags, payload)
 
     def _send(self, id, flags, payload):
-        # with self._send_lock:
-            header_data = struct.pack('<III', len(payload), id, flags)
-            self._socket.sendall(header_data)
-            self._socket.sendall(payload)
+        header_data = struct.pack('<III', len(payload), id, flags)
+        self._socket.sendall(header_data)
+        self._socket.sendall(payload)
+
+    def send_messages(self):
+        """Send all messages currently in the queue and emptied on a bye bye.
+
+        Returns:
+            bool: True if no outgoing bye-bye is consumed, False otherwise (close connection)
+        """
+        can_continue = True
+
+        while not self.message_queue.empty():
+            msg = self.message_queue.get().item
+            if can_continue:
+                self._send(msg.id, msg.flags, msg.payload)
+            if msg.id == oap_api.MESSAGE_BYEBYE:
+                # consumed a bye-bye message so we should shutdown
+                self._socket.shutdown(socket.SHUT_WR)
+                can_continue = False
+
+        return can_continue
 
     def send_message(self):
+        """Send a single message with the highest priority from the message queue. On a bye bye message, empty the message queue and indicate to stop the connection.
+
+        Returns:
+            bool: True if no outgoing bye-bye is consumed, False otherwise (close connection)
+        """
+        can_continue = True
+
         if not self.message_queue.empty():
-            msg = self.message_queue.get()
+            msg = self.message_queue.get().item
             self._send(msg.id, msg.flags, msg.payload)
             if msg.id == oap_api.MESSAGE_BYEBYE:
                 self._socket.shutdown(socket.SHUT_WR)
-                return False
-        return True
+                while not self.message_queue.empty():
+                    # clear the message queue
+                    _ = self.message_queue.get()
+                can_continue = False
+
+        return can_continue
+
 
     def _send_hello(self, name):
         hello_request = oap_api.HelloRequest()
@@ -151,9 +179,9 @@ class Client:
         message = self._receive()
 
         if message.id == oap_api.MESSAGE_PING:
-            self.message_queue.put(Message(oap_api.MESSAGE_PONG, 0, bytes()))
+            pong = QueuedMessage(0, Message(oap_api.MESSAGE_PONG, 0, bytes()))
+            self.message_queue.put(pong)
         elif message.id == oap_api.MESSAGE_BYEBYE:
-            print("received message bye bye from oap api")
             can_continue = False
 
         if self._event_handler is not None:

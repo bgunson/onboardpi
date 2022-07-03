@@ -201,15 +201,7 @@ class API:
         @sio.event
         async def leave_notifications(sid):
             sio.leave_room(sid, 'notifications')
-
-    def static_files(self):
-        """ List routes and static content to be served by the OBD server """
-        return {
-            '/view/obd.log': {'filename': 'obd.log', 'content_type': 'text/plain'},
-            '/download/obd.log': 'obd.log',
-            '/view/oap.log': {'filename': 'oap.log', 'content_type': 'text/plain'},
-            '/download/oap.log': 'oap.log'
-        }
+            
 
     def get_obd_connection_status(self):
         return {

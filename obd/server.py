@@ -1,9 +1,7 @@
 import obdio
 import socketio
-import threading
 import uvicorn
 from src import Configuration, API
-import time
 
 sio = socketio.AsyncServer(cors_allowed_origins='*', json=obdio, async_mode='asgi')
 
@@ -15,10 +13,11 @@ static_files = {
         }
 
 
-async def on_startup():
+def on_startup():
     _ = Configuration()
     api = API(sio)
     api.mount()
+
 
 def main():
     app = socketio.ASGIApp(sio, static_files=static_files, on_startup=on_startup)
