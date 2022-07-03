@@ -5,6 +5,7 @@ import socketio
 from .Message import Message, QueuedMessage
 from . import Api_pb2 as oap_api
 import os
+import time
 
 logger = logging.getLogger('oap')
 
@@ -116,6 +117,11 @@ class OAPEventHandler(threading.Thread):
         def obd_connection_status(message):
             self.show_notification(message['status'])
 
+        try:
+            sio.connect("http://localhost:60000", transports=['websocket'])
+        except:
+            can_continue = False
+
         while can_continue:
             rlist, wlist = self._client.get_streams()
             try:
@@ -124,32 +130,12 @@ class OAPEventHandler(threading.Thread):
                 elif len(wlist) > 0: 
                     can_continue = self._client.send_messages()
                     # can_continue = self._client.send_message()    # or send a single message only
-                if not sio.connected:
-                    sio.connect("http://localhost:60000", transports=['websocket'])
-
-            except socketio.exceptions.ConnectionError:
-                # notifications socket could not connect, try again next pass
-                continue
-
-            except struct.error as e:
-                # couldnt receive/unpack message on the oap socket, server probably crashed
-                logger.error("OAP could not unpack message. {}. Deactivating...".format(e))
-                can_continue = False
-
-            except ConnectionResetError as e:
-                # oap server reset our connection
-                logger.error("OAP connection reset by peer. {}. Deactivating...".format(e))
-                can_continue = False
-
-            except Exception as e:
-                # this happens when the tcp connection closes unexpectedly server side like 
-                # if OAP were to crash and reboot this thread will be let to die on its own
-                # and we shoudnt try to comunicate with this socket anymore
-                logger.error("OAP event handler caught an exception: {}. Deactivating...".format(e))
+            except:
                 can_continue = False
 
         if sio.connected:
             sio.disconnect()
         
         self._client.disconnect()
+        time.sleep(1)
         self.callback()
