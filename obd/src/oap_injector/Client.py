@@ -114,6 +114,8 @@ class Client:
     def _receive(self) -> Message:
         header_size = 12
         header_data = self._socket.recv(header_size)
+        if len(header_data) != header_size:
+            return None
         (payload_size, id, flags) = struct.unpack('<III', header_data[:header_size])
         payload = self._socket.recv(payload_size)
         return Message(id, flags, payload)
@@ -177,6 +179,9 @@ class Client:
         can_continue = True
 
         message = self._receive()
+
+        if message is None:
+            return can_continue
 
         if message.id == oap_api.MESSAGE_PING:
             pong = QueuedMessage(0, Message(oap_api.MESSAGE_PONG, 0, bytes()))
