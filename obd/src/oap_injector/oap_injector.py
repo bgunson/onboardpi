@@ -4,7 +4,7 @@
     The OAPInjector passes OBD values from python-OBD to OpenAuto Pro via its protobuf API
 
 """
-from .oap_event_handler import OAPEventHandler
+from .event_handler import EventHandler
 from .Message import Message, QueuedMessage
 from src.injector import Injector
 from .Api_pb2 import ObdInjectGaugeFormulaValue, MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE, MESSAGE_BYEBYE
@@ -31,13 +31,17 @@ class OAPInjector(Injector):
         self.logger.info("Initializing an OpenAuto Pro injector.")
 
         self.__init_cmds()
-        self.event_handler = None
         self._oap_api_port = self.__parse_oap_api_port()
         self.__oap_inject = ObdInjectGaugeFormulaValue()
+
         self.__connection_attempts = 0
         self.__n_restarts = 0
+
         self._enabled = threading.Event()
         self._enabled.set()
+
+        self.event_handler = EventHandler(self._client, self._restart)
+        self._client.set_event_handler(self.event_handler)
         self.__init_connection()
 
     def __init_connection(self):
@@ -53,8 +57,6 @@ class OAPInjector(Injector):
             threading.Thread(target=self.__init_connection, daemon=True).start()
         else:
             if self._client.is_connected():
-                self.event_handler = OAPEventHandler(self._client, self._restart)
-                self._client.set_event_handler(self.event_handler)
                 self.event_handler.start()
                 self.callback('connected', self)
 
@@ -91,8 +93,12 @@ class OAPInjector(Injector):
     def start(self):
         """Start the injector from a disabled state. Not called on __init__, called at some point during runtime usually from an async event 
         """
-        self._enabled.set()
         self.logger.info("OAP injector starting...")
+
+        self._enabled.set()
+
+        self.event_handler = EventHandler(self._client, self._restart)
+        self._client.set_event_handler(self.event_handler)
         self.__init_connection()
 
     def stop(self):
@@ -118,7 +124,7 @@ class OAPInjector(Injector):
         return {
             'commands': self.__commands,
             'connected': self._client.is_connected(),
-            'active': True if self.event_handler is not None and self.event_handler.is_alive() else False
+            'active': self.event_handler.is_alive()
         }
 
     def is_enabled(self):
@@ -145,8 +151,6 @@ class OAPInjector(Injector):
             obd_response obd.OBDResponse: The response object returned in python-obd callback
         """
         if obd_response.is_null() or not self.event_handler.is_alive():
-            self.logger.debug("OAP injection skipped. OBDResponse is null: {}. injector active: {}".format(
-                obd_response.is_null(), self.event_handler.is_alive()))
             return
         try:
             # The index of the command as defined in the openauto config file, may raise a ValueError

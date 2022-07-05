@@ -1,6 +1,7 @@
 import obdio
 import socketio
 import uvicorn
+from datetime import datetime
 from src import Configuration, API
 
 sio = socketio.AsyncServer(cors_allowed_origins='*', json=obdio, async_mode='asgi')
@@ -13,16 +14,12 @@ static_files = {
         }
 
 
-def on_startup():
-    _ = Configuration()
-    api = API(sio)
-    api.mount()
-
-
-def main():
-    app = socketio.ASGIApp(sio, static_files=static_files, on_startup=on_startup)
-    uvicorn.run(app, host='0.0.0.0', port=60000)
+app = socketio.ASGIApp(sio, static_files=static_files)
+_ = Configuration()
+api = API(sio)
+api.mount()
 
 
 if __name__ == '__main__':
-    main()
+    print("========== OnBoardPi OBD Server Startup - {} ===========".format(datetime.now().strftime("%m/%d/%Y, %H:%M:%S")))
+    uvicorn.run(app, host='0.0.0.0', port=60000)

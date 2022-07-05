@@ -11,69 +11,6 @@ from . import Api_pb2 as oap_api
 from .Message import Message, QueuedMessage
 
 
-class ClientEventHandler:
-
-    def on_hello_response(self, client, message):
-        pass
-
-    def on_register_status_icon_response(self, client, message):
-        pass
-
-    def on_register_notification_channel_response(self, client, message):
-        pass
-
-    def on_phone_connection_status(self, client, message):
-        pass
-
-    def on_phone_levels_status(self, client, message):
-        pass
-
-    def on_phone_voice_call_status(self, client, message):
-        pass
-
-    def on_navigation_status(self, client, message):
-        pass
-
-    def on_navigation_maneuver_details(self, client, message):
-        pass
-
-    def on_navigation_maneuver_distance(self, client, message):
-        pass
-
-    def on_register_audio_focus_receiver_response(self, client, message):
-        pass
-
-    def on_audio_focus_change_response(self, client, message):
-        pass
-
-    def on_audio_focus_action(self, client, message):
-        pass
-
-    def on_audio_focus_media_key(self, client, message):
-        pass
-
-    def on_media_status(self, client, message):
-        pass
-
-    def on_media_metadata(self, client, message):
-        pass
-
-    def on_projection_status(self, client, message):
-        pass
-
-    def on_subscribe_obd_gauge_change_response(self, client, message):
-        pass
-
-    def on_obd_gauge_value_changed(self, client, message):
-        pass
-
-    def on_obd_connection_status(self, client, message):
-        pass
-
-    def on_temperature_status(self, client, message):
-        pass
-
-
 class Client:
 
     def __init__(self, name):

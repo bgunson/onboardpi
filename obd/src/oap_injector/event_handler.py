@@ -1,20 +1,19 @@
 import logging
-import struct
 import threading
-import socketio
+import time
+from .notifications import Notifications
 from .Message import Message, QueuedMessage
 from . import Api_pb2 as oap_api
 import os
-import time
 
 logger = logging.getLogger('oap')
 
 
-class OAPEventHandler(threading.Thread):
+class EventHandler(threading.Thread):
 
     """The event handler manages OpenAuto Pro injection of status icon, notifications, obd values to the protobuf api.
 
-    To relay OnBoardPi notifications, it creates a socketio client which connects to OnBoardPi's server on the main thread, 
+    To relay OnBoardPi notifications, it creates a socketio client (see notifications.py) which connects to OnBoardPi's server on the main thread, 
     listens for events and queues notification messages to be sent by the OAP client. While the sio client is waiting for events
     the event handler checks if the OAP socket is readable and/or writable and specifies to the OAP client what to do.
     The OAP client if readable will call the handlers in this class for corresponding messages and return true/false based on
@@ -70,6 +69,63 @@ class OAPEventHandler(threading.Thread):
             msg = QueuedMessage(1, Message(oap_api.MESSAGE_CHANGE_STATUS_ICON_STATE, 0, change_status_icon_state.SerializeToString()))
             self._client.message_queue.put(msg)
 
+    def on_register_notification_channel_response(self, client, message):
+        logger.debug(
+            "register notification channel response, result: {}, icon id: {}".
+            format(message.result, message.id))
+        self._notification_channel_id = message.id
+
+    def on_phone_connection_status(self, client, message):
+        pass
+
+    def on_phone_levels_status(self, client, message):
+        pass
+
+    def on_phone_voice_call_status(self, client, message):
+        pass
+
+    def on_navigation_status(self, client, message):
+        pass
+
+    def on_navigation_maneuver_details(self, client, message):
+        pass
+
+    def on_navigation_maneuver_distance(self, client, message):
+        pass
+
+    def on_register_audio_focus_receiver_response(self, client, message):
+        pass
+
+    def on_audio_focus_change_response(self, client, message):
+        pass
+
+    def on_audio_focus_action(self, client, message):
+        pass
+
+    def on_audio_focus_media_key(self, client, message):
+        pass
+
+    def on_media_status(self, client, message):
+        pass
+
+    def on_media_metadata(self, client, message):
+        pass
+
+    def on_projection_status(self, client, message):
+        pass
+
+    def on_subscribe_obd_gauge_change_response(self, client, message):
+        pass
+
+    def on_obd_gauge_value_changed(self, client, message):
+        pass
+
+    def on_obd_connection_status(self, client, message):
+        pass
+
+    def on_temperature_status(self, client, message):
+        pass
+
     def show_notification(self, message):
         if self._notification_channel_id is None:
             return
@@ -84,58 +140,29 @@ class OAPEventHandler(threading.Thread):
         msg = QueuedMessage(1, Message(oap_api.MESSAGE_SHOW_NOTIFICATION, 0, show_notification.SerializeToString()))
         self._client.message_queue.put(msg)
 
-    def on_register_notification_channel_response(self, client, message):
-        logger.debug(
-            "register notification channel response, result: {}, icon id: {}".
-            format(message.result, message.id))
-        self._notification_channel_id = message.id
-
     def run(self):
 
-        """Do two main things:
-        1. Try to connect to the OnBoardPi notifications api by acting as a socketio client, listen for incoming notifications and show them on the OpenAuto Pro UI.
-        2. Attempt to either read incoming messages from OAP if the socket is readable, or send queued messages if the socket is writable.
+        """Try to read/write to the oap socket 
         """
 
         self._client._connected.wait()  # make sure client is connected successfully
 
+        notifications = Notifications(self)
+        notifications.start()
+
         can_continue = True
-        # this is a socketio client for our own notifications from OnBoardPi to be relayed to OpenAuto Pro
-        sio = socketio.Client()
-
-        @sio.event
-        def connect():
-            logger.info("OAP event handler notifications socket connected successfully")
-            sio.emit("join_notifications")
-            # on connect join notifications room
-            if self._first_connect.is_set():
-                # the sio client can try initiate the obd connection to the car
-                sio.emit("connect_obd")
-                self._first_connect.clear()
-
-        @sio.event
-        def obd_connection_status(message):
-            self.show_notification(message['status'])
-
-        try:
-            sio.connect("http://localhost:60000", transports=['websocket'])
-        except:
-            can_continue = False
 
         while can_continue:
             rlist, wlist = self._client.get_streams()
             try:
                 if len(rlist) > 0:      # read incoming messages first
                     can_continue = self._client.wait_for_message()
-                elif len(wlist) > 0: 
+                if len(wlist) > 0: 
                     can_continue = self._client.send_messages()
                     # can_continue = self._client.send_message()    # or send a single message only
+                time.sleep(0.1)
             except:
                 can_continue = False
-
-        if sio.connected:
-            sio.disconnect()
         
         self._client.disconnect()
-        time.sleep(1)
         self.callback()
