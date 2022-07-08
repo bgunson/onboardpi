@@ -38,14 +38,14 @@ class API:
             # Stop obd-async worker, unwatch each cmd, then restart the obd-async worker
             self.config.obd_io.stop()
             for cmd in commands:
-                self.config.obd_io.unwatch(obd.commands[cmd])
+                self.config.obd_io.unwatch(obd.commands[cmd], self.watch.cache)
                 if cmd in self.watch.watching:
                     self.watch.watching.pop(cmd)
+
+            self.config.obd_io.start()
             # This is to tell every other clients that someone else has unwatched these commands
             # Affected clients will re-emit a 'watch' for the commands they continue to need and our watch loop will be restarted
             await sio.emit('unwatch', commands, room='watch', skip_sid=sid)
-            # Also tell config who will rewatch for each active injector
-            self.config.on_unwatch_event()
 
         @sio.event
         async def watch(sid, commands):
@@ -54,10 +54,6 @@ class API:
                 self.config.obd_io.watch(
                     obd.commands[cmd], self.watch.cache, self.config.force_cmds)
             self.config.obd_io.start()
-            # Restart our watch loop if not started already
-            if not self.watch.loop_running:
-                self.watch.loop_running = True
-                await sio.start_background_task(self.watch.emit_loop, sio)
 
         # endregion
 
@@ -85,12 +81,8 @@ class API:
         async def disable_injector(sid, injector_type):
             if injector_type in self.config.get_injectors():
                 injector = self.config.get_injectors()[injector_type]
-
                 self.config.handle_injector_event('stop', injector)
                 injector.stop()
-                # Alert clients in the watch room of the event
-                self.config.on_unwatch_event()
-                await sio.emit('unwatch', injector.get_commands(), room='watch', skip_sid=sid)
 
         @sio.event
         async def injector_state(sid, injector_type):
@@ -187,9 +179,10 @@ class API:
 
         @sio.event
         async def connect_obd(sid):
-            await sio.emit('obd_connecting')
+            # await sio.emit('obd_connecting')
             self.config.connect_obd()
             await sio.emit("obd_connection_status", self.get_obd_connection_status(), room="notifications")
+            await sio.start_background_task(self.watch.emit_loop, sio)
 
         # endregion
 
@@ -201,7 +194,6 @@ class API:
         @sio.event
         async def leave_notifications(sid):
             sio.leave_room(sid, 'notifications')
-            
 
     def get_obd_connection_status(self):
         return {

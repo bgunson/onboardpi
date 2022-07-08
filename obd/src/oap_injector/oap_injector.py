@@ -17,6 +17,7 @@ import time
 
 MAX_RESTARTS = 10
 
+
 class OAPInjector(Injector):
 
     """Conrols data injection and connection to the OpenAuto Pro protobuf API (obd gauges, notifications, status icon)
@@ -42,23 +43,24 @@ class OAPInjector(Injector):
 
         self.event_handler = EventHandler(self._client, self._restart)
         self._client.set_event_handler(self.event_handler)
-        self.__init_connection()
+        threading.Thread(target=self.__init_connection, daemon=True).start()
 
     def __init_connection(self):
-        """Initiiate a connection interval 
+        """Initiate a connection interval 
         """
         if not self._enabled.is_set() or self._client.is_connected():
             return
         try:
             self.__connect_attempt()
         except Exception as e:
-            self.logger.error("OAP injector error on start (in OAPInjector.__init_connection()): {}".format(e))
+            self.logger.error(
+                "OAP injector error on start (in OAPInjector.__init_connection()): {}".format(e))
             self.__connection_attempts += 1
-            threading.Thread(target=self.__init_connection, daemon=True).start()
+            threading.Thread(target=self.__init_connection,
+                             daemon=True).start()
         else:
             if self._client.is_connected():
                 self.event_handler.start()
-                self.callback('connected', self)
 
     def __connect_attempt(self):
         """Attempt to connect to the API, ran on another thread with larger intervals as unsuccessful attempts persist
@@ -74,21 +76,18 @@ class OAPInjector(Injector):
 
     def _restart(self):
         """On OAP event handler failure restart if still enabled and not reached max restart attempts
-
-        Args:
-            oap_fault (bool): True if the event handler stopped because of an exception from OAP socket, false otherwise.
         """
         self.logger.info("OAP injector event handler is no longer active")
         self.__connection_attempts += 1
         self.callback('disconnected', self)
-        
         if self._enabled.is_set() and self.__n_restarts < MAX_RESTARTS:
             self.logger.info("OAP injector restarting...")
             self.__n_restarts += 1
             self.start()
 
         if self.__n_restarts >= MAX_RESTARTS:
-            self.logger.info("OAP injector exceeded maxmium number of restarts. Make sure OpenAuto Pro is running and manually disable/enable me")
+            self.logger.info(
+                "OAP injector exceeded maxmium number of restarts. Make sure OpenAuto Pro is running and manually disable/enable me")
 
     def start(self):
         """Start the injector from a disabled state. Not called on __init__, called at some point during runtime usually from an async event 
@@ -99,7 +98,7 @@ class OAPInjector(Injector):
 
         self.event_handler = EventHandler(self._client, self._restart)
         self._client.set_event_handler(self.event_handler)
-        self.__init_connection()
+        threading.Thread(target=self.__init_connection, daemon=True).start()
 
     def stop(self):
         """Stop and disable the running injection
@@ -135,6 +134,9 @@ class OAPInjector(Injector):
         """
         return self._enabled.is_set()
 
+    def is_active(self):
+        return self.event_handler.is_alive()
+
     def get_commands(self):
         """Get the list of OBD command names used by this injector
 
@@ -161,9 +163,10 @@ class OAPInjector(Injector):
             self.logger.debug("Injecting value: {} to PID: {} ({})".format(
                 self.__oap_inject.value, obd_response.command.name, cmd_index))
 
-            msg = QueuedMessage(1, Message(MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE, 0, self.__oap_inject.SerializeToString()))
+            msg = QueuedMessage(1, Message(
+                MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE, 0, self.__oap_inject.SerializeToString()))
             self._client.message_queue.put(msg)
-            
+
             # self._client.send(MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE,
             #                   0, self.__oap_inject.SerializeToString())
         except ValueError:

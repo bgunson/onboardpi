@@ -48,21 +48,20 @@ class Configuration:
         """ Steps to connect to vehicle and any other local operations which are needed after successful/unsuccessful connection. Try twice times to fully connect to vehicle """
         if self.obd_io is not None and self.obd_io.is_connected():
             self.logger.info("OBD is already connected")
-            return 
+        else: 
+            self.logger.info("Connecting to OBD interface")
+            params = self.connection_params()
+            attempts = 0
+            connected = False
+            while not connected and attempts < 2:
+                # self.obd_io.connect_obd(**params) # Blocks server which is ok since no socketio handlers should respond unless there is some sort of connection
+                self.obd_io = obd.Async(**params)
+                connected = self.obd_io.is_connected()
+                attempts += 1
 
-        self.logger.info("Connecting to OBD interface")
-        params = self.connection_params()
-        attempts = 0
-        connected = False
-        while not connected and attempts < 2:
-            # self.obd_io.connect_obd(**params) # Blocks server which is ok since no socketio handlers should respond unless there is some sort of connection
-            self.obd_io = obd.Async(**params)
-            connected = self.obd_io.is_connected()
-            attempts += 1
-
-        if connected:
-            for injector in self.__injectors.values():
-                self.watch_injector_cmds(injector)
+        for injector in self.__injectors.values():
+            if injector.is_active():
+                self.handle_injector_event('watch', injector)
 
     def get_obd_io(self):
         """ return the python-obd connection """
@@ -93,41 +92,22 @@ class Configuration:
         # cache the instance with self
         self.__injectors[injector_type] = injector
 
-        # self.watch_injector_cmds(injector)
-
         return injector
 
-    def handle_injector_event(self, event, injector):
+    def handle_injector_event(self, event, injector):    
+        self.obd_io.stop()
         if event == 'connected' or event == 'watch':
-            self.obd_io.stop()
             for cmd in injector.get_commands():
                 if cmd is not None:
                     # watch the command and subscribe callback to inject, python-OBD handles multiple command callbacks
-                    self.obd_io.watch(
-                        obd.commands[cmd], injector.inject, self.force_cmds)
-            self.obd_io.start()
+                    self.obd_io.watch(obd.commands[cmd], injector.inject, self.force_cmds)
         elif event == 'disconnected' or event == 'stop':
             self.obd_io.stop()
             for cmd in injector.get_commands():
                 if cmd is not None:
-                    self.obd_io.unwatch(obd.commands[cmd])
-            self.obd_io.start()
-
-    def watch_injector_cmds(self, injector):
-        """ Used as a callback when an injector indicates it is ready and when other socketio clients unwatch commands this method will make sure injector commands are not forgotten """
-        self.obd_io.stop()
-        for cmd in injector.get_commands():
-            if cmd is not None:
-                # watch the command and subscribe callback to inject, python-OBD handles multiple command callbacks
-                self.obd_io.watch(
-                    obd.commands[cmd], injector.inject, self.force_cmds)
+                    self.obd_io.unwatch(obd.commands[cmd], injector.inject)
         self.obd_io.start()
 
-    def on_unwatch_event(self):
-        """ When a socketio client unwatches some commands we need to rewatch and re-register the injector commands and callback"""
-        for _, injector in self.__injectors.items():
-            if injector.is_enabled():
-                self.handle_injector_event('watch', injector)
 
     def get_injectors(self):
         return self.__injectors

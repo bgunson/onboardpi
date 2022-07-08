@@ -41,7 +41,7 @@ class Notifications(threading.Thread):
 
         while self.event_handler.is_alive():
             time.sleep(1)
-        
+                
         logger.info("notifications disconnecting")
         sio.disconnect()
 

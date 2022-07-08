@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod, abstractproperty
 
 class Injector(ABC):
     """
@@ -24,6 +24,10 @@ class Injector(ABC):
 
     @abstractmethod
     def is_enabled(self):
+        pass
+
+    @abstractmethod
+    def is_active(self):
         pass
 
     @abstractmethod
