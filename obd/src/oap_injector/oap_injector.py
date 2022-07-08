@@ -4,6 +4,7 @@
     The OAPInjector passes OBD values from python-OBD to OpenAuto Pro via its protobuf API
 
 """
+from .notifications import Notifications
 from .event_handler import EventHandler
 from .Message import Message, QueuedMessage
 from src.injector import Injector
@@ -45,6 +46,8 @@ class OAPInjector(Injector):
         self._client.set_event_handler(self.event_handler)
         threading.Thread(target=self.__init_connection, daemon=True).start()
 
+        Notifications(self._client).start()
+
     def __init_connection(self):
         """Initiate a connection interval 
         """
@@ -61,6 +64,7 @@ class OAPInjector(Injector):
         else:
             if self._client.is_connected():
                 self.event_handler.start()
+                self.callback('connected', self)
 
     def __connect_attempt(self):
         """Attempt to connect to the API, ran on another thread with larger intervals as unsuccessful attempts persist

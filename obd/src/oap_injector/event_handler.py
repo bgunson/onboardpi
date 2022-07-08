@@ -144,12 +144,7 @@ class EventHandler(threading.Thread):
 
         """Try to read/write to the oap socket 
         """
-
         self._client._connected.wait()  # make sure client is connected successfully
-
-        notifications = Notifications(self)
-        notifications.start()
-
         can_continue = True
 
         while can_continue:

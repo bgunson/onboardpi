@@ -24,6 +24,9 @@ class Client:
     def set_event_handler(self, event_handler):
         self._event_handler = event_handler
 
+    def get_event_handler(self):
+        return self._event_handler
+
     def get_streams(self):
         readable, writeable, _ = select([self._socket], [self._socket], [])
         return readable, writeable

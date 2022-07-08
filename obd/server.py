@@ -24,9 +24,9 @@ def on_startup():
 
 
 def on_shutdown():
+    config.obd_io.close()
     print("========== OnBoardPi OBD Server Shutdown - {} ===========".format(
         datetime.now().strftime("%m/%d/%Y, %H:%M:%S")))
-    config.obd_io.close()
 
 
 def main():

@@ -76,13 +76,15 @@ class API:
                 injector.start()
             else:
                 injector = self.config.register_injector(injector_type)
+            await sio.emit('injector_enabled', injector_type, room='notifications')
 
         @sio.event
         async def disable_injector(sid, injector_type):
             if injector_type in self.config.get_injectors():
                 injector = self.config.get_injectors()[injector_type]
-                self.config.handle_injector_event('stop', injector)
                 injector.stop()
+                await sio.emit('injector_disabled', injector_type, room='notifications')
+            
 
         @sio.event
         async def injector_state(sid, injector_type):
@@ -194,6 +196,10 @@ class API:
         @sio.event
         async def leave_notifications(sid):
             sio.leave_room(sid, 'notifications')
+
+        @sio.event
+        async def get_obd_connection_status(sid):
+            await sio.emit("obd_connection_status", self.get_obd_connection_status(), room=sid)
 
     def get_obd_connection_status(self):
         return {
