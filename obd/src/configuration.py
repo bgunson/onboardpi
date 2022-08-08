@@ -2,6 +2,7 @@ import os
 import logging
 import json
 import obd
+import time
 from .oap_injector import OAPInjector
 
 SETTINGS_PATH = os.path.join(os.environ.get(
@@ -44,17 +45,17 @@ class Configuration:
     def __init__(self):
         pass
 
-    def connect_obd(self):
+    async def connect_obd(self, sio):
         """ Steps to connect to vehicle and any other local operations which are needed after successful/unsuccessful connection. Try twice times to fully connect to vehicle """
         if self.obd_io is not None and self.obd_io.is_connected():
             self.logger.info("OBD is already connected")
-        else: 
+        else:
             self.logger.info("Connecting to OBD interface")
             params = self.connection_params()
             attempts = 0
             connected = False
             while not connected and attempts < 2:
-                # self.obd_io.connect_obd(**params) # Blocks server which is ok since no socketio handlers should respond unless there is some sort of connection
+                await sio.sleep(attempts)
                 self.obd_io = obd.Async(**params)
                 connected = self.obd_io.is_connected()
                 attempts += 1
@@ -86,28 +87,22 @@ class Configuration:
             injector_type, injector_config['log_level'])
         # create a new instance of this injector type via the injector map
         injector = injector_map[injector_type](
-            logger=logger, 
-            callback=self.handle_injector_event,
+            logger=logger,
             **injector_config['parameters'])
         # cache the instance with self
         self.__injectors[injector_type] = injector
 
         return injector
 
-    def handle_injector_event(self, event, injector):    
+    def handle_injector_event(self, event, injector):
         self.obd_io.stop()
-        if event == 'connected' or event == 'watch':
-            for cmd in injector.get_commands():
-                if cmd is not None:
-                    # watch the command and subscribe callback to inject, python-OBD handles multiple command callbacks
-                    self.obd_io.watch(obd.commands[cmd], injector.inject, self.force_cmds)
-        elif event == 'disconnected' or event == 'stop':
-            self.obd_io.stop()
-            for cmd in injector.get_commands():
-                if cmd is not None:
-                    self.obd_io.unwatch(obd.commands[cmd], injector.inject)
+        for cmd in injector.get_commands():
+            if cmd is not None:
+                if event == 'connected' or event == 'watch':
+                    self.obd_io.watch(obd.commands[cmd], callback=injector.inject)
+                elif event == 'disconnected' or event == 'stop' or event == 'unwatch':
+                    self.obd_io.unwatch(obd.commands[cmd], callback=injector.inject)
         self.obd_io.start()
-
 
     def get_injectors(self):
         return self.__injectors

@@ -4,7 +4,6 @@
     The OAPInjector passes OBD values from python-OBD to OpenAuto Pro via its protobuf API
 
 """
-from .notifications import Notifications
 from .event_handler import EventHandler
 from .Message import Message, QueuedMessage
 from src.injector import Injector
@@ -24,9 +23,8 @@ class OAPInjector(Injector):
     """Conrols data injection and connection to the OpenAuto Pro protobuf API (obd gauges, notifications, status icon)
     """
 
-    def __init__(self, logger, callback, *args, **kwargs):
+    def __init__(self, logger, *args, **kwargs):
         self._client = Client("OnBoardPi OBD Injector")
-        self.callback = callback
         self.logger = logger
         self.logger.info(
             "======================================================")
@@ -42,11 +40,9 @@ class OAPInjector(Injector):
         self._enabled = threading.Event()
         self._enabled.set()
 
-        self.event_handler = EventHandler(self._client, self._restart)
+        self.event_handler = EventHandler(self._client, self)
         self._client.set_event_handler(self.event_handler)
         threading.Thread(target=self.__init_connection, daemon=True).start()
-
-        Notifications(self._client).start()
 
     def __init_connection(self):
         """Initiate a connection interval 
@@ -64,7 +60,6 @@ class OAPInjector(Injector):
         else:
             if self._client.is_connected():
                 self.event_handler.start()
-                self.callback('connected', self)
 
     def __connect_attempt(self):
         """Attempt to connect to the API, ran on another thread with larger intervals as unsuccessful attempts persist
@@ -78,12 +73,11 @@ class OAPInjector(Injector):
             host, self._oap_api_port))
         self._client.connect(host, self._oap_api_port)
 
-    def _restart(self):
+    def restart(self):
         """On OAP event handler failure restart if still enabled and not reached max restart attempts
         """
         self.logger.info("OAP injector event handler is no longer active")
         self.__connection_attempts += 1
-        self.callback('disconnected', self)
         if self._enabled.is_set() and self.__n_restarts < MAX_RESTARTS:
             self.logger.info("OAP injector restarting...")
             self.__n_restarts += 1
@@ -100,7 +94,7 @@ class OAPInjector(Injector):
 
         self._enabled.set()
 
-        self.event_handler = EventHandler(self._client, self._restart)
+        self.event_handler = EventHandler(self._client, self)
         self._client.set_event_handler(self.event_handler)
         threading.Thread(target=self.__init_connection, daemon=True).start()
 

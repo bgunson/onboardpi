@@ -1,10 +1,10 @@
 import logging
 import threading
 import time
-from .notifications import Notifications
 from .Message import Message, QueuedMessage
 from . import Api_pb2 as oap_api
 import os
+import socketio
 
 logger = logging.getLogger('oap')
 
@@ -19,15 +19,15 @@ class EventHandler(threading.Thread):
     The OAP client if readable will call the handlers in this class for corresponding messages and return true/false based on
     the health iof the OAP server (ex. recv bye bye from server). If the OAP socket is writable the event handler will tell the 
     client to send messages from its message queue.
-    
+
     If this thread is alive it means the OAP injection is active and connected. When it dies it calls back to its parent thread
     who will decide whether the OAP injector should restart.
     """
 
-    def __init__(self, client, callback):
+    def __init__(self, client, injector):
         super().__init__(daemon=True)
         self._client = client
-        self.callback = callback
+        self.injector = injector
         self._notification_channel_id = None
         self._first_connect = threading.Event()
         self._first_connect.set()
@@ -42,7 +42,8 @@ class EventHandler(threading.Thread):
         register_notification_channel_request.name = "OnBoardPi"
         register_notification_channel_request.description = "OnBoardPi OBD connection status channel"
 
-        msg = QueuedMessage(1, Message(oap_api.MESSAGE_REGISTER_NOTIFICATION_CHANNEL_REQUEST, 0, register_notification_channel_request.SerializeToString()))
+        msg = QueuedMessage(1, Message(oap_api.MESSAGE_REGISTER_NOTIFICATION_CHANNEL_REQUEST,
+                            0, register_notification_channel_request.SerializeToString()))
         client.message_queue.put(msg)
 
         register_status_icon_request = oap_api.RegisterStatusIconRequest()
@@ -52,7 +53,8 @@ class EventHandler(threading.Thread):
         with open(os.path.join(os.path.dirname(__file__), "assets/car.svg"), 'rb') as icon_file:
             register_status_icon_request.icon = icon_file.read()
 
-        msg = QueuedMessage(1, Message(oap_api.MESSAGE_REGISTER_STATUS_ICON_REQUEST, 0, register_status_icon_request.SerializeToString()))
+        msg = QueuedMessage(1, Message(oap_api.MESSAGE_REGISTER_STATUS_ICON_REQUEST,
+                            0, register_status_icon_request.SerializeToString()))
         client.message_queue.put(msg)
 
     def on_register_status_icon_response(self, client, message):
@@ -66,7 +68,8 @@ class EventHandler(threading.Thread):
             change_status_icon_state.id = self._icon_id
             change_status_icon_state.visible = True
 
-            msg = QueuedMessage(1, Message(oap_api.MESSAGE_CHANGE_STATUS_ICON_STATE, 0, change_status_icon_state.SerializeToString()))
+            msg = QueuedMessage(1, Message(
+                oap_api.MESSAGE_CHANGE_STATUS_ICON_STATE, 0, change_status_icon_state.SerializeToString()))
             self._client.message_queue.put(msg)
 
     def on_register_notification_channel_response(self, client, message):
@@ -137,27 +140,60 @@ class EventHandler(threading.Thread):
 
         with open(os.path.join(os.path.dirname(__file__), "assets/car.svg"), 'rb') as icon_file:
             show_notification.icon = icon_file.read()
-        msg = QueuedMessage(1, Message(oap_api.MESSAGE_SHOW_NOTIFICATION, 0, show_notification.SerializeToString()))
+        msg = QueuedMessage(1, Message(
+            oap_api.MESSAGE_SHOW_NOTIFICATION, 0, show_notification.SerializeToString()))
         self._client.message_queue.put(msg)
 
     def run(self):
-
         """Try to read/write to the oap socket 
         """
         self._client._connected.wait()  # make sure client is connected successfully
         can_continue = True
 
+        sio = socketio.Client()
+
+        @sio.event
+        def connect():
+            logger.info("OAP notifications socket connected successfully")
+            sio.sleep(0.1)
+            # on connect join notifications room
+            if self._first_connect.is_set():
+                # the sio client can try initiate the obd connection to the car
+                sio.emit("connect_obd")
+                self._first_connect.clear()
+
+            sio.emit("join_notifications")
+
+        @sio.event
+        def disconnect():
+            logger.info("OAP notifications socket disconnected")
+
+        @sio.event
+        def obd_connection_status(message):
+            # get the current event handler
+            self.show_notification(message['status'])
+
         while can_continue:
+            time.sleep(0.1)
             rlist, wlist = self._client.get_streams()
             try:
                 if len(rlist) > 0:      # read incoming messages first
                     can_continue = self._client.wait_for_message()
-                if len(wlist) > 0: 
+                if len(wlist) > 0:
                     can_continue = self._client.send_messages()
                     # can_continue = self._client.send_message()    # or send a single message only
-                time.sleep(0.1)
             except:
                 can_continue = False
-        
+
+            if not sio.connected:
+                try:
+                    sio.connect("http://localhost:60000")
+                except:
+                    continue
+
+        if sio.connected:
+            sio.emit('unwatch_injector', 'oap')
+            sio.disconnect()
+
         self._client.disconnect()
-        self.callback()
+        self.injector.restart()
