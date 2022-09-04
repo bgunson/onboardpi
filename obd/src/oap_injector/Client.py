@@ -134,6 +134,8 @@ class Client:
                 hello_response = oap_api.HelloResponse()
                 hello_response.ParseFromString(message.payload)
                 self._event_handler.on_hello_response(self, hello_response)
+            elif message.id == oap_api.MESSAGE_PING:
+                self._event_handler.on_ping(self)
             elif message.id == oap_api.MESSAGE_REGISTER_STATUS_ICON_RESPONSE:
                 register_status_icon_response = oap_api.RegisterStatusIconResponse(
                 )

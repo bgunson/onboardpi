@@ -29,6 +29,8 @@ class EventHandler(threading.Thread):
         self._client = client
         self.injector = injector
         self._notification_channel_id = None
+
+        self._sio = socketio.Client()
         self._first_connect = threading.Event()
         self._first_connect.set()
 
@@ -56,6 +58,10 @@ class EventHandler(threading.Thread):
         msg = QueuedMessage(1, Message(oap_api.MESSAGE_REGISTER_STATUS_ICON_REQUEST,
                             0, register_status_icon_request.SerializeToString()))
         client.message_queue.put(msg)
+
+    def on_ping(self, client):
+        self._sio.emit('is_connected')
+
 
     def on_register_status_icon_response(self, client, message):
         logger.debug("register status icon response, result: {}, icon id: {}".format(
@@ -150,7 +156,7 @@ class EventHandler(threading.Thread):
         self._client._connected.wait()  # make sure client is connected successfully
         can_continue = True
 
-        sio = socketio.Client()
+        sio = self._sio
 
         @sio.event
         def connect():
@@ -162,15 +168,18 @@ class EventHandler(threading.Thread):
                 sio.emit("connect_obd")
                 self._first_connect.clear()
 
-            sio.emit("join_notifications")
-
         @sio.event
         def disconnect():
             logger.info("OAP notifications socket disconnected")
 
         @sio.event
+        def is_connected(obd_connected):
+            if not obd_connected:
+                # request obd be connected
+                sio.emit("connect_obd")
+
+        @sio.event
         def obd_connection_status(message):
-            # get the current event handler
             self.show_notification(message['status'])
 
         while can_continue:
