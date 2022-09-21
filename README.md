@@ -77,7 +77,7 @@ Thanks to [MockuPhone](https://mockuphone.com/) for the device mock-ups.
 
 ### Data Stream
 - View all (mode 1) OBDII PIDs at once
-- View realtime system parameters including CPU, RAM and disk usage. Screenshots below were not from a Raspberry Pi.
+- View realtime system parameters including CPU, RAM and disk usage.
 
 <div align="center">
     <img src="_img/mocks/vehicle_stream_dark_ios_iphone12miniblack_portrait.png" width="300"><img src="_img/mocks/sys_stream_dark_ios_iphone12miniblack_portrait.png" width="300">
