@@ -56,6 +56,9 @@ class API:
                     obd.commands[cmd], callback=self.watch.cache)
             self.config.obd_io.start()
 
+            if not self.watch.loop_running:
+                await sio.start_background_task(self.watch.emit_loop, sio)
+
         # endregion
 
         # region Logger event listeners
@@ -187,10 +190,11 @@ class API:
 
         @sio.event
         async def connect_obd(sid):
-            # await sio.emit('obd_connecting')
-            await sio.start_background_task(self.config.connect_obd, sio)
+            # await sio.start_background_task(self.config.connect_obd, sio)
+            self.config.connect_obd()
             await sio.emit("obd_connection_status", self.get_obd_connection_status(), room="notifications")
-            await sio.start_background_task(self.watch.emit_loop, sio)
+            if not self.watch.loop_running:
+                await sio.start_background_task(self.watch.emit_loop, sio)
 
         # endregion
 

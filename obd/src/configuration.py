@@ -45,8 +45,28 @@ class Configuration:
     def __init__(self):
         pass
 
-    async def connect_obd(self, sio):
-        """ Steps to connect to vehicle and any other local operations which are needed after successful/unsuccessful connection. Try twice times to fully connect to vehicle """
+    def connect_obd(self):
+        """ Blocks for min two attempts vs connect_obd_async which will sleep before each attempt which may be problematic and cause race conditions on the serial port and obd server in general, this may be the safer approach. 
+        """
+        if self.obd_io is not None and self.obd_io.is_connected():
+            self.logger.info("OBD is already connected")
+        else:
+            self.logger.info("Connecting to OBD interface")
+            params = self.connection_params()
+            attempts = 0
+            connected = False
+            while not connected and attempts < 2:
+                self.obd_io = obd.Async(**params)
+                connected = self.obd_io.is_connected()
+                attempts += 1
+
+        for injector in self.__injectors.values():
+            if injector.is_active():
+                self.handle_injector_event('watch', injector)
+        
+
+    async def connect_obd_async(self, sio):
+        """ Steps to connect to vehicle and any other local operations which are needed after successful/unsuccessful connection. Try two times to fully connect to vehicle """
         if self.obd_io is not None and self.obd_io.is_connected():
             self.logger.info("OBD is already connected")
         else:

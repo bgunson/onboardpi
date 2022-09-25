@@ -23,6 +23,7 @@ class Watch():
         The watch loop continuosly emits the latest watched command responses to clients in the watch room every quarter second and is 
         started as a socketio background task.
         """
+        self.loop_running = True
         while self.config.obd_io.is_connected():
             await socket.emit("watching", self.watching, room="watch")
             await socket.sleep(self.config.delay)

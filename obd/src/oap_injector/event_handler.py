@@ -63,6 +63,7 @@ class EventHandler(threading.Thread):
         # The OAP API pings us every once in a while so we use this as a sort of heartbeat/wellness check for the OBD connection.
         # Handles the case if ignition is shut off but ACC left on (like you are parked but not idling), OBD will have disconnected. 
         # Then you start engine again (ignition ot on position) so ECU will respond and OBD can be reconnected. See @sio.event for 'is_connected' in self.run()
+        logger.debug("OAP server pinged us.")
         self._sio.emit('is_connected')
 
     def on_register_status_icon_response(self, client, message):
