@@ -29,10 +29,7 @@ class EventHandler(threading.Thread):
         self._client = client
         self.injector = injector
         self._notification_channel_id = None
-
         self._sio = socketio.Client()
-        self._first_connect = threading.Event()
-        self._first_connect.set()
 
     def on_hello_response(self, client, message):
         logger.debug("Received hello response, result: {}, oap version: {}.{}, api version: {}.{}"
@@ -58,6 +55,8 @@ class EventHandler(threading.Thread):
         msg = QueuedMessage(1, Message(oap_api.MESSAGE_REGISTER_STATUS_ICON_REQUEST,
                             0, register_status_icon_request.SerializeToString()))
         client.message_queue.put(msg)
+        
+        self._sio.emit('is_connected')
 
     def on_ping(self, client):
         # The OAP API pings us every once in a while so we use this as a sort of heartbeat/wellness check for the OBD connection.
@@ -163,17 +162,11 @@ class EventHandler(threading.Thread):
 
         @sio.event
         def connect():
-            logger.info("OAP notifications socket connected successfully")
-            sio.sleep(0.1)
-            # on connect join notifications room
-            if self._first_connect.is_set():
-                # the sio client can try initiate the obd connection to the car
-                sio.emit("connect_obd")
-                self._first_connect.clear()
+            logger.debug("OAP notifications socket connected successfully")
 
         @sio.event
         def disconnect():
-            logger.info("OAP notifications socket disconnected")
+            logger.debug("OAP notifications socket disconnected")
 
         @sio.event
         def is_connected(obd_connected):
