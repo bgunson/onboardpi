@@ -13,7 +13,7 @@
   "dependencies": {
     "compression": "^1.7.4",
     "express": "^4.17.1",
-    "knex": "^0.95.14",
+    "knex": "^2.4.0",
     "pg": "^8.7.3",
     "socket.io": "^4.5.3",
     "systeminformation": "^5.9.4"
