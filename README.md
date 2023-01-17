@@ -1,5 +1,6 @@
 # OnBoardPi
-![](_img/obpi_splash.png)
+![obpi_splash](https://user-images.githubusercontent.com/47361247/213033694-4e6ec2cd-6123-4ba3-a4c7-1a0a2107fa57.png)
+
 
 [Try the Demo](https://bengunson.me/onboardpi/)
 
@@ -45,7 +46,8 @@ Thanks to [MockuPhone](https://mockuphone.com/) for the device mock-ups.
 - Choose from any Mode 1 OBDII PID.
 - Reorder dashboard cards
 <div align="center">
-    <img src="_img/mocks/dashboard_dark_ios_iphone12miniblack_portrait.png" width="300"><img src="_img/mocks/dashboard_light_iphone12miniblack_portrait.png" width="300">
+    <img src="https://user-images.githubusercontent.com/47361247/213033908-ce58a6a5-569c-4edb-94c4-690b128e115c.png" width="300">
+    <img src="https://user-images.githubusercontent.com/47361247/213033940-019c5e2b-5810-424c-a49c-a8c4c0a26cff.png" width="300">
 </div>
 
 
@@ -55,7 +57,7 @@ Thanks to [MockuPhone](https://mockuphone.com/) for the device mock-ups.
 - View current status and fuel status, if supported.
 
 <div align="center">
-    <img src="_img/mocks/diagnostics_dark_ios_iphone12miniblack_portrait.png" width="300">
+    <img src="https://user-images.githubusercontent.com/47361247/213033717-279aa83f-35b7-416f-be6c-8f178c8f8eef.png" width="300">
 </div>
 
 *Clearing codes not supported yet*
@@ -65,22 +67,22 @@ Thanks to [MockuPhone](https://mockuphone.com/) for the device mock-ups.
 - View realtime system parameters including CPU, RAM and disk usage.
 
 <div align="center">
-    <img src="_img/mocks/vehicle_stream_dark_ios_iphone12miniblack_portrait.png" width="300"><img src="_img/mocks/sys_stream_dark_ios_iphone12miniblack_portrait.png" width="300">
+    <img src="https://user-images.githubusercontent.com/47361247/213033990-7274d23e-3f9e-4da6-80ca-8e5d8b7e6e6f.png" width="300">
+    <img src="https://user-images.githubusercontent.com/47361247/213034043-e5b31fc0-9822-4183-8e4b-4c19b9be182b.png" width="300">
 </div>
 
 ### Realtime Curves
 - Fullscreen real time depiction of any supported OBDII commands
 
 <div align="center">
-    <img src="_img/mocks/curves_dark_ios_iphone12miniblack_portrait.png" width="300"><img src="_img/mocks/curves_light_ios_iphone12miniblack_portrait.png" width="300">
-
+    <img src="https://user-images.githubusercontent.com/47361247/213034099-d462d8aa-3620-4aee-849f-c639385de4ba.png" width="300">
+    <img src="https://user-images.githubusercontent.com/47361247/213034105-7e480c2b-ad2d-4b3f-96e3-c4496e48d0a1.png" width="300">
 </div>
 
 ### Maintenance
 - Store your vehicle maintenance in a convenient table (stored in a database on the Raspberry Pi)
 
-<img src="_img/screenshots/maintenance_light.png">
-
+<img src="https://user-images.githubusercontent.com/47361247/213034191-eaf2bb7c-0689-4dbd-89ef-a484eeda91e2.png">
 
 ## Roadmap
 - Datalogging using [TimescaleDB](https://www.timescale.com/)
