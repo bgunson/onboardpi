@@ -24,7 +24,7 @@
     "date-fns": "^2.26.0",
     "material-icons": "^1.2.1",
     "ngx-gauge": "^4.0.0",
-    "ngx-graph": "^0.9.0",
+    "ngx-graph": "^0.9.1",
     "ngx-socket-io": "^4.1.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
