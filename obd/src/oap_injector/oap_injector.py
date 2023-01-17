@@ -40,6 +40,8 @@ class OAPInjector(Injector):
         self._enabled = threading.Event()
         self._enabled.set()
 
+        self.__last_values = dict()
+
         self.event_handler = EventHandler(self._client, self)
         self._client.set_event_handler(self.event_handler)
         threading.Thread(target=self.__init_connection, daemon=True).start()
@@ -158,15 +160,17 @@ class OAPInjector(Injector):
             self.__oap_inject.formula = "getPidValue({})".format(cmd_index)
             # may raise a KeyError
             self.__oap_inject.value = obd_response.value.magnitude
-            self.logger.debug("Injecting value: {} to PID: {} ({})".format(
-                self.__oap_inject.value, obd_response.command.name, cmd_index))
 
-            msg = QueuedMessage(1, Message(
-                MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE, 0, self.__oap_inject.SerializeToString()))
-            self._client.message_queue.put(msg)
+            if self.__last_values[obd_response.command.name] != obd_response.value.magnitude:
+                # only queue inject msg if value has changed
+                self.logger.debug("Injecting value: {} to PID: {} ({})".format(self.__oap_inject.value, obd_response.command.name, cmd_index))
 
-            # self._client.send(MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE,
-            #                   0, self.__oap_inject.SerializeToString())
+                msg = QueuedMessage(1, Message(MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE, 0, self.__oap_inject.SerializeToString()))
+
+                self._client.message_queue.put(msg)
+
+                self.__last_values[obd_response.command.name] = obd_response.value.magnitude
+
         except ValueError:
             # This OBD response is for a command not needed by OAP. i.e. the obd_response.command is not contained in self.__commands
             pass
@@ -232,6 +236,7 @@ class OAPInjector(Injector):
 
             if cmd is not None and hasattr(cmd, 'name'):
                 self.__commands.append(cmd.name)
+                self.__last_values[cmd.name] = None
             else:
                 self.logger.warning(
                     "OAP injector could not determine a valid OBD command for ObdPid_{} with query: {}".format(i, query))
