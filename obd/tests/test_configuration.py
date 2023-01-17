@@ -28,7 +28,6 @@ def test_get_injectors():
     injectors = config.get_injectors()
     for _, i in injectors.items():
         # make sure each injector is properly implement Injector
-        assert hasattr(i, "enabled")
         assert hasattr(i, "start")
         assert hasattr(i, "stop")
         assert hasattr(i, "get_commands")

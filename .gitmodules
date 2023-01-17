@@ -1,3 +1,0 @@
-[submodule "obd/obd-socketio"]
-	path = obd/obd-socketio
-	url = git@github.com:bgunson/obd-socketio.git

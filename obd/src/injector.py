@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod, abstractproperty
 
 class Injector(ABC):
     """
@@ -12,17 +12,22 @@ class Injector(ABC):
     - Can even add support for more protocols down the road  
     """
 
-    """ Whether or not an injector can start, default to true on creation """
-    enabled: bool
-
     @abstractmethod
-    def start(self, connect_callback):
-        """ Start the data injection """
+    def start(self):
+        """ Enable the data injection """
         pass
     
     @abstractmethod
     def stop(self):
-        """ Stop the data injection """
+        """ Disable an already running injector """
+        pass
+
+    @abstractmethod
+    def is_enabled(self):
+        pass
+
+    @abstractmethod
+    def is_active(self):
         pass
 
     @abstractmethod
