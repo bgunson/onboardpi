@@ -78,6 +78,7 @@ class API:
                 injector = self.config.get_injectors()[injector_type]
                 # This injector is already registered with configuration so start it up again
                 injector.start()
+                self.config.handle_injector_event('watch', injector)
             else:
                 injector = self.config.register_injector(injector_type)
 

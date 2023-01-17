@@ -56,7 +56,7 @@ class EventHandler(threading.Thread):
                             0, register_status_icon_request.SerializeToString()))
         client.message_queue.put(msg)
         
-        self._sio.emit('is_connected')
+        #self._sio.emit('is_connected')
 
     def on_ping(self, client):
         # The OAP API pings us every once in a while so we use this as a sort of heartbeat/wellness check for the OBD connection.
@@ -162,6 +162,7 @@ class EventHandler(threading.Thread):
 
         @sio.event
         def connect():
+            sio.emit("is_connected")
             logger.debug("OAP notifications socket connected successfully")
 
         @sio.event
