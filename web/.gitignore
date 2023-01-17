@@ -2,7 +2,7 @@ dev
 data/dev.db
 
 # compiled output
-# /public
+/public
 /dist
 /tmp
 /out-tsc
