@@ -30,6 +30,7 @@ class OAPInjector(Injector):
             "======================================================")
         self.logger.info("Initializing an OpenAuto Pro injector.")
 
+        self.__last_values = dict()
         self.__init_cmds()
         self._oap_api_port = self.__parse_oap_api_port()
         self.__oap_inject = ObdInjectGaugeFormulaValue()
@@ -39,8 +40,6 @@ class OAPInjector(Injector):
 
         self._enabled = threading.Event()
         self._enabled.set()
-
-        self.__last_values = dict()
 
         self.event_handler = EventHandler(self._client, self)
         self._client.set_event_handler(self.event_handler)
