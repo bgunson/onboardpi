@@ -83,7 +83,7 @@ export class RealtimeCurvesComponent implements OnInit, OnDestroy {
 
     this.commands$ = this.obd.usersCommands().then(cmds => cmds[1].map(c => c.name).sort());
 
-    this.curvePid = localStorage.getItem('curvePid') || "ENGINE_RPM";
+    this.curvePid = localStorage.getItem('curvePid') || "RPM";
     this.setCurvePid();
   }
 
