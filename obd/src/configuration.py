@@ -117,7 +117,7 @@ class Configuration:
     def handle_injector_event(self, event, injector):
         self.obd_io.stop()
         for cmd in injector.get_commands():
-            if cmd is not None:
+            if cmd is not None and obd.commands.has_name(cmd):
                 if event == 'connected' or event == 'watch':
                     self.obd_io.watch(obd.commands[cmd], callback=injector.inject)
                 elif event == 'disconnected' or event == 'stop' or event == 'unwatch':

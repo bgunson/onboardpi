@@ -39,9 +39,10 @@ class API:
             # Stop obd-async worker, unwatch each cmd, then restart the obd-async worker
             self.config.obd_io.stop()
             for cmd in commands:
-                self.config.obd_io.unwatch(obd.commands[cmd], callback=self.watch.cache)
-                if cmd in self.watch.watching:
-                    self.watch.watching.pop(cmd)
+                if obd.commands.has_name(cmd):
+                    self.config.obd_io.unwatch(obd.commands[cmd], callback=self.watch.cache)
+                    if cmd in self.watch.watching:
+                        self.watch.watching.pop(cmd)
 
             self.config.obd_io.start()
             # This is to tell every other clients that someone else has unwatched these commands
@@ -52,8 +53,8 @@ class API:
         async def watch(sid, commands):
             self.config.obd_io.stop()
             for cmd in commands:
-                self.config.obd_io.watch(
-                    obd.commands[cmd], callback=self.watch.cache)
+                if obd.commands.has_name(cmd):
+                    self.config.obd_io.watch(obd.commands[cmd], callback=self.watch.cache)
             self.config.obd_io.start()
 
             if not self.watch.loop_running:
@@ -122,7 +123,10 @@ class API:
 
         @sio.event
         async def supports(sid, cmd):
-            await sio.emit('supports', self.config.obd_io.supports(obd.commands[cmd]), room=sid)
+            if obd.commands.has_name(cmd):
+                await sio.emit('supports', self.config.obd_io.supports(obd.commands[cmd]), room=sid)
+            else:
+                await sio.emit('suuports', False, room=sid)
 
         @sio.event
         async def protocol_id(sid):
@@ -138,7 +142,10 @@ class API:
 
         @sio.event
         async def query(sid, cmd):
-            await sio.emit('query', self.config.obd_io.query(obd.commands[cmd]), room=sid)
+            if obd.commands.has_name(cmd):
+                await sio.emit('query', self.config.obd_io.query(obd.commands[cmd]), room=sid)
+            else:
+                await sio.emit('query', None, room=sid)
 
         @sio.event
         async def unwatch_all(sid):
@@ -187,7 +194,10 @@ class API:
 
         @sio.event
         async def get_command(sid, cmd):
-            await sio.emit('get_command', obd.commands[cmd], room=sid)
+            if obd.commands.has_name(cmd):
+                await sio.emit('get_command', obd.commands[cmd], room=sid)
+            else:
+                await sio.emit('get_command', None, room=sid)
 
         @sio.event
         async def connect_obd(sid):

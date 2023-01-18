@@ -19,8 +19,7 @@ static_files = {
 def on_startup():
     print("========== OnBoardPi OBD Server Startup - {} ===========".format(
         datetime.now().strftime("%m/%d/%Y, %H:%M:%S")))
-    api = API(sio)
-    api.mount()
+    API(sio).mount()
 
 
 def on_shutdown():

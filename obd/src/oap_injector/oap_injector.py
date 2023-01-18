@@ -220,11 +220,7 @@ class OAPInjector(Injector):
                 mode = int(query[:2])
                 pid = int(query[2:], 16)    # pid in decimal
 
-                if mode < 0 or mode > 9:
-                    # This pid is not part of a valid mode
-                    raise ValueError
-                if pid > len(obd.commands[mode]):
-                    # This pid is not contained in the mode
+                if not obd.commands.has_pid(mode, pid):
                     raise ValueError
 
                 cmd = obd.commands[mode][pid]
