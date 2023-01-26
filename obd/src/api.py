@@ -126,7 +126,7 @@ class API:
             if obd.commands.has_name(cmd):
                 await sio.emit('supports', self.config.obd_io.supports(obd.commands[cmd]), room=sid)
             else:
-                await sio.emit('suuports', False, room=sid)
+                await sio.emit('suports', False, room=sid)
 
         @sio.event
         async def protocol_id(sid):
