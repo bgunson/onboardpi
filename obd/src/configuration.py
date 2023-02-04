@@ -2,11 +2,10 @@ import os
 import logging
 import json
 import obd
-import time
+import obdio
+import socketio
 from .oap_injector import OAPInjector
 
-SETTINGS_PATH = os.path.join(os.environ.get(
-    "SETTINGS_DIR", os.getcwd()), "settings.json")
 
 injector_map = {
     'oap': OAPInjector
@@ -33,6 +32,7 @@ class Configuration:
         _ = self.connection_params()
         # create a temporary psuedo connection to some non-existent descriptor so the api endpoint can reference something for self.obd_io
         self.obd_io = obd.Async("TEMP")
+        self.sio = socketio.AsyncServer(cors_allowed_origins='*', json=obdio, async_mode='asgi')
 
         # register python-obd logger with onboardpi
         self.__register_logger(
@@ -179,7 +179,8 @@ class Configuration:
     def __read_settings(self):
         """ Try to open and parse the settings json file store it in memory """
         try:
-            with open(SETTINGS_PATH, mode='r') as settings_file:
+            settings_path = os.path.join(os.environ.get("SETTINGS_DIR", os.getcwd()), "settings.json")
+            with open(settings_path, mode='r') as settings_file:
                 self.__settings = json.load(settings_file)
         except FileNotFoundError:
             self.__settings = {}

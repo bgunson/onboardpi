@@ -1,6 +1,6 @@
 import { Injectable, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { Socket, SocketIoModule } from 'ngx-socket-io';
+import { SocketIoModule } from 'ngx-socket-io';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DashboardModule } from './dashboard/dashboard.module';
@@ -28,7 +28,8 @@ export class OBDSocket extends environment.obdSocket {
     super({ 
       url: `http://${window.location.hostname}:60000`,
       options: { 
-        transports: ['websocket'] 
+        transports: ['websocket'] ,
+        timeout: 30000
       }
     });
   }

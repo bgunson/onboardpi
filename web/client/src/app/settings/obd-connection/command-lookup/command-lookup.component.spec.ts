@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AppSocket, OBDSocket } from 'src/app/app.module';
 
 import { CommandLookupComponent } from './command-lookup.component';
 
@@ -8,7 +10,9 @@ describe('CommandLookupComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CommandLookupComponent ]
+      declarations: [ CommandLookupComponent ],
+      imports: [ MatSnackBarModule ],
+      providers: [ OBDSocket, AppSocket ]
     })
     .compileComponents();
   });

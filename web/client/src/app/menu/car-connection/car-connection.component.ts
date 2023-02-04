@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { AppSocket } from 'src/app/app.module';
 import { DisplayService } from 'src/app/shared/services/display.service';
@@ -13,16 +14,24 @@ export class CarConnectionComponent implements OnInit {
 
   obdStatus$: Observable<string>;
   obdConnected$: Observable<boolean>;
+  connecting: boolean = false;
   
   constructor(
     public obd: OBDService, 
-    private appSocket: AppSocket,
-    public display: DisplayService
+    public display: DisplayService,
+    private snackBar: MatSnackBar
   ) { }
 
   connectOBD() {
-    this.obd.connect();
-    this.obd.getConnection();
+    this.connecting = true;
+    this.obd.connect().then((connected: boolean) => {
+      if (!connected) {
+        this.snackBar.open("Unable to connect to the vehicle", "Dismiss", { verticalPosition: 'top', duration: 4000 })
+      } 
+      this.obd.getStatus();
+      this.obd.isConnected();
+      this.connecting = false;
+    });
   }
 
   disconnectOBD() {

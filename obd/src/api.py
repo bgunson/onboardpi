@@ -1,7 +1,6 @@
 import obd
 from .configuration import Configuration
 from .watch import Watch
-import threading
 
 
 class API:
@@ -126,7 +125,7 @@ class API:
             if obd.commands.has_name(cmd):
                 await sio.emit('supports', self.config.obd_io.supports(obd.commands[cmd]), room=sid)
             else:
-                await sio.emit('suuports', False, room=sid)
+                await sio.emit('suports', False, room=sid)
 
         @sio.event
         async def protocol_id(sid):
@@ -201,8 +200,8 @@ class API:
 
         @sio.event
         async def connect_obd(sid):
-            # await sio.start_background_task(self.config.connect_obd, sio)
-            self.config.connect_obd()
+            self.config.connect_obd()  
+            await sio.emit("connect_obd", self.config.obd_io.is_connected())
             await sio.emit("obd_connection_status", self.get_obd_connection_status(), room="notifications")
             if not self.watch.loop_running:
                 await sio.start_background_task(self.watch.emit_loop, sio)

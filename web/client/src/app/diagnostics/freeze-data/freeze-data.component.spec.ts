@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AppSocket, OBDSocket } from 'src/app/app.module';
 
 import { FreezeDataComponent } from './freeze-data.component';
 
@@ -8,7 +10,9 @@ describe('FreezeDataComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FreezeDataComponent ]
+      declarations: [ FreezeDataComponent ],
+      imports: [ MatSnackBarModule ],
+      providers: [ OBDSocket, AppSocket ]
     })
     .compileComponents();
   });

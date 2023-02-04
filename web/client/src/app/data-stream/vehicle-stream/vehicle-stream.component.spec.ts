@@ -1,14 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AppSocket, OBDSocket } from 'src/app/app.module';
 import { VehicleStreamComponent } from './vehicle-stream.component';
 
 
-describe('VehicleComponent', () => {
+describe('VehicleStreamComponent', () => {
   let component: VehicleStreamComponent;
   let fixture: ComponentFixture<VehicleStreamComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ VehicleStreamComponent ]
+      declarations: [ VehicleStreamComponent ],
+      providers: [ OBDSocket, AppSocket ],
+      imports: [ MatSnackBarModule ]
     })
     .compileComponents();
   });

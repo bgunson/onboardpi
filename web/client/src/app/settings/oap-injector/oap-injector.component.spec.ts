@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AppSocket, OBDSocket } from 'src/app/app.module';
 
 import { OapInjectorComponent } from './oap-injector.component';
 
@@ -8,7 +10,9 @@ describe('OapInjectorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OapInjectorComponent ]
+      declarations: [ OapInjectorComponent ],
+      imports: [ MatSnackBarModule ],
+      providers: [ AppSocket, OBDSocket ]
     })
     .compileComponents();
   });

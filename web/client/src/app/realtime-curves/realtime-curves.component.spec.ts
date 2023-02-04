@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AppSocket, OBDSocket } from '../app.module';
 
 import { RealtimeCurvesComponent } from './realtime-curves.component';
 
@@ -8,7 +10,9 @@ describe('RealtimeCurvesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RealtimeCurvesComponent ]
+      declarations: [ RealtimeCurvesComponent ],
+      imports: [ MatSnackBarModule ],
+      providers: [ OBDSocket, AppSocket ]
     })
     .compileComponents();
   });

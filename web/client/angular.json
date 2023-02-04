@@ -109,6 +109,16 @@
           }
         },
         "test": {
+          "configurations": {
+            "demo":{
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.demo.ts"
+                }
+              ]
+            }
+          },
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "src/test.ts",

@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
+import { AppSocket } from '../app.module';
 
 import { MaintenanceComponent } from './maintenance.component';
 
@@ -8,7 +10,9 @@ describe('MaintenanceComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MaintenanceComponent ]
+      declarations: [ MaintenanceComponent ],
+      imports: [ MatDialogModule ],
+      providers: [ AppSocket ]
     })
     .compileComponents();
   });

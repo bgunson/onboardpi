@@ -29,7 +29,6 @@ export class DiagnosticsComponent implements OnInit, OnDestroy {
 
   constructor(
     private obd: OBDService, 
-    private action: ActionService, 
     public display: DisplayService
   ) { }
 
