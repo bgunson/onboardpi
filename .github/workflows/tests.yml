@@ -6,7 +6,7 @@ on:
       - 'main'
 
 jobs: 
-  test obd:
+  test-obd:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -40,7 +40,7 @@ jobs:
           python obd/server.py & 
           cd web
           npm test
-  test web:
+  test-web:
     runs-on: ubuntu-latest
     steps:
     -
