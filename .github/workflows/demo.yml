@@ -1,11 +1,8 @@
-name: Web Client CI
+name: Demo
 
 on:
-  push:
-    branches:
-      - 'main'
-    tags:
-      - 'v*'
+  tags:
+    - 'v*'
 
 jobs: 
   deploy: 
@@ -14,16 +11,7 @@ jobs:
     -
       name: Checkout
       uses: actions/checkout@v2
-    - 
-      name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16.x'
-    - run: npm install
-      working-directory: ./web/client
-    - run: npm run test-ci
-      working-directory: ./web/client
-    - 
+    -
       name: Angular Deploy gh-pages Actions
       uses: AhsanAyaz/angular-deploy-gh-pages-actions@v1.3.2
       with:

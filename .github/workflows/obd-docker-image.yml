@@ -1,4 +1,4 @@
-name: OBD-Server Docker Image CI
+name: OBD Docker
 
 on:
   push:
