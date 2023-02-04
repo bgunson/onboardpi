@@ -35,4 +35,8 @@ jobs:
         run: npm install --only=dev
         working-directory: ./web
       -
-        run: python obd/server.py & (cd web && npm test)
+        run: |
+          export SETTINGS_DIR=./obd/tests/test_config
+          python obd/server.py & 
+          cd web
+          npm test
