@@ -1,8 +1,9 @@
 name: Demo
 
 on:
-  tags:
-    - 'v*'
+  push:
+    tags:
+      - 'v*'
 
 jobs: 
   deploy: 
