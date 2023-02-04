@@ -1,8 +1,9 @@
 name: test pytest
 
 on:
-  paths:
-    - 'obd/**'
+  push:
+    paths:
+      - 'obd/**'
 
 jobs: 
   test:
