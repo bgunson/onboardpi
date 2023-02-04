@@ -2,8 +2,9 @@ name: Tests
 
 on:
   push:
-    branches:
-      - 'main'
+    paths:
+      - 'obd/**'
+      - 'web/**'
 
 jobs: 
   test-obd:
