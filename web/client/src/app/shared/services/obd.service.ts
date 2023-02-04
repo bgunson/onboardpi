@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { share, takeWhile, timeout } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { share, shareReplay, takeWhile, timeout } from 'rxjs/operators';
 import { OBDSocket } from 'src/app/app.module';
 import { SettingsService } from 'src/app/settings/settings.service';
 import { OBDCommand, OBDResponse, Protocol, ResponseSet } from '../models/obd.model';
@@ -21,20 +21,19 @@ export class OBDService {
   /** Active set of watched commands by name */
   private _watchList: Set<string> = new Set<string>();
 
-  private _status$: BehaviorSubject<string> = new BehaviorSubject<string>("Not Connected");
-  private _isConnected$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _status$: Observable<string>;
+  private _isConnected$: Observable<boolean>;
 
-  connectingNow: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);    // TODO: maybe make this server side from appSocket event so other clients know if connecting
+  // connectingNow: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);    // TODO: maybe make this server side from appSocket event so other clients know if connecting
 
   constructor(
-    private socket: OBDSocket, 
-    private snackBar: MatSnackBar,
+    private socket: OBDSocket,
     private settingsService: SettingsService
   ) { 
     socket.on('unwatch', () => this.watch([...this._watchList]));
 
-    socket.fromEvent<string>('status').subscribe(v => this._status$.next(v));
-    socket.fromEvent<boolean>('is_connected').subscribe(v => this._isConnected$.next(v));
+    // socket.fromEvent<string>('status').subscribe(v => this._status$.next(v));
+    // socket.fromEvent<boolean>('is_connected').subscribe(v => this._isConnected$.next(v));
 
     socket.on('obd_closed', () => {
       this.isConnected();
@@ -47,8 +46,8 @@ export class OBDService {
     });
 
     socket.on('disconnect', () => {
-      this._isConnected$.next(false);
-      this._status$.next("Not Connected");
+      this._isConnected$ = of(false)
+      this._status$ = of('Not Connected');
     });
 
     socket.on('connect', () => {
@@ -57,42 +56,43 @@ export class OBDService {
     });
   }
 
-  getConnection(): void {
-    this.isConnected();
-    this.getStatus();
-    if (!this.connectingNow.getValue()) {
-      this.connectingNow.next(true);
-      this.getStatus();
-      this.isConnected()
-        .pipe(
-          takeWhile(v => v === false),
-          timeout(10000)
-        ).subscribe(
-          () => {},
-          () => {
-            this.connectingNow.next(false);
-            this.snackBar.open("Unable to connect to the vehicle", "Dismiss", { verticalPosition: 'top', duration: 4000 })
-          },
-          () => this.connectingNow.next(false)
-        );
-    }
+  async waitForConnection(): Promise<boolean> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const connected: boolean = await this.isConnected().pipe(takeWhile(v => v === false), timeout(5000)).toPromise();
+      } catch(err) {
+        const connectObd: boolean = confirm(`Looks like the vehicle is not connected. Would you like to try to connect now?\n${err}`);
+        if (connectObd) {
+          return this.connect().then((connected) => resolve(connected));
+        } else {
+          reject(false);
+        }
+      }
+    });
   }
 
-  connect(): void {
+  connect(): Promise<boolean> {
     this.socket.emit('connect_obd');
+    return this.socket.fromOneTimeEvent<boolean>('connect_obd');
   }
 
   disconnect(): void {
     this.socket.emit('close');
   }
 
-  getStatus(): BehaviorSubject<string> {
+  getStatus(): Observable<string> {
     this.socket.emit('status');
+    if (!this._status$) {
+      this._status$ = this.socket.fromEvent<string>('status').pipe(shareReplay());
+    }
     return this._status$;
   }
 
-  isConnected(): BehaviorSubject<boolean> {
+  isConnected(): Observable<boolean> {
     this.socket.emit('is_connected');
+    if (!this._isConnected$) {
+      this._isConnected$ = this.socket.fromEvent<boolean>('is_connected').pipe(shareReplay());
+    }
     return this._isConnected$;
   }
 

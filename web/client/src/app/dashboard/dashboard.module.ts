@@ -45,6 +45,6 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     MatSelectModule,
     MatProgressBarModule,
     RealtimeChartModule
-  ],
+  ]
 })
 export class DashboardModule { }

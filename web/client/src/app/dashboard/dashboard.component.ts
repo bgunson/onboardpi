@@ -8,6 +8,7 @@ import { DashboardService } from './dashboard.service';
 import { CdkDragDrop, CdkDragEnter, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
 import { CardFormComponent } from './components/card-form/card-form.component';
+import { take, takeWhile, timeout } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -105,11 +106,12 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   }
 
-
-  ngOnInit(): void {
+  async ngOnInit() {
     this.action.setAction('dashboard_customize');
     this.setDimensions();
     this.vehicleConnected$ = this.obd.isConnected();
+
+    // TODO: block wait for timeout or connection event then continue. See obd.service.waitForConnection() for potential implementation
 
     // Subscribe to sreen orientation
     this.subscriptions.add(this.display.isPortrait$.subscribe(() => this.setDimensions()));

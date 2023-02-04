@@ -2,8 +2,8 @@ name: Demo on Github Pages
 
 on:
   push:
-    # branches:
-    #   - 'main'
+    branches:
+      - 'main'
     tags:
       - 'v*'
 

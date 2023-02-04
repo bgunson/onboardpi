@@ -113,21 +113,4 @@ export class DemoAppSocket extends DemoSocket {
     return this._sysSnapshot$;
   }
 
-  // Start Socket class overrides
-
-  emit(event: string, ...args: any[]): void {
-    this.emits[event] ? this.emits[event](args) : null;
-
-  }
-
-  fromOneTimeEvent<T>(event: string): Promise<T> {
-    return this.oneTimeEvents[event];
-  }
-
-  fromEvent<T>(event: string): Observable<T> {
-    return this.fromEvents[event];
-  }
-
-  on(event: string, cb: Function): void { }
-
 }

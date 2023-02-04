@@ -21,8 +21,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(
     public display: DisplayService, 
     public action: ActionService,
-    private router: Router,
-    private settingsService: SettingsService
+    private router: Router
   ) { }
 
   get route() {

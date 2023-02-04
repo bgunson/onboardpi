@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AppSocket } from '../app.module';
 
 import { SettingsComponent } from './settings.component';
 
@@ -8,7 +9,8 @@ describe('SettingsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SettingsComponent ]
+      declarations: [ SettingsComponent ],
+      providers: [ AppSocket ]
     })
     .compileComponents();
   });

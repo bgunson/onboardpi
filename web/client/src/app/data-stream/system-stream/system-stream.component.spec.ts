@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AppSocket, OBDSocket } from 'src/app/app.module';
 import { SystemStreamComponent } from './system-stream.component';
 
 
@@ -8,7 +10,9 @@ describe('SystemStreamComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SystemStreamComponent ]
+      declarations: [ SystemStreamComponent ],
+      imports: [ MatSnackBarModule ],
+      providers: [ AppSocket, OBDSocket ]
     })
     .compileComponents();
   });

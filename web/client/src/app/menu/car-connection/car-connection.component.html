@@ -1,7 +1,7 @@
 <div style="padding: 10px; position: relative;">
     {{ obdStatus$ | async }}
     <div class="btn">
-        <ng-container *ngIf="obd.connectingNow | async; else btn">
+        <ng-container *ngIf="connecting; else btn">
             <mat-spinner style="top: 5px" [diameter]="25" [color]="display.palette"></mat-spinner>
         </ng-container>
         <ng-template #btn>
