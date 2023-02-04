@@ -22,6 +22,10 @@ jobs:
         name: Install Node Modules (client)
         run: npm install
         working-directory: ./web/client
+      -
+        name: Test client
+        run: npm run test-ci
+        working-directory: ./web/client
       - 
         name: Build Client
         run: npm run build
