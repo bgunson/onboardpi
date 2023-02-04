@@ -32,11 +32,11 @@ jobs:
         with:
           node-version: '16.x'
       - 
-        run: npm install --only=dev
+        run: npm install
         working-directory: ./web
       -
         run: |
-          export SETTINGS_DIR=./obd/tests/test_config
+          export SETTINGS_DIR=./obd/tests/test_configs
           python obd/server.py & 
           cd web
           npm test
