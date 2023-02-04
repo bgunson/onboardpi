@@ -4,7 +4,7 @@
   "description": "OnBoardPi web server",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --timeout 10000",
     "dev": "nodemon server.js --ignore ./client"
   },
   "keywords": [],
@@ -17,5 +17,10 @@
     "pg": "^8.7.3",
     "socket.io": "^4.5.3",
     "systeminformation": "^5.9.4"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "socket.io-client": "^4.5.4"
   }
 }

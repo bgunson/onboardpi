@@ -17,7 +17,7 @@
   },
   "injectors": {
     "oap": {
-      "enabled": true,
+      "enabled": false,
       "parameters": {},
       "log_level": "DEBUG"
     }

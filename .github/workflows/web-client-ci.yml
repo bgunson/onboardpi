@@ -22,7 +22,7 @@ jobs:
     - run: npm install
       working-directory: ./web/client
     - run: npm run test-ci
-      workng-directory: ./web/client
+      working-directory: ./web/client
     - 
       name: Angular Deploy gh-pages Actions
       uses: AhsanAyaz/angular-deploy-gh-pages-actions@v1.3.2
