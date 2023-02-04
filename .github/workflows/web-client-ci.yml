@@ -20,9 +20,9 @@ jobs:
       with:
         node-version: '16.x'
     - run: npm install
-      working_dir: ./web/client
+      working-directory: ./web/client
     - run: npm run test-ci
-      workng_dir: ./web/client
+      workng-directory: ./web/client
     - 
       name: Angular Deploy gh-pages Actions
       uses: AhsanAyaz/angular-deploy-gh-pages-actions@v1.3.2
