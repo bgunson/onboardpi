@@ -16,6 +16,6 @@ module.exports.configure = async function(callback) {
     } catch(e) {
         console.log("Unable to connect to the database")
         console.log(e);
-        process.exit();
+        process.exit(1);
     }
 }

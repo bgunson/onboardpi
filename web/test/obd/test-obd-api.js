@@ -76,7 +76,7 @@ describe("obd api", () => {
     });
 
     it('should unwatch all commands', (done) => {
-        socket.emit('unwatch_all', ['SPEED']);
+        socket.emit('unwatch_all');
         socket.once('watching', (watching) => {
             assert.notExists(watching['SPEED']);
             done();

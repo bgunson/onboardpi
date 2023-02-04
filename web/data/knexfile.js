@@ -39,7 +39,7 @@ module.exports = {
 
     test: {
         client: 'sqlite3',
-        connection: ':memory',
+        connection: `${__dirname}/test.db`,
         useNullAsDefault: true,
         seeds: {
             directory: `${__dirname}/seeds`
