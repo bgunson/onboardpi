@@ -1,10 +1,9 @@
 name: test pytest
 
 on:
-  push
-  # push:
-  #   paths:
-  #     - 'obd/**'
+  push:
+    paths:
+      - 'obd/**'
 
 jobs: 
   test:
@@ -35,6 +34,7 @@ jobs:
         run: npm install
         working-directory: ./web
       -
+        name: Test OBD API
         run: |
           export SETTINGS_DIR=./obd/tests/test_configs
           python obd/server.py & 
