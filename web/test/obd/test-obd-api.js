@@ -4,11 +4,12 @@ const assert = require("chai").assert;
 
 const port = 60000;
 
-describe("OBD API", () => {
+describe("obd api", () => {
 
     let socket;
 
     before((done) => {
+
         socket = new Client(`http://localhost:${port}`);
 
         socket.on("connect", () => {

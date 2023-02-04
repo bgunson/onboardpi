@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM node:14-alpine
+FROM node:16-alpine
 
 # Create app directory
 WORKDIR /usr/src/app

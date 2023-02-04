@@ -1,4 +1,4 @@
-const Controller = require(".");
+const Controller = require("./controller");
 
 class Sensor extends Controller {
 

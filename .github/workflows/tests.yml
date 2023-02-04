@@ -10,17 +10,22 @@ jobs:
   test-obd:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
+      - 
+        name: Checkout
+        uses: actions/checkout@v3
+      - 
+        name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.8'
-      - name: Install dependencies
+      - 
+        name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
         working-directory: ./obd
-      - name: Test with pytest
+      - 
+        name: Test obd with pytest
         run: |
           pip install pytest
           pip install pytest-cov
@@ -32,6 +37,7 @@ jobs:
         with:
           node-version: '16.x'
       - 
+        name: Install web dependencies 
         run: npm install
         working-directory: ./web
       -
@@ -40,7 +46,7 @@ jobs:
           export SETTINGS_DIR=./obd/tests/test_configs
           python obd/server.py & 
           cd web
-          npm test
+          npm run test-obd
   test-web:
     runs-on: ubuntu-latest
     steps:
@@ -52,7 +58,19 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '16.x'
-    - run: npm install
+    - 
+      name: Install client dependencies
+      run: npm install
       working-directory: ./web/client
-    - run: npm run test-ci
+    - 
+      name: Test client
+      run: npm run test-ci
       working-directory: ./web/client
+    -
+      name: Install web server dependencies
+      run: npm install
+      working-directory: ./web
+    - 
+      name: Test web server
+      run: npm test
+      working-directory: ./web
