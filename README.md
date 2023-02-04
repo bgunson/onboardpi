@@ -1,9 +1,9 @@
 # OnBoardPi
-[![Tests](https://github.com/bgunson/onboardpi/actions/workflows/tests.yml/badge.svg)](https://github.com/bgunson/onboardpi/actions/workflows/tests.yml)
-[![Demo](https://github.com/bgunson/onboardpi/actions/workflows/demo.yml/badge.svg)](https://github.com/bgunson/onboardpi/actions/workflows/demo.yml)
+[![tests](https://github.com/bgunson/onboardpi/actions/workflows/tests.yml/badge.svg)](https://github.com/bgunson/onboardpi/actions/workflows/tests.yml)
+[![build](https://github.com/bgunson/onboardpi/actions/workflows/build.yml/badge.svg)](https://github.com/bgunson/onboardpi/actions/workflows/build.yml)
+[![demo](https://github.com/bgunson/onboardpi/actions/workflows/demo.yml/badge.svg)](https://github.com/bgunson/onboardpi/actions/workflows/demo.yml)
 [![pages-build-deployment](https://github.com/bgunson/onboardpi/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/bgunson/onboardpi/actions/workflows/pages/pages-build-deployment)
-[![OBD Docker](https://github.com/bgunson/onboardpi/actions/workflows/obd-docker-image.yml/badge.svg)](https://github.com/bgunson/onboardpi/actions/workflows/obd-docker-image.yml)
-[![Web Docker](https://github.com/bgunson/onboardpi/actions/workflows/web-docker-image.yml/badge.svg)](https://github.com/bgunson/onboardpi/actions/workflows/web-docker-image.yml)
+
 
 ![obpi_splash](https://user-images.githubusercontent.com/47361247/213033694-4e6ec2cd-6123-4ba3-a4c7-1a0a2107fa57.png)
 
