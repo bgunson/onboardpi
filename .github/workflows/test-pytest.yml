@@ -24,5 +24,15 @@ jobs:
         run: |
           pip install pytest
           pip install pytest-cov
-          python -m pytest
+          python -m pytest 
         working-directory: ./obd
+      - 
+        name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+      - 
+        run: npm install --only=dev
+        working-directory: ./web
+      -
+        run: python obd/server.py & (cd web && npm test)

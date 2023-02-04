@@ -1,7 +1,9 @@
 import obd
 from .configuration import Configuration
 from .watch import Watch
-
+import elm
+import threading
+import sys
 
 class API:
     """
@@ -10,6 +12,7 @@ class API:
     """
 
     def __init__(self, sio):
+        self.__emulator = None
         self.socket = sio
         self.config = Configuration()
         # self.obd_io = self.config.get_obd_io()
@@ -125,7 +128,7 @@ class API:
             if obd.commands.has_name(cmd):
                 await sio.emit('supports', self.config.obd_io.supports(obd.commands[cmd]), room=sid)
             else:
-                await sio.emit('suports', False, room=sid)
+                await sio.emit('supports', False, room=sid)
 
         @sio.event
         async def protocol_id(sid):
@@ -199,12 +202,31 @@ class API:
                 await sio.emit('get_command', None, room=sid)
 
         @sio.event
-        async def connect_obd(sid):
-            self.config.connect_obd()  
+        async def connect_obd(sid, portstr):
+            self.config.connect_obd(portstr)  
             await sio.emit("connect_obd", self.config.obd_io.is_connected())
             await sio.emit("obd_connection_status", self.get_obd_connection_status(), room="notifications")
             if not self.watch.loop_running:
                 await sio.start_background_task(self.watch.emit_loop, sio)
+
+
+        @sio.event
+        async def start_emulator(sid):
+            if self.__emulator is None:
+                self.__emulator = elm.Elm()
+                threading.Thread(target=self.__emulator.run, daemon=True).start()
+                await sio.emit('emulator_port', self.__emulator.get_pty())
+
+        @sio.event
+        async def stop_emulator(sid):
+            if not self.__emulator is None:
+                self.__emulator.terminate()
+                self.__emulator = None
+                await sio.emit('stop_emulator')
+            
+        @sio.event
+        async def kill(sid):
+            sys.exit(0)
 
         # endregion
 
