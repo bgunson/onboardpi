@@ -1,9 +1,11 @@
 name: Web Docker Image CI
 
 on:
+  workflow_run:
+    workflows: ["Test OBD"]
+    types:
+      - completed
   push:
-    # branches:
-    #   - 'main'
     tags:
       - 'v*'
 

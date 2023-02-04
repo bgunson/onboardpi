@@ -81,9 +81,5 @@ describe("OBD API", () => {
             done();
         });
     });
-
-    it('should fail', () => {
-        assert.equal(false, true);
-    });
-
+    
 });
