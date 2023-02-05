@@ -1,5 +1,5 @@
-import { BehaviorSubject, interval, Observable } from "rxjs";
-import { map, shareReplay, switchMap } from "rxjs/operators";
+import { BehaviorSubject, from, interval, Observable, of, ReplaySubject, Subject } from "rxjs";
+import { map, shareReplay, switchMap, tap } from "rxjs/operators";
 import { Sensor } from "src/app/dashboard/dashboard.model";
 import { SysInfo } from "src/app/data-stream/system-stream/system-stream.component";
 import { MaintenanceRecord } from "src/app/maintenance/maintenance.model";
@@ -7,16 +7,18 @@ import { environment } from "src/environments/environment";
 import { Settings } from "../../settings/settings.model";
 import { DemoSocket } from "./demo-socket";
 
+interface DemoType {
+  id?: number;
+}
 
 export class DemoAppSocket extends DemoSocket {
-
 
   private _sensors$: BehaviorSubject<Sensor[]> = new BehaviorSubject<Sensor[]>([]);
   private _maintenanceRecords$: BehaviorSubject<MaintenanceRecord[]> = new BehaviorSubject<MaintenanceRecord[]>([]);
 
-  private _crud: {[name: string]: BehaviorSubject<any[]>} = {
+  private _crud: {[name: string]: any} = {
     'sensor': this._sensors$,
-    'maintenance':this._maintenanceRecords$
+    'maintenance': this._maintenanceRecords$
   }
 
   private _sysSnapshot$: Observable<SysInfo>;
@@ -40,12 +42,14 @@ export class DemoAppSocket extends DemoSocket {
   );
 
   oneTimeEvents: { [event: string]: Promise<any> } = {
-    'settings:response': this.get<Settings>(environment.dataURL + '/app/settings.json').toPromise()
+    'settings:response': this.get<Settings>(environment.dataURL + '/app/settings.json').toPromise(),
+    'maintenance:response': this.read('maintenance').toPromise(),
+    'sensor:response': this.read('sensor').toPromise()
   }
 
   fromEvents: { [event: string]: Observable<any> } = {
-    'sensor:response': this.getList('sensor'),
-    'maintenance:response': this.getList('maintenance'),
+    'sensor:response': this.read('sensor'),
+    'maintenance:response': this.read('maintenance'),
     'sysInfo': this._sysInfo$
   }
   
@@ -53,14 +57,10 @@ export class DemoAppSocket extends DemoSocket {
     'sensor:update': (args: any[]) => this.update(args[0], 'sensor'),
     'sensor:create': (args: any[]) => this.create(args[0], 'sensor'),
     'sensor:delete': (args: any[]) => this.delete(args[0], 'sensor'),
-    'sensor:reorder': (args: any[]) => {
-      this._crud['sensor'].next((args[0])); 
-      localStorage.setItem('sensor', JSON.stringify(this._crud['sensor'].getValue())) 
-    },
+    'sensor:reorder': (args: any[]) => this.change(args[0], 'sensor'),
     'maintenance:update': (args: any[]) => this.update(args[0], 'maintenance'),
     'maintenance:create': (args: any[]) => this.create(args[0], 'maintenance'),
     'maintenance:delete': (args: any[]) => this.delete(args[0], 'maintenance')
-
   }
   
   constructor(args: any) {
@@ -68,42 +68,47 @@ export class DemoAppSocket extends DemoSocket {
     console.log("Demo App socket created.")
   }
 
-
-  create(item: MaintenanceRecord | Sensor, crudList: string) {
-    let list: BehaviorSubject<any[]> = this._crud[crudList];
-    list.getValue().push(item);
-    list.next(list.getValue());
-    localStorage.setItem(crudList, JSON.stringify(list.getValue()));
+  private change(value: DemoType[], crudList: string) {
+    value = value.map((e, i) => ({...e, id: i+1}));
+    sessionStorage.setItem(crudList, JSON.stringify(value));
+    this._crud[crudList].next(value);
   }
 
-  update(update: MaintenanceRecord | Sensor, crudList: string) {
-    let list: BehaviorSubject<any[]> = this._crud[crudList];
-    const updated = list.getValue().map(element => {
+
+  create(item: DemoType, crudList: string) {
+    const list = this._crud[crudList].getValue()
+    list.push(item);
+    this.change(list, crudList);
+  }
+
+  update(update: DemoType, crudList: string) {
+    let list: DemoType[] = this._crud[crudList].getValue();
+    const updated = list.map(element => {
       if (element.id === update.id) {
         return update;
       }
       return element;
     });
-    list.next(updated);
-    localStorage.setItem(crudList, JSON.stringify(list.getValue()));
+    this.change(updated, crudList);
   }
 
-  delete(item: MaintenanceRecord | Sensor, crudList: string) {
-    let list: BehaviorSubject<any[]> = this._crud[crudList];
-    list.next(list.getValue().filter(val => val.id !== item.id));
-    localStorage.setItem(crudList, JSON.stringify(list.getValue()));
+  delete(item: DemoType, crudList: string) {
+    let list: DemoType[] = this._crud[crudList].getValue();
+    list = list.filter(v => v.id != item.id);
+    this.change(list, crudList);
   }
 
-  getList(crudList: string) {
-    if (this._crud[crudList].getValue().length === 0) {
-      let localList = localStorage.getItem(crudList);
-      if (localList) {
-        this._crud[crudList].next(JSON.parse(localList));
-      } else {
-        this.get<Sensor[]>(`${environment.dataURL}/app/${crudList}.json`).subscribe(res => this._crud[crudList].next(res));
-      }
+  read(crudList: string): Observable<any> {
+    let localList = sessionStorage.getItem(crudList);
+    if (localList) {
+      this._crud[crudList].next(JSON.parse(localList));
+      return this._crud[crudList].asObservable();
+
+    } else {    
+      return this.get<any[]>(`${environment.dataURL}/app/${crudList}.json`).pipe(tap(res => {
+        this.change(res, crudList);
+      }));
     }
-    return this._crud[crudList].asObservable();
   }
 
   getSysSnapshot() {
