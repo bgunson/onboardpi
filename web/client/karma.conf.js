@@ -38,7 +38,7 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: [
-      // 'ChromeHeadless' 
+      'ChromeHeadless' 
     ],
     singleRun: false,
     restartOnFileChange: true
