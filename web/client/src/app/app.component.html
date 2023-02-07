@@ -11,11 +11,7 @@
             <mat-icon aria-label="Side nav toggle icon">chevron_left</mat-icon>
         </button>
 
-        <mat-icon *ngIf="display.showDemo">
-            directions_car
-        </mat-icon>
-
-        <!-- <img *ngIf="display.showDemo" height="32" src="/assets/touch-icon.png" /> -->
+        <mat-icon *ngIf="display.showDemo">directions_car</mat-icon>
 
         <span style="flex: 1 1 auto"></span>
         <!-- <button
@@ -33,10 +29,34 @@
     </mat-toolbar>
 
     <mat-sidenav-container class="sidenav-container" [ngClass]="{ 'portrait-container': (display.isPortrait$ | async) }">
-        <mat-sidenav #drawer
-            *ngIf="!display.showDemo"
+        <mat-sidenav #lhdSidenav
+            *ngIf="!display.showDemo && display.getSidenavPosition() == 'start'"
             autosize 
-            [position]="display.getSidenavPosition() || 'start'"
+            position="start"
+            color="primary" 
+            class="sidenav" 
+            [attr.role]="(display.isHandset$ | async) ? 'dialog' : 'navigation'"
+            mode="side"
+            [opened]="!(display.isPortrait$ | async)">
+
+            <mat-nav-list style="overflow-x: hidden;">
+                <mat-list-item (click)="back()" *ngIf="route">
+                    <mat-icon mat-list-icon style="color: white">chevron_left</mat-icon>
+                </mat-list-item>
+                <!-- <mat-list-item (click)="refresh()" *ngIf="!(display.isHandset$ | async)">
+                    <mat-icon mat-list-icon style="color: white">refresh</mat-icon>
+                </mat-list-item> -->
+                <mat-list-item [ngClass]="{ 'bottom' : (display.isHandset$ | async) }" *ngIf="action.icon | async as icon" (click)="action.click()">
+                    <mat-icon mat-list-icon style="color: white">{{ icon }}</mat-icon>
+                </mat-list-item>
+            </mat-nav-list>
+
+        </mat-sidenav>
+
+        <mat-sidenav #rhdSidenav
+            *ngIf="!display.showDemo && display.getSidenavPosition() == 'end'"
+            autosize 
+            position="end"
             color="primary" 
             class="sidenav" 
             [attr.role]="(display.isHandset$ | async) ? 'dialog' : 'navigation'"
@@ -60,7 +80,7 @@
         
         <mat-sidenav-content class="content" [ngClass]="{ 'portrait-content': (display.isPortrait$ | async) }">
             <router-outlet></router-outlet>
-            <div style="height: 60px;"></div>
+            <div style="height: 56px;"></div>
         </mat-sidenav-content>
 
     </mat-sidenav-container>
