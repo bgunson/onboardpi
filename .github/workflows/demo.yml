@@ -2,8 +2,8 @@ name: demo
 
 on:
   push:
-    tags:
-      - 'v*'
+#     tags:
+#       - 'v*'
     paths:
       - 'web/client/**'
 
