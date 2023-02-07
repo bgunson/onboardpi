@@ -1,6 +1,6 @@
 const Controller = require('../controllers/controller');
 const assert = require("chai").assert;
-const db = require('../data/config');
+const dbConfig = require('../data/config');
 
 describe('db controller (maintenance)', () => {
 
@@ -14,7 +14,7 @@ describe('db controller (maintenance)', () => {
     };
 
     before((done) => {
-        db.configure(k => {
+        dbConfig.configure(k => {
             knex = k;
             testController = new Controller('maintenance', knex);
             done();
@@ -23,7 +23,7 @@ describe('db controller (maintenance)', () => {
 
     after(async () => {
         await knex.migrate.rollback();
-        await knex.destroy();
+        await dbConfig.cleanup();
     }); 
 
     it('should create a record', (done) => {

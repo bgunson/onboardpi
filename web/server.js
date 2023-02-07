@@ -36,7 +36,7 @@ database.configure(knex => {
     socketAPIs.sysInfo = new SysInfo(io);
 
     app.set('API', socketAPIs);
-    app.use(require('./routes'));
+    // app.use(require('./routes'));
 
     io.on("connection", (socket) => {
         console.log(`Client connected from ${socket.handshake.address}`);

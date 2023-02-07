@@ -11,7 +11,11 @@
             <mat-icon aria-label="Side nav toggle icon">chevron_left</mat-icon>
         </button>
 
-        <img *ngIf="display.showDemo" height="32" src="/assets/touch-icon.png" />
+        <mat-icon *ngIf="display.showDemo">
+            directions_car
+        </mat-icon>
+
+        <!-- <img *ngIf="display.showDemo" height="32" src="/assets/touch-icon.png" /> -->
 
         <span style="flex: 1 1 auto"></span>
         <!-- <button

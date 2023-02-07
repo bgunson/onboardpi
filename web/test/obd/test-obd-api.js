@@ -2,11 +2,14 @@
 const Client = require("socket.io-client");
 const assert = require("chai").assert;
 
+const protocols = require('../../data/obd/all_protocols.json');
+const dtcs = require('../../data/obd/dtc.json');
+
 const port = 60000;
 
 describe("obd api", () => {
 
-    let socket;
+    let socket, emulatorPort;
 
     before((done) => {
 
@@ -15,7 +18,8 @@ describe("obd api", () => {
         socket.on("connect", () => {
             socket.emit('start_emulator');
             socket.once('emulator_port', (pty) => {
-                socket.emit('connect_obd', pty);
+                emulatorPort = pty;
+                // socket.emit('connect_obd', pty);
                 done();
             })
         });
@@ -34,7 +38,23 @@ describe("obd api", () => {
         assert.equal(socket.connected, true);
     });
 
-    it('should connect to the emulator', (done) => {
+    it('should *connect_obd*', (done) => {
+        socket.emit('connect_obd', emulatorPort);
+        socket.once('connect_obd', (connected) => {
+            assert.isTrue(connected);
+            done();
+        });
+    });
+
+    it('should be connected on second attempt to *connect_obd*', (done) => {
+        socket.emit('connect_obd');
+        socket.once('connect_obd', (connected) => {
+            assert.isTrue(connected);
+            done();
+        });
+    });
+
+    it('should return true for *is_connected* to the emulator', (done) => {
         socket.emit('is_connected');
         socket.once('is_connected', (connected) => {
             assert.equal(connected, true);
@@ -42,7 +62,7 @@ describe("obd api", () => {
         });
     });
 
-    it('should support "RPM" command', (done) => {
+    it('should *supports* "RPM" command', (done) => {
         socket.emit('supports', 'RPM');
         socket.once('supports', (supports) => {
             assert.equal(supports, true);
@@ -50,15 +70,15 @@ describe("obd api", () => {
         });
     });
 
-    it('should not support bad command', (done) => {
+    it('should not *supports* bad command', (done) => {
         socket.emit('supports', 'fake');
         socket.once('supports', (supports) => {
             assert.equal(supports, false);
             done();
-        });    
+        });
     });
 
-    it('should watch "RPM" command', (done) =>{
+    it('should *watch* "RPM" command', (done) => {
         socket.emit("join_watch");
         socket.emit('watch', ['RPM']);
         socket.once('watching', (watching) => {
@@ -67,7 +87,7 @@ describe("obd api", () => {
         });
     });
 
-    it('should unwatch "RPM" command', (done) => {
+    it('should *unwatch* "RPM" command', (done) => {
         socket.emit('unwatch', ['RPM', 'SPEED']);
         socket.once('watching', (watching) => {
             assert.notExists(watching['RPM']);
@@ -75,12 +95,74 @@ describe("obd api", () => {
         })
     });
 
-    it('should unwatch all commands', (done) => {
+    it('should *unwatch_all* commands', (done) => {
         socket.emit('unwatch_all');
         socket.once('watching', (watching) => {
             assert.notExists(watching['SPEED']);
             done();
         });
     });
-    
+
+    it('should get the *port_name*', (done) => {
+        socket.emit('port_name');
+        socket.once('port_name', (pty) => {
+            assert.equal(emulatorPort, pty);
+            done();
+        });
+    });
+
+    it('should return correct *protocol_id* and *protocol_name*', (done) => {
+        socket.emit('protocol_id');
+        socket.once('protocol_id', (id) => {
+            socket.emit('protocol_name');
+            socket.once('protocol_name', (name) => {
+                assert.equal(name, protocols.find(p => p.id === id).name);
+                done();
+            });
+        });
+    });
+
+    it('should return *all_protocols*', (done) => {
+        socket.emit('all_protocols');
+        socket.once('all_protocols', (all) => {
+            assert.deepEqual(protocols, all);
+            done();
+        });
+    });
+
+    it('should return *all_dtcs*', (done) => {
+        socket.emit('all_dtcs');
+        socket.once('all_dtcs', (all) => {
+            assert.deepEqual(dtcs, all);
+            done();
+        });
+    });
+
+    it('should return true for *has_name*', (done) => {
+        socket.emit('has_name', 'RPM');
+        socket.once('has_name', (has) => {
+            assert.isTrue(has);
+            done();
+        });
+    });
+
+    it('should return false for *has_name*', (done) => {
+        socket.emit('has_name', 'bad');
+        socket.once('has_name', (has) => {
+            assert.isFalse(has);
+            done();
+        });
+    });
+
+
+
+    it('should *close* the obd connection', (done) => {
+        socket.emit('close');
+        socket.emit('is_connected');
+        socket.once('is_connected', (connected) => {
+            assert.isFalse(connected);
+            done();
+        });
+    });
+
 });
