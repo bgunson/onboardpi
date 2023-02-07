@@ -4,8 +4,6 @@ import { CommonModule } from '@angular/common';
 import { DemoRoutingModule } from './demo-routing.module';
 import { DemoComponent } from './demo.component';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 @NgModule({
@@ -15,9 +13,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   imports: [
     CommonModule,
     DemoRoutingModule,
-    MatButtonModule,
-    MatIconModule,
-    MatToolbarModule
+    MatButtonModule
   ]
 })
 export class DemoModule { }

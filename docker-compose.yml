@@ -10,7 +10,7 @@ services:
       - /var/lib/onboardpi/data:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro
   web:
-    image: bgunson/onboardpi-web
+    image: bgunson/onboardpi-web:0.4.1-beta
     restart: always
     ports: 
       - 80:8080
@@ -25,7 +25,7 @@ services:
     depends_on:
       - db
   obd:
-    image: bgunson/onboardpi-obd
+    image: bgunson/onboardpi-obd:0.4.1-beta
     restart: always
     privileged: true    # container needs to read/write to serial obd port
     ports: 
