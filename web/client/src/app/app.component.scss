@@ -21,8 +21,8 @@
     position: sticky;
     top: 0px;
     z-index: 1000;
-    padding-top: calc(env(safe-area-inset-top) + 10px);
-    padding-bottom: env(safe-area-inset-bottom);
+    padding-top: calc(max(env(safe-area-inset-top), 0));
+    padding-bottom:  calc(max(env(safe-area-inset-bottom), 0));
 }
 
   

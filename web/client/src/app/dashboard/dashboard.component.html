@@ -4,8 +4,8 @@
     [rowHeight]="dashboardService.rowHeight" >
     <mat-grid-tile #tile matCard *ngFor="let card of dashboard; trackBy:track; let i = index" [colspan]="getColspan(card)" [rowspan]="getRowspan(card)">
         <cdk-drop-list [cdkDropListConnectedTo]="drops" [cdkDropListData]="i" (cdkDropListDropped)="drop($event)">
-            <mat-card class="card" cdkDragPreviewContainer="parent" cdkDrag (cdkDragEntered)="entered($event)" [cdkDragData]="i">
-                <mat-icon class="drag-handle" (click)="edit(card)" cdkDragHandle>drag_indicator</mat-icon>
+            <mat-card (click)="edit(card)" class="card" cdkDragPreviewContainer="parent" cdkDrag [cdkDragStartDelay]="100" (cdkDragEntered)="entered($event)" [cdkDragData]="i">
+                <!-- <mat-icon class="drag-handle" cdkDragHandle>drag_indicator</mat-icon> -->
                 <dashboard-gauge 
                     *ngIf="isGauge(card)" 
                     [card]="card">

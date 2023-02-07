@@ -1,0 +1,69 @@
+#gradient {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 122vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url("data:image/svg+xml,%0A%3Csvg id='visual' viewBox='0 0 900 450' width='900' height='450' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1'%3E%3Cpath d='M0 183L25 183C50 183 100 183 150 187.8C200 192.7 250 202.3 300 217C350 231.7 400 251.3 450 248.8C500 246.3 550 221.7 600 213.8C650 206 700 215 750 230.8C800 246.7 850 269.3 875 280.7L900 292L900 0L875 0C850 0 800 0 750 0C700 0 650 0 600 0C550 0 500 0 450 0C400 0 350 0 300 0C250 0 200 0 150 0C100 0 50 0 25 0L0 0Z' fill='%23ffca28e6'%3E%3C/path%3E%3Cpath d='M0 176L25 181.3C50 186.7 100 197.3 150 187.2C200 177 250 146 300 140.5C350 135 400 155 450 157C500 159 550 143 600 138.5C650 134 700 141 750 139.3C800 137.7 850 127.3 875 122.2L900 117L900 0L875 0C850 0 800 0 750 0C700 0 650 0 600 0C550 0 500 0 450 0C400 0 350 0 300 0C250 0 200 0 150 0C100 0 50 0 25 0L0 0Z' fill='%236bad51'%3E%3C/path%3E%3Cpath d='M0 63L25 75.3C50 87.7 100 112.3 150 125.7C200 139 250 141 300 139.8C350 138.7 400 134.3 450 123.2C500 112 550 94 600 79.8C650 65.7 700 55.3 750 59.3C800 63.3 850 81.7 875 90.8L900 100L900 0L875 0C850 0 800 0 750 0C700 0 650 0 600 0C550 0 500 0 450 0C400 0 350 0 300 0C250 0 200 0 150 0C100 0 50 0 25 0L0 0Z' fill='%2300796b'%3E%3C/path%3E%3C/svg%3E");
+}
+
+#phone {
+    height: 120px;
+    position: absolute;
+    bottom: 50px;
+}
+
+#desktop {
+    width: 300px;
+}
+
+.demo-container {
+    padding: 4% 0%;
+    padding-top: 2.2rem;
+    // height: 100vh;
+    width: calc(100vw - 15px);
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.demo-row {
+    // margin: 5px;
+    gap: 5vw;
+    display: flex; 
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-wrap: wrap; 
+    text-align: center;
+}
+
+.demo-row div {
+    text-align: left;
+    max-width: 300px;
+    position: relative;
+}
+
+h1 {
+    font-size: 1.8rem;
+}
+
+h2 {
+    font-size: 1.6rem;
+}
+
+
+h3 {
+    font-size: 1.4rem;
+}
+
+p {
+    font-size: 1.2rem;
+    line-height: 1.6rem;
+}
