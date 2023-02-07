@@ -6,12 +6,7 @@ The OBD Server must be run from the project root:
 ```
 python obd/server.py
 ```
-(python 3 or greater)
-
-Be sure to init the submodules (obd-socketio)
-```
-git submodule update --init
-```
+(python 3.8 preferred - use a venv)
 
 For a desk test setup you can use [ELM-emulator](https://github.com/Ircama/ELM327-emulator).
 Open another terminal and run:
@@ -44,7 +39,7 @@ Example `settings.json` where protocol and baudrate are not required from my exp
 }
 ```
 The `settings.json` file should be located wherever `server.py` is ran from.
-If testing the web application alongside the OBD server, then it should be located in the project root (back on directory) and ran as `python obd/server.py`. If just testing the OBD server the settings in `./tests/test_configs/settings.json` can be used but you will need to configure the environment variable `SETTINGS_DIR` to point to that file. Otherwise copy the template from `../web/data/app/settings.json` into this directory. 
+If testing the web application alongside the OBD server, then it should be located in the project root (back on directory) and ran as `python obd/server.py`. If just testing the OBD server the settings in `./tests/test_configs/settings.json` can be used but you will need to configure the environment variable `SETTINGS_DIR` to point to that file. Otherwise copy the template from `../web/data/app/settings.json` into this directory or run the web server first who will create one if it doesn't exist already. 
 
 
 ## Testing
@@ -56,3 +51,15 @@ From this directory run:
 ```
 python -m pytest
 ```
+
+For testing the socketio handlers see `../web/README.md#Testing`.
+
+## Build
+See `Dockerfile`. 
+
+To test a staging env, from the project root:
+```
+docker compose -f docker-compose.staging.yml up -d
+```
+
+The web client will be served on port 80 in the staging environment.

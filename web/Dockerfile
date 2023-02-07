@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM node:14-alpine
+FROM node:16-alpine
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -9,9 +9,8 @@ COPY . .
 
 ENV NODE_ENV=production
 
-
 # If you are building your code for production
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 # RUN npm install sqlite3 --build-from-source
 
 

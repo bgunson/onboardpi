@@ -1,5 +1,6 @@
 dev
 data/dev.db
+data/test.db
 
 # compiled output
 /public

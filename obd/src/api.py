@@ -202,7 +202,7 @@ class API:
                 await sio.emit('get_command', None, room=sid)
 
         @sio.event
-        async def connect_obd(sid, portstr):
+        async def connect_obd(sid, portstr=None):
             self.config.connect_obd(portstr)  
             await sio.emit("connect_obd", self.config.obd_io.is_connected())
             await sio.emit("obd_connection_status", self.get_obd_connection_status(), room="notifications")

@@ -7,10 +7,10 @@ const port = process.env.PORT || 8080;
 const compression = require('compression');
 
 // Lib modules
-const SysInfo = require('./lib/sys-info');
+const SysInfo = require('./lib/sys-info.js');
 
 // API Controllers
-const Controller = require('./controllers');    // Parent/base
+const Controller = require('./controllers/controller');    // Parent/base
 const Sensor = require('./controllers/sensor');
 const Settings = require('./controllers/settings');
 
@@ -36,7 +36,7 @@ database.configure(knex => {
     socketAPIs.sysInfo = new SysInfo(io);
 
     app.set('API', socketAPIs);
-    app.use(require('./routes'));
+    // app.use(require('./routes'));
 
     io.on("connection", (socket) => {
         console.log(`Client connected from ${socket.handshake.address}`);

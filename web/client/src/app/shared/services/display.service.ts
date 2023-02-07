@@ -14,6 +14,8 @@ export class DisplayService {
 
   palette: ThemePalette;  // this is 'primary' | 'accent' 
 
+  showDemo: boolean = false;
+
   theme: string;
   defaultColor: string;
 

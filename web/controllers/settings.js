@@ -7,16 +7,16 @@ class Settings {
 
     constructor() {
         this.settingsPath = path.join(process.env.SETTINGS_DIR || process.cwd(), 'settings.json');
-        console.log(`Using ${this.settingsPath} for settings configuration.`);
+        // console.log(`Using ${this.settingsPath} for settings configuration.`);
         if (!fs.existsSync(this.settingsPath)) {
-            console.log("Settings file does not exist, creating default.")
+            // console.log("Settings file does not exist, creating default.")
             fs.writeFileSync(this.settingsPath, JSON.stringify(seed, null, 2));
         }
         this.settings = require(this.settingsPath);
     }
 
-    create(client) {
-        Promise.reject(new Error("Settings can only be read or updated"));
+    create(client=null) {
+        return Promise.reject(new Error("Settings can only be read or updated"));
     }
 
     read(client=null) {

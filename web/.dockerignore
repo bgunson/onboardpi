@@ -3,3 +3,11 @@ npm-debug.log
 .gitignore
 Dockerfile
 client
+
+// mocha test suite
+test
+.mocharc.js 
+
+// test suite moch data if exists
+data/settings.json
+data/test.db

@@ -1,10 +1,11 @@
 {
   "name": "onboardpi-web",
-  "version": "0.4.0",
+  "version": "0.4.1-beta",
   "description": "OnBoardPi web server",
   "main": "server.js",
   "scripts": {
-    "test": "mocha --timeout 10000",
+    "test": "mocha",
+    "test-obd": "mocha 'test/obd/**' --timeout 10000",
     "dev": "nodemon server.js --ignore ./client"
   },
   "keywords": [],
@@ -20,7 +21,10 @@
   },
   "devDependencies": {
     "chai": "^4.3.7",
+    "chai-as-promised": "^7.1.1",
+    "deep-equal-in-any-order": "^2.0.2",
     "mocha": "^10.2.0",
-    "socket.io-client": "^4.5.4"
+    "socket.io-client": "^4.5.4",
+    "sqlite3": "^5.1.4"
   }
 }

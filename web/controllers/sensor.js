@@ -1,4 +1,4 @@
-const Controller = require(".");
+const Controller = require("./controller");
 
 class Sensor extends Controller {
 
@@ -7,6 +7,12 @@ class Sensor extends Controller {
         this.knex = knex;
     }
 
+    /**
+     * 
+     * @param {*} _  
+     * @param {Sensor[]} cards - the dashboard cards in order 
+     * @returns a Promise when the reorder resolves
+     */
     reorder(_, cards) {
         const queries = [];
         cards.forEach(card => {

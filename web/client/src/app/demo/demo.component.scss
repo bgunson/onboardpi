@@ -1,0 +1,76 @@
+#gradient {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 160vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url("data:image/svg+xml,%0A%3Csvg id='visual' viewBox='0 0 900 450' width='900' height='450' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1'%3E%3Cpath d='M0 183L25 183C50 183 100 183 150 187.8C200 192.7 250 202.3 300 217C350 231.7 400 251.3 450 248.8C500 246.3 550 221.7 600 213.8C650 206 700 215 750 230.8C800 246.7 850 269.3 875 280.7L900 292L900 0L875 0C850 0 800 0 750 0C700 0 650 0 600 0C550 0 500 0 450 0C400 0 350 0 300 0C250 0 200 0 150 0C100 0 50 0 25 0L0 0Z' fill='%23ffca28e6'%3E%3C/path%3E%3Cpath d='M0 176L25 181.3C50 186.7 100 197.3 150 187.2C200 177 250 146 300 140.5C350 135 400 155 450 157C500 159 550 143 600 138.5C650 134 700 141 750 139.3C800 137.7 850 127.3 875 122.2L900 117L900 0L875 0C850 0 800 0 750 0C700 0 650 0 600 0C550 0 500 0 450 0C400 0 350 0 300 0C250 0 200 0 150 0C100 0 50 0 25 0L0 0Z' fill='%236bad51'%3E%3C/path%3E%3Cpath d='M0 63L25 75.3C50 87.7 100 112.3 150 125.7C200 139 250 141 300 139.8C350 138.7 400 134.3 450 123.2C500 112 550 94 600 79.8C650 65.7 700 55.3 750 59.3C800 63.3 850 81.7 875 90.8L900 100L900 0L875 0C850 0 800 0 750 0C700 0 650 0 600 0C550 0 500 0 450 0C400 0 350 0 300 0C250 0 200 0 150 0C100 0 50 0 25 0L0 0Z' fill='%2300796b'%3E%3C/path%3E%3C/svg%3E");
+}
+
+#phone {
+    height: 120px;
+    position: absolute;
+    bottom: 50px;
+}
+
+#desktop {
+    width: 300px;
+}
+
+.demo-container {
+    padding: 4% 0%;
+    padding-top: 2.2rem;
+    // height: 100vh;
+    width: calc(100vw - 15px);
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background-repeat: repeat-y;
+    background-size: cover;
+    background-position: bottom -200px center;
+    background-image: url("data:image/svg+xml,%0A%3Csvg id='visual' viewBox='0 0 900 600' width='900' height='600' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1'%3E%3Cg%3E%3Cg transform='translate(701 296)'%3E%3Cpath d='M55.3 -57.7C72.2 -38.3 86.9 -19.2 88.1 1.2C89.3 21.6 77.1 43.3 60.2 58.5C43.3 73.7 21.6 82.6 -0.7 83.3C-23.1 84 -46.1 76.6 -60.5 61.3C-74.9 46.1 -80.7 23.1 -78.9 1.8C-77.1 -19.5 -67.8 -39 -53.4 -58.3C-39 -77.6 -19.5 -96.8 -0.2 -96.6C19.2 -96.5 38.3 -77 55.3 -57.7Z' fill='%2300796b'%3E%3C/path%3E%3C/g%3E%3Cg transform='translate(268 194)'%3E%3Cpath d='M47.1 -47.8C61.5 -32.7 73.9 -16.3 76.3 2.4C78.6 21.1 70.9 42.2 56.5 54.3C42.2 66.4 21.1 69.5 2 67.4C-17 65.4 -34 58.2 -44.8 46.1C-55.5 34 -60 17 -58.7 1.3C-57.3 -14.3 -50.2 -28.7 -39.4 -43.8C-28.7 -59 -14.3 -74.9 1 -75.9C16.3 -76.9 32.7 -63 47.1 -47.8Z' fill='%2300796b'%3E%3C/path%3E%3C/g%3E%3Cg transform='translate(128 462)'%3E%3Cpath d='M64.8 -63C81.2 -48.5 89.6 -24.3 86 -3.5C82.5 17.2 67.1 34.4 50.7 45.9C34.4 57.5 17.2 63.3 -2.9 66.2C-22.9 69.1 -45.9 68.9 -59.5 57.4C-73.1 45.9 -77.3 22.9 -75.2 2.1C-73 -18.7 -64.5 -37.3 -50.9 -51.8C-37.3 -66.2 -18.7 -76.5 2.8 -79.3C24.3 -82.1 48.5 -77.4 64.8 -63Z' fill='%2300796b'%3E%3C/path%3E%3C/g%3E%3Cg transform='translate(464 398)'%3E%3Cpath d='M33.9 -36C40.5 -27.3 40 -13.6 40.1 0.1C40.1 13.8 40.8 27.6 34.2 36.2C27.6 44.9 13.8 48.4 -0.3 48.7C-14.3 49 -28.7 46 -36.1 37.3C-43.5 28.7 -43.9 14.3 -42.6 1.3C-41.3 -11.7 -38.3 -23.5 -30.9 -32.2C-23.5 -40.9 -11.7 -46.6 1 -47.5C13.6 -48.5 27.3 -44.7 33.9 -36Z' fill='%2300796b'%3E%3C/path%3E%3C/g%3E%3Cg transform='translate(510 137)'%3E%3Cpath d='M47.4 -44C62.9 -32 77.8 -16 78.4 0.6C79 17.2 65.3 34.4 49.8 50.7C34.4 66.9 17.2 82.3 -1.5 83.8C-20.2 85.3 -40.4 73 -51.3 56.7C-62.2 40.4 -63.8 20.2 -61.2 2.5C-58.7 -15.1 -52.1 -30.3 -41.2 -42.3C-30.3 -54.3 -15.1 -63.2 0.4 -63.6C16 -64 32 -56 47.4 -44Z' fill='%2300796b'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/svg%3E");    background-repeat: no-repeat;
+
+}
+
+
+.demo-row {
+    // margin: 5px;
+    gap: 5vw;
+    display: flex; 
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-wrap: wrap; 
+    text-align: center;
+}
+
+.demo-row div {
+    text-align: left;
+    max-width: 300px;
+    position: relative;
+}
+
+h1 {
+    font-size: 1.8rem;
+}
+
+h2 {
+    font-size: 1.6rem;
+}
+
+
+h3 {
+    font-size: 1.4rem;
+}
+
+p {
+    font-size: 1.2rem;
+    line-height: 1.6rem;
+}

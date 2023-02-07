@@ -13,6 +13,7 @@ import { SettingsService } from './settings/settings.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, AfterViewInit {
+
   title = 'onboardpi-client';
 
   route$: Observable<string | undefined>;
@@ -43,8 +44,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-      if (environment.demo && !sessionStorage.getItem('demo')) {
+      if (environment.demo) {
         this.router.navigateByUrl('demo');
+        this.display.showDemo = true;
       }
   }
   

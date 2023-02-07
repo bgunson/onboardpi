@@ -45,7 +45,7 @@ class Configuration:
     def __init__(self):
         pass
 
-    def connect_obd(self, portstr):
+    def connect_obd(self, portstr=None):
         """ Blocks for min two attempts vs connect_obd_async which will sleep before each attempt which may be problematic and cause race conditions on the serial port and obd server in general, this may be the safer approach. 
         """
         if self.obd_io is not None and self.obd_io.is_connected():

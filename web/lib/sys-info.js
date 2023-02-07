@@ -8,6 +8,9 @@ class SysInfo {
         this.observer = undefined;
     }
 
+    /**
+     * returns room name = 'sysInfo'
+     */
     get roomName() {
         return 'sysInfo';
     }
@@ -49,6 +52,12 @@ class SysInfo {
         return info;
     }
 
+    /**
+     * Add a client socket ref to the sys info room where they will be given data once per second.
+     * Increments the room size as well
+     * @param {Socket} client the Server's reference to the client socket
+     * @returns a resolve promise after finished
+     */
     join(client) {
         client.join(this.roomName);
         this.roomSize++;
@@ -61,6 +70,12 @@ class SysInfo {
         return Promise.resolve();
     }
 
+    /**
+     * Removes a client from the info room, and decrements room size counter. If no clients are in the room
+     * then the observer on system parameters in cancelled.
+     * @param {Socket} client - the Server's reference to the client socket who is leaving 
+     * @returns a resolved promise once finished 
+     */
     leave(client) {
         client.leave(this.roomName);
         this.roomSize = Math.max(0, this.roomSize - 1);

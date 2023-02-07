@@ -42,6 +42,10 @@
     padding: 2px;
 }
 
+.card:hover {
+    cursor: pointer;
+}
+
 .card-title {
     overflow: hidden;
     font-size: small;

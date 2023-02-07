@@ -1,30 +1,40 @@
 <!-- <app-nav [ngClass]="theme.current + '-theme'"></app-nav> -->
 <main [ngClass]="display.theme + '-theme'" class="main">
 
-    <mat-toolbar class="portrait-toolbar" color="primary" *ngIf="display.isPortrait$ | async">
+    <mat-toolbar class="portrait-toolbar mat-elevation-z2" color="primary" *ngIf="(display.isPortrait$ | async) || display.showDemo">
         <button
-            *ngIf="route"
+            *ngIf="route && !display.showDemo"
             (click)="back()"
             type="button"
             aria-label="Toggle sidenav"
             mat-icon-button>
             <mat-icon aria-label="Side nav toggle icon">chevron_left</mat-icon>
         </button>
+
+        <mat-icon *ngIf="display.showDemo">
+            directions_car
+        </mat-icon>
+
+        <!-- <img *ngIf="display.showDemo" height="32" src="/assets/touch-icon.png" /> -->
+
         <span style="flex: 1 1 auto"></span>
-        <button
+        <!-- <button
             *ngIf="display.isHandset$ | async"
             (click)="refresh()"
             type="button"
             mat-icon-button>
             <mat-icon aria-label="Side nav toggle icon">refresh</mat-icon>
-        </button>
+        </button> -->
         <button mat-icon-button *ngIf="action.icon | async as icon" (click)="action.click()">
             <mat-icon>{{ icon }}</mat-icon>
         </button>
+        <button *ngIf="display.showDemo" mat-raised-button (click)="display.showDemo = false" routerLink="/" color="accent">Try the demo &#8594;</button>
+
     </mat-toolbar>
 
     <mat-sidenav-container class="sidenav-container" [ngClass]="{ 'portrait-container': (display.isPortrait$ | async) }">
         <mat-sidenav #drawer
+            *ngIf="!display.showDemo"
             autosize 
             [position]="display.getSidenavPosition() || 'start'"
             color="primary" 
@@ -37,9 +47,9 @@
                 <mat-list-item (click)="back()" *ngIf="route">
                     <mat-icon mat-list-icon style="color: white">chevron_left</mat-icon>
                 </mat-list-item>
-                <mat-list-item (click)="refresh()" *ngIf="!(display.isHandset$ | async)">
+                <!-- <mat-list-item (click)="refresh()" *ngIf="!(display.isHandset$ | async)">
                     <mat-icon mat-list-icon style="color: white">refresh</mat-icon>
-                </mat-list-item>
+                </mat-list-item> -->
                 <mat-list-item [ngClass]="{ 'bottom' : (display.isHandset$ | async) }" *ngIf="action.icon | async as icon" (click)="action.click()">
                     <mat-icon mat-list-icon style="color: white">{{ icon }}</mat-icon>
                 </mat-list-item>
@@ -50,7 +60,7 @@
         
         <mat-sidenav-content class="content" [ngClass]="{ 'portrait-content': (display.isPortrait$ | async) }">
             <router-outlet></router-outlet>
-            <div style="height: 15px;"></div>
+            <div style="height: 60px;"></div>
         </mat-sidenav-content>
 
     </mat-sidenav-container>
