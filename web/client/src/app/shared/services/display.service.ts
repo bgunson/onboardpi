@@ -38,8 +38,8 @@ export class DisplayService {
     private overlay: OverlayContainer
   ) { }
 
-  getSidenavPosition() : SidenavPosition | null {
-    return <SidenavPosition>localStorage.getItem('sidenav');
+  getSidenavPosition() : SidenavPosition {
+    return localStorage.getItem('sidenav') ? <SidenavPosition>localStorage.getItem('sidenav') : 'start';
   }
 
   toggleSidenavPosition() {
