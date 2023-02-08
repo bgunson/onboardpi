@@ -50,7 +50,7 @@ export class DisplayService {
       current = 'end';
     }
     localStorage.setItem('sidenav', current);
-    window.location.reload();
+    // window.location.reload();
   }
 
   setTheme(theme: string) : void {

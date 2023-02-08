@@ -1,7 +1,6 @@
 .sidenav-container {
     height: 100vh;
     overflow: hidden;
-    // min-height: calc(100% + env(safe-area-inset-top));
 }
 
 .portrait-container {
@@ -21,8 +20,8 @@
     position: sticky;
     top: 0px;
     z-index: 1000;
-    padding-top: calc(max(env(safe-area-inset-top), 0));
-    padding-bottom:  calc(max(env(safe-area-inset-bottom), 0));
+    padding-top: calc(1.4 * env(safe-area-inset-top));
+    padding-bottom:  env(safe-area-inset-bottom);
 }
 
   
@@ -32,7 +31,6 @@
 
 .content {
     overflow-x: hidden;
-    padding: 8px !important;
 }
 
 .bottom {
