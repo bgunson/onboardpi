@@ -11,17 +11,18 @@
 }
 
 #phone {
-    height: 120px;
+    height: 40%;
     position: absolute;
-    bottom: 50px;
+    bottom: 20%;
 }
 
 #desktop {
-    width: 300px;
+    // width: 300px;
+    width: 100%;
 }
 
 .demo-container {
-    padding-bottom: 56px;
+    padding: 56px 10%;
     min-height: calc(100vh - 56px);
     // max-width: 1200px;
     display: flex;
@@ -34,8 +35,8 @@
 #features {
     background-repeat: repeat-y;
     background-size: cover;
-    background-position: center;
-    background-image: url("https://user-images.githubusercontent.com/47361247/217401926-7d245e37-fce3-4b03-96cc-190bdc35dfce.svg");
+    background-position: top;
+    background-image: url("https://user-images.githubusercontent.com/47361247/217438109-53b63a94-2fa1-44bf-bde2-a500fe5fcb63.svg");
     
 }
 
@@ -49,7 +50,7 @@ iframe {
 
 .demo-row {
     // margin: 5px;
-    gap: 5vw;
+    gap: 2vw;
     display: flex; 
     flex: 1;
     justify-content: center;
@@ -57,25 +58,37 @@ iframe {
     width: 100%;
     flex-wrap: wrap; 
     text-align: center;
-}
-
-.demo-row div {
-    text-align: left;
-    max-width: 300px;
     position: relative;
 }
 
+.demo-row div {
+    // text-align: center;
+    width: 400px;
+    max-width: 100%;
+    position: relative;
+}
+
+.header-pics {
+    width: 700px !important;
+}
+
+
 h1 {
-    font-size: 1.8rem;
+    font-size: 2.4rem;
 }
 
 h2 {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
+    line-height: 2.4rem;
 }
 
 
 h3 {
     font-size: 1.4rem;
+}
+
+.demo-text {
+    text-align: left;
 }
 
 p {

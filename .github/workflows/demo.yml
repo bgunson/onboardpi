@@ -4,8 +4,8 @@ on:
   push:
     tags:
       - 'v*'
-    # paths:
-      # - 'web/client/**'
+    paths:
+      - 'web/client/**'
 
 jobs: 
   deploy: 
