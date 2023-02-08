@@ -7,10 +7,13 @@
 
 ![obpi_splash](https://user-images.githubusercontent.com/47361247/213033694-4e6ec2cd-6123-4ba3-a4c7-1a0a2107fa57.png)
 
+[Try the demo](https://bengunson.me/onboardpi/)
 
-[Try the Demo](https://bengunson.me/onboardpi/)
+[Watch the demo video](https://www.youtube.com/watch?v=HjtUfPwrNDA)
 
-OnBoardPi is the perfect project if you have a Raspiberry Pi (or other SBC) collecting dust and like to work on your car. It combines hardware and software to provide a unique way of monitoring your vehicles performance and health and can be used as a start point for turning any vehicle into a "smart car". Your OnBoardPi will host a web server which uses the websocket protocol to relay OBD (On Board Diagnostics) data to any device in realtime and does not require an active internet connection.
+
+OnBoardPi is a web based application which can be installed in any OBD2 (1996 or newer) vehicle using a Raspberry Pi or similar single board computer. Parameters such as RPMs, speeds, or temperatures can be monitored on dashboards, tables, and charts in real time. OnBoardPi also integrates with [BlueWave Stuidio's OpenAuto Pro](https://bluewavestudio.io/shop/openauto-pro-car-head-unit-solution/) by injecting values via its API allowing users to use both softwares at once. 
+
 
 ## Quick Install
 **Requires**
