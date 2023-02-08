@@ -78,7 +78,7 @@
         </mat-sidenav>
 
         
-        <mat-sidenav-content class="content" [ngClass]="{ 'portrait-content': (display.isPortrait$ | async) }">
+        <mat-sidenav-content class="content" [ngClass]="{ 'portrait-content': (display.isPortrait$ | async) }" [ngStyle]="!display.showDemo ? { 'padding': '8px' } : null">
             <router-outlet></router-outlet>
             <div style="height: 56px;"></div>
         </mat-sidenav-content>
