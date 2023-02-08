@@ -2,12 +2,10 @@ name: demo
 
 on:
   push:
-#     tags:
-#       - 'v*'
-    branchches:
-      - main
-    paths:
-      - 'web/client/**'
+    tags:
+      - 'v*'
+    # paths:
+      # - 'web/client/**'
 
 jobs: 
   deploy: 
