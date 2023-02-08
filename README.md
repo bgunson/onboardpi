@@ -12,7 +12,7 @@
 [Watch the demo video](https://www.youtube.com/watch?v=HjtUfPwrNDA)
 
 
-OnBoardPi is a web based application which can be installed in any OBD2 (1996 or newer) vehicle using a Raspberry Pi or similar single board computer. Parameters such as RPMs, speeds, or temperatures can be monitored on dashboards, tables, and charts in real time. OnBoardPi also integrates with [BlueWave Stuidio's OpenAuto Pro](https://bluewavestudio.io/shop/openauto-pro-car-head-unit-solution/) by injecting values via its API allowing users to use both softwares at once. 
+OnBoardPi is a web based application which can be installed in any OBD2 compliant (1996 or newer) vehicle using a Raspberry Pi or similar single board computer. Parameters such as RPMs, speeds, or temperatures can be monitored on dashboards, tables, and charts in real time. OnBoardPi also integrates with [BlueWave Stuidio's OpenAuto Pro](https://bluewavestudio.io/shop/openauto-pro-car-head-unit-solution/) by injecting values via its API allowing users to use both softwares at once. 
 
 
 ## Quick Install
