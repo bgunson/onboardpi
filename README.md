@@ -18,11 +18,8 @@ OnBoardPi is a web based application which can be installed in any OBD2 complian
 ## Quick Install
 **Requires**
 - Docker - see [optional post-install steps](https://docs.docker.com/engine/install/linux-postinstall/) to manage Docker as a non-root user if desired.
-- Docker Compose
-
 ```
 curl -sSL https://get.docker.com | sh
-pip install docker-compose
 ```
 
 [Link to Docker images](https://hub.docker.com/u/bgunson)
@@ -31,8 +28,10 @@ Then, in a directory of your choice:
 ```
 mkdir onboardpi && cd onboardpi
 curl https://raw.githubusercontent.com/bgunson/onboardpi/main/docker-compose.yml > docker-compose.yml
-docker-compose up -d
+docker compose up -d
 ```
+> Docker Compose should be included with the Docker CLI, howerver if you have an older version of Docker you can install it specifically using `python3 -m pip install docker-compose` and run OnBoardPi using `docker-comopse` with a hyphen.
+
 Open a browser and navigate to [http://raspberrypi.local](http://raspberrypi.local)
 
 TIP: If your Pi's hostname is different from the default then use that in place of 'raspberrypi'. For example, set the hostname to 'onboardpi' and navigate to [http://onboardpi.local](http://raspberrypi.local)
