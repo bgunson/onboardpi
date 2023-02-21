@@ -30,7 +30,7 @@ mkdir onboardpi && cd onboardpi
 curl https://raw.githubusercontent.com/bgunson/onboardpi/main/docker-compose.yml > docker-compose.yml
 docker compose up -d
 ```
-> Docker Compose should be included with the Docker CLI, howerver if you have an older version of Docker you can install it specifically using `python3 -m pip install docker-compose` and run OnBoardPi using `docker-comopse` with a hyphen.
+> Docker Compose should be included with the Docker CLI, however if you have an older version of Docker you can install it specifically using `python3 -m pip install docker-compose` and run OnBoardPi using `docker-compose` with a hyphen.
 
 Open a browser and navigate to [http://raspberrypi.local](http://raspberrypi.local)
 
