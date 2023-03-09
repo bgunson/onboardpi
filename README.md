@@ -17,7 +17,7 @@ OnBoardPi is a web based application which can be installed in any OBD2 complian
 
 ## Quick Install
 **Requires**
-- Docker - see [optional post-install steps](https://docs.docker.com/engine/install/linux-postinstall/) to manage Docker as a non-root user if desired.
+- Docker - see [optional post-install steps](https://docs.docker.com/engine/install/linux-postinstall/) to manage Docker as a non-root user if desired otherwise use `sudo` for Docker commands.
 ```
 curl -sSL https://get.docker.com | sh
 ```
