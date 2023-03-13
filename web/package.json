@@ -25,6 +25,6 @@
     "deep-equal-in-any-order": "^2.0.2",
     "mocha": "^10.2.0",
     "socket.io-client": "^4.5.4",
-    "sqlite3": "^5.1.4"
+    "sqlite3": "^5.1.5"
   }
 }
