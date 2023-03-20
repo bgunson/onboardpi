@@ -179,14 +179,17 @@ class EventHandler(threading.Thread):
             self.show_notification(message['status'])
 
         while can_continue:
-            time.sleep(0.1)
             rlist, wlist = self._client.get_streams()
             try:
-                if len(rlist) > 0:      # read incoming messages first
-                    can_continue = self._client.wait_for_message()
-                if len(wlist) > 0:
-                    can_continue = self._client.send_messages()
-                    # can_continue = self._client.send_message()    # or send a single message only
+                if len(rlist or wlist) > 0:
+                    if len(rlist) > 0:      # read incoming messages first
+                        can_continue = self._client.wait_for_message()
+
+                    if len(wlist) > 0:
+                        can_continue = self._client.send_message() 
+                else:
+                    time.sleep(0.0001)        
+
             except:
                 can_continue = False
 

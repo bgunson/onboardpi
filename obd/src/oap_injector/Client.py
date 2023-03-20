@@ -28,7 +28,7 @@ class Client:
         return self._event_handler
 
     def get_streams(self):
-        readable, writeable, _ = select([self._socket], [self._socket], [])
+        readable, writeable, _ = select([self._socket], [self._socket], [], 0.1)
         return readable, writeable
 
     def connect(self, hostname, port):
@@ -38,7 +38,7 @@ class Client:
         self._socket.connect((hostname, port))
         self._connected.set()
         self._send_hello(self._name)
-        # self._socket.setblocking(False)   # hmmm
+        self._socket.setblocking(0)   # hmmm
 
 
     def is_connected(self):
@@ -46,9 +46,13 @@ class Client:
         
 
     def disconnect(self):
-        if self._connected.is_set():
-            self._socket.close()
-            self._connected.clear()
+        
+        # clear the message queue
+        while not self.message_queue.empty():
+            _ = self.message_queue.get()
+
+        self._socket.close()
+        self._connected.clear()
 
 
     def _receive(self) -> Message:
@@ -75,12 +79,18 @@ class Client:
 
         while not self.message_queue.empty():
             msg = self.message_queue.get().item
-            if can_continue:
-                self._send(msg.id, msg.flags, msg.payload)
+            self._send(msg.id, msg.flags, msg.payload)
+
             if msg.id == oap_api.MESSAGE_BYEBYE:
                 # consumed a bye-bye message so we should shutdown
                 self._socket.shutdown(socket.SHUT_WR)
                 can_continue = False
+                break
+
+            elif msg.id == oap_api.MESSAGE_PONG:
+                # sent a pong, break from the loop to allow socket to be readable to prevent deadlock
+                # if message queue keeps being filled
+                break
 
         return can_continue
 
@@ -93,13 +103,12 @@ class Client:
         can_continue = True
 
         if not self.message_queue.empty():
+
             msg = self.message_queue.get().item
             self._send(msg.id, msg.flags, msg.payload)
+
             if msg.id == oap_api.MESSAGE_BYEBYE:
                 self._socket.shutdown(socket.SHUT_WR)
-                while not self.message_queue.empty():
-                    # clear the message queue
-                    _ = self.message_queue.get()
                 can_continue = False
 
         return can_continue

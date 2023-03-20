@@ -24,6 +24,8 @@ class OAPInjector(Injector):
     """
 
     def __init__(self, logger, *args, **kwargs):
+        """Start injection
+        """
         self._client = Client("OnBoardPi OBD Injector")
         self.logger = logger
         self.logger.info(
@@ -39,11 +41,7 @@ class OAPInjector(Injector):
         self.__n_restarts = 0
 
         self._enabled = threading.Event()
-        self._enabled.set()
-
-        self.event_handler = EventHandler(self._client, self)
-        self._client.set_event_handler(self.event_handler)
-        threading.Thread(target=self.__init_connection, daemon=True).start()
+        self.start()
 
     def __init_connection(self):
         """Initiate a connection interval 
