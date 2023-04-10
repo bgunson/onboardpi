@@ -25,7 +25,7 @@ OpenAuto Pro 16 users please see [this issue](https://github.com/bgunson/onboard
 curl -sSL https://get.docker.com | sh
 ```
 
-[Link to Docker images](https://hub.docker.com/u/bgunson)
+[Link to Docker images](https://hub.docker.com/search?q=bgunson%2Fonboardpi)
 
 Then, in a directory of your choice:
 ```
