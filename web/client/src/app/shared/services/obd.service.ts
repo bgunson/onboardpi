@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { share, shareReplay, takeWhile, timeout } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { shareReplay, takeWhile, timeout } from 'rxjs/operators';
 import { OBDSocket } from 'src/app/app.module';
 import { SettingsService } from 'src/app/settings/settings.service';
-import { OBDCommand, OBDResponse, Protocol, ResponseSet } from '../models/obd.model';
+import { DTCSet, OBDCommand, OBDResponse, Protocol, ResponseSet } from '../models/obd.model';
 
 
 /**
@@ -21,19 +21,19 @@ export class OBDService {
   /** Active set of watched commands by name */
   private _watchList: Set<string> = new Set<string>();
 
-  private _status$: Observable<string>;
-  private _isConnected$: Observable<boolean>;
-
+  private _status$: Subject<string>;
+  private _isConnected$: Subject<boolean>;
   // connectingNow: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);    // TODO: maybe make this server side from appSocket event so other clients know if connecting
 
   constructor(
     private socket: OBDSocket,
     private settingsService: SettingsService
   ) { 
+
     socket.on('unwatch', () => this.watch([...this._watchList]));
 
-    // socket.fromEvent<string>('status').subscribe(v => this._status$.next(v));
-    // socket.fromEvent<boolean>('is_connected').subscribe(v => this._isConnected$.next(v));
+    this._isConnected$ = socket.fromEvent<boolean>('is_connected') as Subject<boolean>;
+    this._status$ = socket.fromEvent<string>('status') as Subject<string>;  
 
     socket.on('obd_closed', () => {
       this.isConnected();
@@ -46,8 +46,8 @@ export class OBDService {
     });
 
     socket.on('disconnect', () => {
-      this._isConnected$ = of(false)
-      this._status$ = of('Not Connected');
+      this._isConnected$.next(false);
+      this._status$.next('Not Connected');
     });
 
     socket.on('connect', () => {
@@ -72,8 +72,7 @@ export class OBDService {
   }
 
   connect(): Promise<boolean> {
-    this.socket.emit('connect_obd');
-    return this.socket.fromOneTimeEvent<boolean>('connect_obd');
+    return new Promise<boolean>((resolve) => this.socket.emit('connect_obd', resolve));
   }
 
   disconnect(): void {
@@ -82,17 +81,11 @@ export class OBDService {
 
   getStatus(): Observable<string> {
     this.socket.emit('status');
-    if (!this._status$) {
-      this._status$ = this.socket.fromEvent<string>('status').pipe(shareReplay());
-    }
     return this._status$;
   }
 
   isConnected(): Observable<boolean> {
     this.socket.emit('is_connected');
-    if (!this._isConnected$) {
-      this._isConnected$ = this.socket.fromEvent<boolean>('is_connected').pipe(shareReplay());
-    }
     return this._isConnected$;
   }
 
@@ -109,45 +102,38 @@ export class OBDService {
   }
 
   query(cmd: string): Promise<OBDResponse> {
-    this.socket.emit('query', cmd);
-    return this.socket.fromOneTimeEvent<any>('query');
+    return new Promise<OBDResponse>(resolve => this.socket.emit('query', cmd, resolve));
   }
   
   getWatching(): Observable<ResponseSet> {
     if (!this._watching$) {
-      this._watching$ = this.socket.fromEvent<any>('watching').pipe(share());
+      this._watching$ = this.socket.fromEvent<ResponseSet>('watching');
     }
     return this._watching$;
   }
 
   getCommand(cmd: string): Promise<OBDCommand> {
-    this.socket.emit('get_command', cmd);
-    return this.socket.fromOneTimeEvent<OBDCommand>('get_command');
+    return new Promise<OBDCommand>(resolve => this.socket.emit('get_command', cmd, resolve));
   }
 
   supports(cmd: OBDCommand): Promise<boolean> {
-    this.socket.emit('supports', cmd.name);
-    return this.socket.fromOneTimeEvent<boolean>('supports');
+    return new Promise<boolean>(resolve => this.socket.emit('supports', cmd.name, resolve));
   }
 
   getSupported(): Promise<OBDCommand[]> {
-    this.socket.emit('supported_commands');
-    return this.socket.fromOneTimeEvent<any>('supported_commands');
+    return new Promise<OBDCommand[]>(resolve => this.socket.emit('supported_commands', resolve));
   }
 
-  allDTCs(): Promise<{[key: string]: string}> {
-    this.socket.emit('all_dtcs');
-    return this.socket.fromOneTimeEvent<{[key: string]: string}>('all_dtcs');
+  allDTCs(): Promise<DTCSet> {
+    return new Promise<DTCSet>(resolve => this.socket.emit('all_dtcs', resolve));
   }
 
   allProtocols(): Promise<Protocol[]> {
-    this.socket.emit('all_protocols');
-    return this.socket.fromOneTimeEvent<Protocol[]>('all_protocols');
+    return new Promise<Protocol[]>(resolve => this.socket.emit('all_protocols', resolve));
   }
 
   allCommands(): Promise<OBDCommand[][]> {
-    this.socket.emit('all_commands');
-    return this.socket.fromOneTimeEvent<any>('all_commands');
+    return new Promise<OBDCommand[][]>(resolve => this.socket.emit('all_commands', resolve));
   }
 
   /** 
@@ -165,23 +151,19 @@ export class OBDService {
   }
 
   getProtocolName(): Promise<string> {
-    this.socket.emit('protocol_name');
-    return this.socket.fromOneTimeEvent<string>('protocol_name');
+    return new Promise<string>(resolve => this.socket.emit('protocol_name', resolve));
   }
 
   getPortName(): Promise<string> {
-    this.socket.emit('port_name');
-    return this.socket.fromOneTimeEvent<string>('port_name');
+    return new Promise<string>(resolve => this.socket.emit('port_name', resolve));
   }
 
   getAvailablePorts(): Promise<string[]> {
-    this.socket.emit('available_ports');
-    return this.socket.fromOneTimeEvent<string[]>('available_ports');
+    return new Promise<string[]>(resolve => this.socket.emit('available_ports', resolve));
   }
 
   getInjectorState(injectorType: string): Promise<any> {
-    this.socket.emit('injector_state', injectorType);
-    return this.socket.fromOneTimeEvent<any>('injector_state');
+    return new Promise(resolve => this.socket.emit('injector_state', injectorType, resolve));
   }
 
   setLoggerLevel(loggerName: string, level: string) {

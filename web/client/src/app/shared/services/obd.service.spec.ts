@@ -24,8 +24,7 @@ describe('OBDService', () => {
 
   it('#disconnect should close obd connection', (done: DoneFn) => {
     obd.disconnect();
-    obd.isConnected()
-    .subscribe((connected: boolean) => {
+    obd.isConnected().subscribe((connected: boolean) => {
       expect(connected).toBeFalsy();
       done();
     });

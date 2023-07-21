@@ -114,10 +114,12 @@ class API:
         @sio.event
         async def status(sid):
             await sio.emit('status', self.config.obd_io.status(), room=sid)
+            return self.config.obd_io.status()
 
         @sio.event
         async def is_connected(sid):
             await sio.emit('is_connected', self.config.obd_io.is_connected(), room=sid)
+            return self.config.obd_io.is_connected()
 
         @sio.event
         async def port_name(sid):
@@ -182,7 +184,8 @@ class API:
                 obd.protocols.SAE_J1850_VPW,
                 obd.protocols.SAE_J1939
             ]
-            await sio.emit('all_protocols', sorted(all, key=lambda p: p.ELM_ID), room=sid)
+            # await sio.emit('all_protocols', sorted(all, key=lambda p: p.ELM_ID), room=sid)
+            return sorted(all, key=lambda p: p.ELM_ID)
 
         @sio.event
         async def all_dtcs(sid):

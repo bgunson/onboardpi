@@ -110,6 +110,9 @@
             },
             "development": {
               "browserTarget": "onboardpi-client:build:development"
+            },
+            "demo": {
+              "browserTarget": "onboardpi-client:build:demo-dev"
             }
           },
           "defaultConfiguration": "development"

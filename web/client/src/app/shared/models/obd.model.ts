@@ -25,3 +25,7 @@ export interface Protocol {
     id: string;
     name: string;
 }
+
+export interface DTCSet {
+    [key: string]: string
+}
