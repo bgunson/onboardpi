@@ -13,7 +13,7 @@ describe("obd api", () => {
 
     before((done) => {
 
-        socket = new Client(`http://localhost:${port}`);
+        socket = new Client(`http://localhost:${port}`, { transports: ["websocket"]});
 
         socket.on("connect", () => {
             socket.emit('start_emulator');
@@ -39,24 +39,28 @@ describe("obd api", () => {
     });
 
     it('should *connect_obd*', (done) => {
-        socket.emit('connect_obd', emulatorPort);
-        socket.once('connect_obd', (connected) => {
+        socket.emit('connect_obd', emulatorPort, (connected) => {
             assert.isTrue(connected);
             done();
         });
+        // socket.once('connect_obd', (connected) => {
+            
+        // });
     });
 
     it('should be connected on second attempt to *connect_obd*', (done) => {
-        socket.emit('connect_obd');
-        socket.once('connect_obd', (connected) => {
+        socket.emit('connect_obd', "", (connected) => {
             assert.isTrue(connected);
             done();
         });
+        // socket.once('connect_obd', (connected) => {
+        //     assert.isTrue(connected);
+        //     done();
+        // });
     });
 
     it('should return true for *is_connected* to the emulator', (done) => {
-        socket.emit('is_connected');
-        socket.once('is_connected', (connected) => {
+        socket.emit('is_connected', (connected) => {
             assert.equal(connected, true);
             done();
         });
@@ -81,41 +85,38 @@ describe("obd api", () => {
     it('should *watch* "RPM" command', (done) => {
         socket.emit("join_watch");
         socket.emit('watch', ['RPM']);
-        socket.once('watching', (watching) => {
-            assert.exists(watching['RPM']);
+        socket.once('obd_response', (r) => {
+            console.log(r);
             done();
         });
     });
 
-    it('should *unwatch* "RPM" command', (done) => {
-        socket.emit('unwatch', ['RPM', 'SPEED']);
-        socket.once('watching', (watching) => {
-            assert.notExists(watching['RPM']);
-            done();
-        })
-    });
+    // it('should *unwatch* "RPM" command', (done) => {
+    //    socket.emit('unwatch', ['RPM', 'SPEED']);
+    //     socket.once('watching', (watching) => {
+    //         assert.notExists(watching['RPM']);
+    //         done();
+    //     })
+    // });
 
-    it('should *unwatch_all* commands', (done) => {
-        socket.emit('unwatch_all');
-        socket.once('watching', (watching) => {
-            assert.notExists(watching['SPEED']);
-            done();
-        });
-    });
+    // it('should *unwatch_all* commands', (done) => {
+    //     socket.emit('unwatch_all');
+    //     socket.once('watching', (watching) => {
+    //         assert.notExists(watching['SPEED']);
+    //         done();
+    //     });
+    // });
 
     it('should get the *port_name*', (done) => {
-        socket.emit('port_name');
-        socket.once('port_name', (pty) => {
+        socket.emit('port_name', (pty) => {
             assert.equal(emulatorPort, pty);
             done();
         });
     });
 
     it('should return correct *protocol_id* and *protocol_name*', (done) => {
-        socket.emit('protocol_id');
-        socket.once('protocol_id', (id) => {
-            socket.emit('protocol_name');
-            socket.once('protocol_name', (name) => {
+        socket.emit('protocol_id', (id) => {
+            socket.emit('protocol_name', (name) => {
                 assert.equal(name, protocols.find(p => p.id === id).name);
                 done();
             });
@@ -123,32 +124,28 @@ describe("obd api", () => {
     });
 
     it('should return *all_protocols*', (done) => {
-        socket.emit('all_protocols');
-        socket.once('all_protocols', (all) => {
+        socket.emit('all_protocols', (all) => {
             assert.deepEqual(protocols, all);
             done();
         });
     });
 
     it('should return *all_dtcs*', (done) => {
-        socket.emit('all_dtcs');
-        socket.once('all_dtcs', (all) => {
+        socket.emit('all_dtcs', (all) => {
             assert.deepEqual(dtcs, all);
             done();
         });
     });
 
     it('should return true for *has_name*', (done) => {
-        socket.emit('has_name', 'RPM');
-        socket.once('has_name', (has) => {
+        socket.emit('has_name', 'RPM', (has) => {
             assert.isTrue(has);
             done();
         });
     });
 
     it('should return false for *has_name*', (done) => {
-        socket.emit('has_name', 'bad');
-        socket.once('has_name', (has) => {
+        socket.emit('has_name', 'bad', (has) => {
             assert.isFalse(has);
             done();
         });

@@ -123,33 +123,33 @@ class API:
 
         @sio.event
         async def port_name(sid):
-            await sio.emit('port_name', self.config.obd_io.port_name(), room=sid)
+            return self.config.obd_io.port_name()
 
         @sio.event
         async def supports(sid, cmd):
             if obd.commands.has_name(cmd):
-                await sio.emit('supports', self.config.obd_io.supports(obd.commands[cmd]), room=sid)
+                return self.config.obd_io.supports(obd.commands[cmd])
             else:
-                await sio.emit('supports', False, room=sid)
+                return False
 
         @sio.event
         async def protocol_id(sid):
-            await sio.emit('protocol_id', self.config.obd_io.protocol_id(), room=sid)
+            return self.config.obd_io.protocol_id()
 
         @sio.event
         async def protocol_name(sid):
-            await sio.emit('protocol_name', self.config.obd_io.protocol_name(), room=sid)
+            return self.config.obd_io.protocol_name()
 
         @sio.event
         async def supported_commands(sid):
-            await sio.emit('supported_commands', self.config.obd_io.supported_commands, room=sid)
+            return self.config.obd_io.supported_commands
 
         @sio.event
         async def query(sid, cmd):
             if obd.commands.has_name(cmd):
-                await sio.emit('query', self.config.obd_io.query(obd.commands[cmd]), room=sid)
+                return self.config.obd_io.query(obd.commands[cmd])
             else:
-                await sio.emit('query', None, room=sid)
+                return None
 
         @sio.event
         async def unwatch_all(sid):
@@ -158,7 +158,7 @@ class API:
 
         @sio.event
         async def has_name(sid, name):
-            await sio.emit('has_name', obd.commands.has_name(name), room=sid)
+            return obd.commands.has_name(name)
 
         @sio.event
         async def close(sid):
@@ -168,7 +168,7 @@ class API:
 
         @sio.event
         async def available_ports(sid):
-            await sio.emit('available_ports', obd.scan_serial(), room=sid)
+            return obd.scan_serial()
 
         @sio.event
         async def all_protocols(sid):
@@ -184,31 +184,31 @@ class API:
                 obd.protocols.SAE_J1850_VPW,
                 obd.protocols.SAE_J1939
             ]
-            # await sio.emit('all_protocols', sorted(all, key=lambda p: p.ELM_ID), room=sid)
             return sorted(all, key=lambda p: p.ELM_ID)
 
         @sio.event
         async def all_dtcs(sid):
-            await sio.emit('all_dtcs', obd.codes.DTC, room=sid)
+            return obd.codes.DTC
 
         @sio.event
         async def all_commands(sid):
             all = list(obd.commands.modes)
             all[0] = obd.commands.base_commands()
-            await sio.emit('all_commands', all, room=sid)
+            return all
 
         @sio.event
         async def get_command(sid, cmd):
             if obd.commands.has_name(cmd):
-                await sio.emit('get_command', obd.commands[cmd], room=sid)
+                return  obd.commands[cmd]
             else:
-                await sio.emit('get_command', None, room=sid)
-
+                return None
+            
         @sio.event
         async def connect_obd(sid, portstr=None):
             self.config.connect_obd(portstr)  
             await sio.emit("connect_obd", self.config.obd_io.is_connected())
             await sio.emit("obd_connection_status", self.get_obd_connection_status(), room="notifications")
+            return self.config.obd_io.is_connected()
             if not self.watch.loop_running:
                 await sio.start_background_task(self.watch.emit_loop, sio)
 
