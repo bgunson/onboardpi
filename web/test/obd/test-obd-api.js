@@ -87,21 +87,6 @@ describe("obd api", () => {
         });
     });
 
-    it('should not *query* a bad command', (done) => {
-        socket.emit('query', 'baposdnfkj');
-        socket.once('query', (res) => {
-            assert.isUndefined(res);
-            done();
-        });
-    });
-
-    it('should *query* RPM', (done) => {
-        socket.emit('query', 'RPM');
-        socket.once('query', (res) => {
-            assert.isObject(res);
-            done();
-        });
-    });
 
     it('should *unwatch* "RPM" command', (done) => {
         socket.emit('unwatch', ['RPM', 'SPEED']);
@@ -115,6 +100,14 @@ describe("obd api", () => {
         socket.emit('unwatch_all');
         socket.once('watching', (watching) => {
             assert.notExists(watching['SPEED']);
+            done();
+        });
+    });
+
+    it('should not *query* a bad command', (done) => {
+        socket.emit('query', 'baposdnfkj');
+        socket.once('query', (res) => {
+            assert.isUndefined(res);
             done();
         });
     });

@@ -1,14 +1,9 @@
 name: demo
 
 on:
-  paths:
-      # - 'obd/**'
-      - 'web/**'
-  # push:
-  #   tags:
-  #     - 'v*'
-  #   paths:
-  #     - 'web/client/src/app/demo/**'
+  push:
+    paths:
+        - 'web/client/**'
 
 jobs: 
   deploy: 
