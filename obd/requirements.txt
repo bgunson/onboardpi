@@ -1,4 +1,4 @@
-obd
+obd==0.7.2
 protobuf~=3.19
 uvicorn
 obd-socketio

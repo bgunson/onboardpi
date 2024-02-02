@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha",
-    "test-obd": "mocha 'test/obd/**' --timeout 30000",
+    "test-obd": "mocha 'test/obd/**' --timeout 10000",
     "dev": "nodemon server.js --ignore ./client"
   },
   "keywords": [],

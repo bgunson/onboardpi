@@ -26,11 +26,11 @@ class API:
 
         @sio.event
         async def join_watch(sid):
-            sio.enter_room(sid, 'watch')
+            await sio.enter_room(sid, 'watch')
 
         @sio.event
         async def leave_watch(sid):
-            sio.leave_room(sid, 'watch')
+            await sio.leave_room(sid, 'watch')
 
         @sio.event
         async def unwatch(sid, commands):
