@@ -1,9 +1,12 @@
 name: demo
 
-on:
+on: 
+  workflow_dispatch:
   push:
     paths:
-        - 'web/client/**'
+      - 'web/client/**'
+    tags:
+      - 'v*'
 
 jobs: 
   deploy: 
