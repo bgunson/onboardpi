@@ -23,7 +23,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   dashboard: Sensor[];
   watchList: string[];
   subscriptions: Subscription = new Subscription();
-  
+
   vehicleConnected$: Observable<boolean>;
   status$: Observable<string>;
 
@@ -37,7 +37,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   drops: CdkDropList[];
 
   constructor(
-    private obd: OBDService, 
+    private obd: OBDService,
     public dashboardService: DashboardService,
     private action: ActionService,
     public display: DisplayService,
@@ -73,7 +73,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
       return 2;
     }
   }
-  
+
   isGauge(card: Sensor) {
     return card.type.startsWith('gauge');
   }
@@ -82,11 +82,11 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dialog.open(CardFormComponent, {
       data: {
         new: false,
-        card: {...card}
+        card: { ...card }
       }
     });
   }
-  
+
   drop(event: CdkDragDrop<any>) {
     this.dashboard.forEach((card, i) => card.index = i);
     this.dashboardService.updateDashboard(this.dashboard);
@@ -95,7 +95,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   entered($event: CdkDragEnter) {
     moveItemInArray(this.dashboard, $event.item.data, $event.container.data);
   }
-  
+
 
   ngAfterViewInit(): void {
     this.dropsQuery.changes.subscribe(() => {
@@ -125,16 +125,16 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Subscribe to the action button click event
     this.subscriptions.add(this.action.actionClick.subscribe(() => {
-       this.dialog.open(CardFormComponent, {
-         data: {
-           new: true,
-           card: {
-             index: this.dashboard.length,
-             type: "",
-             command: ""
-           }
-         }
-       })
+      this.dialog.open(CardFormComponent, {
+        data: {
+          new: true,
+          card: {
+            index: this.dashboard.length,
+            type: "",
+            command: ""
+          }
+        }
+      })
     }));
   }
 
