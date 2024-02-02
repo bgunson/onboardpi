@@ -87,6 +87,22 @@ describe("obd api", () => {
         });
     });
 
+    it('should not *query* a bad command', (done) => {
+        socket.emit('query', 'baposdnfkj');
+        socket.once('query', (res) => {
+            assert.isUndefined(res);
+            done();
+        });
+    });
+
+    it('should *query* RPM', (done) => {
+        socket.emit('query', 'RPM');
+        socket.once('query', (res) => {
+            assert.isObject(res);
+            done();
+        });
+    });
+
     it('should *unwatch* "RPM" command', (done) => {
         socket.emit('unwatch', ['RPM', 'SPEED']);
         socket.once('watching', (watching) => {
@@ -154,7 +170,13 @@ describe("obd api", () => {
         });
     });
 
-
+    it('should *query* CLEAR_DTC', (done) => {
+        socket.emit('query', 'CLEAR_DTC');
+        socket.once('query', (res) => {
+            assert.isNull(res);
+            done();
+        });
+    });
 
     it('should *close* the obd connection', (done) => {
         socket.emit('close');
