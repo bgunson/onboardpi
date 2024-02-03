@@ -1,6 +1,6 @@
 {
   "name": "onboardpi-client",
-  "version": "0.4.3",
+  "version": "0.4.3-beta.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

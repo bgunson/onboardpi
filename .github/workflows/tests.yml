@@ -42,11 +42,7 @@ jobs:
         working-directory: ./web
       -
         name: Test OBD API
-        run: |
-          export SETTINGS_DIR=./obd/tests/test_configs
-          python obd/server.py & 
-          cd web
-          npm run test-obd
+        run: sh web/test/obd/test-obd-api.sh
   test-web:
     runs-on: ubuntu-latest
     steps:

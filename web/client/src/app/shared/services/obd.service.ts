@@ -15,7 +15,7 @@ import { OBDCommand, OBDResponse, Protocol, ResponseSet } from '../models/obd.mo
   providedIn: 'root'
 })
 export class OBDService {
- 
+
   private _watching$: Observable<any>;
 
   /** Active set of watched commands by name */
@@ -29,7 +29,7 @@ export class OBDService {
   constructor(
     private socket: OBDSocket,
     private settingsService: SettingsService
-  ) { 
+  ) {
     socket.on('unwatch', () => this.watch([...this._watchList]));
 
     // socket.fromEvent<string>('status').subscribe(v => this._status$.next(v));
@@ -60,7 +60,7 @@ export class OBDService {
     return new Promise(async (resolve, reject) => {
       try {
         const connected: boolean = await this.isConnected().pipe(takeWhile(v => v === false), timeout(5000)).toPromise();
-      } catch(err) {
+      } catch (err) {
         const connectObd: boolean = confirm(`Looks like the vehicle is not connected. Would you like to try to connect now?\n${err}`);
         if (connectObd) {
           return this.connect().then((connected) => resolve(connected));
@@ -112,7 +112,7 @@ export class OBDService {
     this.socket.emit('query', cmd);
     return this.socket.fromOneTimeEvent<any>('query');
   }
-  
+
   getWatching(): Observable<ResponseSet> {
     if (!this._watching$) {
       this._watching$ = this.socket.fromEvent<any>('watching').pipe(share());
@@ -135,9 +135,13 @@ export class OBDService {
     return this.socket.fromOneTimeEvent<any>('supported_commands');
   }
 
-  allDTCs(): Promise<{[key: string]: string}> {
+  allDTCs(): Promise<{ [key: string]: string }> {
     this.socket.emit('all_dtcs');
-    return this.socket.fromOneTimeEvent<{[key: string]: string}>('all_dtcs');
+    return this.socket.fromOneTimeEvent<{ [key: string]: string }>('all_dtcs');
+  }
+
+  clearDTCs(): Promise<any> {
+    return new Promise(resolve => this.socket.emit('clear_dtc', resolve));
   }
 
   allProtocols(): Promise<Protocol[]> {
@@ -156,7 +160,7 @@ export class OBDService {
    * @returns All OBD commands or only those supported if the seeting is true
    */
   async usersCommands(): Promise<OBDCommand[][]> {
-    let cmds = this.allCommands();        
+    let cmds = this.allCommands();
     if (this.settingsService.getUserSetting('supportedOnly') === "true") {
       const supported = await this.getSupported().then(cmds => cmds.map(c => c.name));
       cmds = cmds.then(modes => modes.map(cmds => cmds.filter(c => c ? supported.includes(c.name) : false)));

@@ -35,7 +35,7 @@ jobs:
         with:
           flavor: latest=auto
           images: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/onboardpi-obd
+            ${{ secrets.DOCKERHUB_USERNAME }}/onboardpi-web
             ghcr.io/bgunson/onboardpi-web
           tags: type=semver,pattern={{version}}
       -
