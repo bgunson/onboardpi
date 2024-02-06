@@ -1,6 +1,6 @@
 import obd
 
-imperial_conversions = {
+conversions = {
     "kilometer": obd.Unit.mile,
     "kilometer_per_hour": obd.Unit.mile_per_hour,
     "kilopascal": obd.Unit.psi,
@@ -8,11 +8,11 @@ imperial_conversions = {
     "degree_Celsius": obd.Unit.degree_Fahrenheit
 }
 
-def convert_to_imperial(obd_response: obd.OBDResponse) -> obd.OBDResponse:
+def convert(obd_response: obd.OBDResponse) -> obd.OBDResponse:
 
     unit_key = str(obd_response.unit)
 
-    if unit_key in imperial_conversions:
-        obd_response.value = obd_response.value.to(imperial_conversions[unit_key])
+    if unit_key in conversions:
+        obd_response.value = obd_response.value.to(conversions[unit_key])
 
     return obd_response
