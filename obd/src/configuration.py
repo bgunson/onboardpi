@@ -45,6 +45,10 @@ class Configuration:
     def __init__(self):
         pass
 
+    @property
+    def use_imperial_units(self):
+        return bool(self.__settings.get('imperial_units'))
+
     def connect_obd(self, portstr=None):
         """ Blocks for min two attempts vs connect_obd_async which will sleep before each attempt which may be problematic and cause race conditions on the serial port and obd server in general, this may be the safer approach. 
         """
