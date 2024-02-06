@@ -48,10 +48,10 @@ export class DiagnosticsComponent implements OnInit, OnDestroy {
       
 DISCLAIMER
       
-This feature is intended to reset diagnostic trouble codes(DTCs) in your car's onboard diagnostics (OBD) system. It does not fix any underlying issues or ensure vehicle repair. Consult a qualified automotive professional before clearing codes. Clearing codes without addressing root causes may cause damage or compromise safety. You are solely liable for any actions taken using this feature.We are not responsible for any negative consequences or damages. Clearing codes may be temporary.Codes may reappear if underlying issues are not addressed adequately.`);
+This feature is intended to reset diagnostic trouble codes(DTCs) in your car's onboard diagnostics (OBD) system. It does not fix any underlying issues or ensure vehicle repair. Consult a qualified automotive professional before clearing codes. Clearing codes without addressing root causes may cause damage or compromise safety. You are solely liable for any actions taken using this feature. We are not responsible for any negative consequences or damages. Clearing codes may be temporary.Codes may reappear if underlying issues are not addressed adequately.`);
 
       if (clear) {
-        this.obd.query('CLEAR_DTC');
+        this.obd.clearDTCs();
       }
 
     });

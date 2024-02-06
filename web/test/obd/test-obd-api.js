@@ -164,8 +164,7 @@ describe("obd api", () => {
     });
 
     it('should *query* CLEAR_DTC', (done) => {
-        socket.emit('query', 'CLEAR_DTC');
-        socket.once('query', (res) => {
+        socket.emit('clear_dtc', (res) => {
             assert.isNull(res);
             done();
         });

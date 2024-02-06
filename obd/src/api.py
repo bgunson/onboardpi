@@ -189,6 +189,13 @@ class API:
             await sio.emit('all_dtcs', obd.codes.DTC, room=sid)
 
         @sio.event
+        async def clear_dtc(sid):
+            self.config.obd_io.stop()
+            res = super(obd.Async, self.config.obd_io).query(obd.commands['CLEAR_DTC'])
+            self.config.obd_io.start()
+            return res
+
+        @sio.event
         async def all_commands(sid):
             all = list(obd.commands.modes)
             all[0] = obd.commands.base_commands()
