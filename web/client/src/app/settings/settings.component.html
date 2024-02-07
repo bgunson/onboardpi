@@ -7,7 +7,8 @@
             <span style="flex: 1 1 auto"></span>
             <div>
                 <mat-icon class="theme icon">light_mode</mat-icon>
-                <mat-slide-toggle class="theme"  [(ngModel)]="isDarkTheme" (ngModelChange)="switchTheme()"></mat-slide-toggle>
+                <mat-slide-toggle class="theme" [(ngModel)]="isDarkTheme"
+                    (ngModelChange)="switchTheme()"></mat-slide-toggle>
                 <mat-icon class="theme icon">bedtime</mat-icon>
             </div>
             <mat-divider class="app-divider"></mat-divider>
@@ -16,7 +17,19 @@
             Right Hand Drive
             <span style="flex: 1 1 auto"></span>
             <div>
-                <mat-slide-toggle [(ngModel)]="isRHD" (ngModelChange)="display.toggleSidenavPosition()"></mat-slide-toggle>
+                <mat-slide-toggle [(ngModel)]="isRHD"
+                    (ngModelChange)="display.toggleSidenavPosition()"></mat-slide-toggle>
+            </div>
+        </mat-list-item>
+    </mat-card>
+
+    <div mat-subheader><mat-icon>square_foot</mat-icon>&nbsp;Units</div>
+    <mat-card class="settings-card">
+        <mat-list-item>
+            Imperial
+            <span style="flex: 1 1 auto"></span>
+            <div>
+                <mat-slide-toggle [(ngModel)]="settings.imperial_units"></mat-slide-toggle>
             </div>
         </mat-list-item>
     </mat-card>
@@ -27,25 +40,25 @@
         <mat-list-item>
             Year
             <span style="flex: 1 1 auto"></span>
-            <input matInput class="settings-input" [(ngModel)]="settings.vehicle.year" placeholder="None"/>
+            <input matInput class="settings-input" [(ngModel)]="settings.vehicle.year" placeholder="None" />
             <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
         <mat-list-item>
             Make
             <span style="flex: 1 1 auto"></span>
-            <input matInput class="settings-input" [(ngModel)]="settings.vehicle.make" placeholder="None"/>
+            <input matInput class="settings-input" [(ngModel)]="settings.vehicle.make" placeholder="None" />
             <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
         <mat-list-item>
             Model
             <span style="flex: 1 1 auto"></span>
-            <input matInput class="settings-input" [(ngModel)]="settings.vehicle.model" placeholder="None"/>
+            <input matInput class="settings-input" [(ngModel)]="settings.vehicle.model" placeholder="None" />
             <mat-divider class="app-divider"></mat-divider>
         </mat-list-item>
         <mat-list-item>
             VIN#
             <span style="flex: 1 1 auto"></span>
-            <input matInput class="settings-input" [(ngModel)]="settings.vehicle.vin" placeholder="None"/>
+            <input matInput class="settings-input" [(ngModel)]="settings.vehicle.vin" placeholder="None" />
         </mat-list-item>
     </mat-card>
     <br>
@@ -56,12 +69,13 @@
             <span style="color:grey"><mat-icon style="vertical-align: middle;">chevron_right</mat-icon></span>
         </mat-list-item>
     </mat-card>
-    <br/>
+    <br />
     <mat-card class="settings-card">
         <mat-list-item routerLink="oap-injector" matRipple style="cursor: pointer;">
             OpenAuto Pro
             <span style="flex: 1 1 auto"></span>
-            <span style="color:grey">{{ settings.injectors.oap.enabled ? 'Enabled' : 'Disabled' }}<mat-icon style="vertical-align: middle;">chevron_right</mat-icon></span>
+            <span style="color:grey">{{ settings.injectors.oap.enabled ? 'Enabled' : 'Disabled' }}<mat-icon
+                    style="vertical-align: middle;">chevron_right</mat-icon></span>
         </mat-list-item>
     </mat-card>
     <br>
@@ -75,7 +89,8 @@
         <mat-list-item>
             Author
             <span style="flex: 1 1 auto"></span>
-            <span style="color: grey;"><a style="margin-right: -15px;" mat-button href="https://github.com/bgunson/onboardpi">Bennett Gunson</a></span>
+            <span style="color: grey;"><a style="margin-right: -15px;" mat-button
+                    href="https://github.com/bgunson/onboardpi">Bennett Gunson</a></span>
         </mat-list-item>
     </mat-card>
 </mat-list>
@@ -85,5 +100,3 @@
 <ng-template #loading>
     <mat-spinner style="margin: 25vh auto;" [color]="display.palette"></mat-spinner>
 </ng-template>
-
-

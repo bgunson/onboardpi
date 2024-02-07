@@ -20,7 +20,7 @@ export class OBDValuePipe implements PipeTransform {
       return 'NaN'
     }
   }
-  
+
 }
 
 @Pipe({
@@ -34,7 +34,7 @@ export class ElapsedPipe implements PipeTransform {
     let seconds: string = String(Math.floor(numSec % 60)).padStart(2, '0');
     return `${hours}:${minutes}:${seconds}`;
   }
-  
+
 }
 
 /**
@@ -68,41 +68,47 @@ export class BytesPipe implements PipeTransform {
  * Transform unit from python-OBD to prettier version
  */
 @Pipe({
-    name: 'prettyUnit'
+  name: 'prettyUnit'
 })
 export class PrettyUnitPipe implements PipeTransform {
 
-    prettyUnits: {[key: string]: string} = {
-      'percent': '%',
-      'kph': 'km/h',
-      'revolutions_per_minute': 'RPM',
-      'volt': 'V',
-      'degC': '°C',
-      'degree': '°',
-      'gps': 'g/s',
-      'kilopascal': 'kPa'
+  prettyUnits: { [key: string]: string } = {
+    'percent': '%',
+    'mile_per_hour': 'mph',
+    'kilometer_per_hour': 'km/h',
+    'kph': 'km/h',
+    'revolutions_per_minute': 'RPM',
+    'volt': 'V',
+    'degree_Fahrenheit': '°F',
+    'degree_Celsius': '°C',
+    'degC': '°C',
+    'degree': '°',
+    'gps': 'g/s',
+    'kilopascal': 'kPa',
+    'pound / minute': 'lb/min',
+    'pound_force_per_square_inch': 'psi'
+  }
+
+  transform(value: string, ...args: unknown[]): string {
+    if (value.startsWith('<class')) {
+      return "";
     }
-    
-    transform(value: string, ...args: unknown[]): string {
-      if (value.startsWith('<class')) {
-        return "";
-      }
-      return this.prettyUnits[value] ? this.prettyUnits[value] : value;
-    }
-  
+    return this.prettyUnits[value] ? this.prettyUnits[value] : value;
+  }
+
 }
-  
+
 
 /**
  * Round number -> number
  */
 @Pipe({
-    name: 'round'
+  name: 'round'
 })
 export class RoundPipe implements PipeTransform {
-    
-    transform(value: number, ...args: any[]): number {
-        return Math.round(value);
-    }
+
+  transform(value: number, ...args: any[]): number {
+    return Math.round(value);
+  }
 
 }

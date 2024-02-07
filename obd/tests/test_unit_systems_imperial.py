@@ -23,3 +23,8 @@ def test_gps_to_lb_per_minute():
     lb_min = unit.pound / unit.minute
     assert gps in imperial.conversions
     assert imperial.conversions[gps] == lb_min
+
+def test_celsius_to_fahrenheit():
+    celsius = str(unit.celsius)
+    assert celsius in imperial.conversions
+    assert imperial.conversions[celsius] == unit.fahrenheit
