@@ -22,7 +22,7 @@ export class DemoSocket {
      * @param value 
      * @returns 
      */
-     generateValue(value: any) {
+    generateValue(value: any) {
         if (typeof value === 'number') {
             let max = value * 0.5;
             let min = -max;
@@ -39,7 +39,7 @@ export class DemoSocket {
     emit(event: string, ...args: any): void {
         if (event in this.emits) {
             this.emits[event](args);
-        } 
+        }
         // not having an emit event defined is OK for demo purpoese for now, if we wish to get better coverage
         // then throw this error and run `npm test` to see holes.
         // else {

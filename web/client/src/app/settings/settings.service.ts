@@ -10,7 +10,7 @@ export class SettingsService {
 
   constructor(private crud: CrudService, private socket: AppSocket) { }
 
-  getUserSetting<T>(key: string): string | null {
+  getUserSetting(key: string): string | null {
     return localStorage.getItem(key);
   }
 

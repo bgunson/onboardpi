@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { RealtimeChartData, RealtimeChartOptions} from 'ngx-graph';
+import { RealtimeChartData, RealtimeChartOptions } from 'ngx-graph';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { pluck, throttleTime } from 'rxjs/operators';
 import { OBDResponse } from 'src/app/shared/models/obd.model';
@@ -36,13 +36,13 @@ export class RealtimeCurvesComponent implements OnInit, OnDestroy {
     lines: [
       { lineWidth: 3, area: true, areaOpacity: .2 }
     ],
-    xGrid: { tickPadding: 5, dashed: false, opacity: 0},
+    xGrid: { tickPadding: 5, dashed: false, opacity: 0 },
     yGrid: { enable: false, tickNumber: 5, tickPadding: -5 }
   };
 
   constructor(
     private curveDataService: CurveDataService,
-    private obd: OBDService, 
+    private obd: OBDService,
     public display: DisplayService,
   ) { }
 
@@ -75,7 +75,7 @@ export class RealtimeCurvesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-        
+
     if (this.curveOptions.lines) {
       this.curveOptions.lines[0].color = this.display.defaultColor;
       this.curveOptions.lines[0].areaColor = this.display.defaultColor;
@@ -88,6 +88,7 @@ export class RealtimeCurvesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.curveDataService.unsubscribeFromCurveData();
     this.unwatchSub.unsubscribe();
     this.obd.unwatch([this.curvePid]);
   }

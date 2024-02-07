@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { RealtimeChartData, RealtimeChartOptions } from 'ngx-graph';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { pluck } from 'rxjs/operators';
@@ -14,8 +14,7 @@ import { DashboardService } from '../../dashboard.service';
   templateUrl: './curve.component.html',
   styleUrls: ['../../dashboard.component.scss']
 })
-export class CurveComponent implements OnInit {
-
+export class CurveComponent implements OnInit, OnDestroy {
   @Input() card: Sensor;
 
   live$: Observable<OBDResponse>;
@@ -29,7 +28,7 @@ export class CurveComponent implements OnInit {
     loadingOverlayColor: '#ffffff00',
     margin: { left: -5, right: 0 },
     lines: [
-      {  area: true, areaOpacity: .2 }
+      { area: true, areaOpacity: .2 }
     ],
     xGrid: { enable: false },
     yGrid: { enable: false }
@@ -38,17 +37,16 @@ export class CurveComponent implements OnInit {
   constructor(
     private curveData: CurveDataService,
     private obd: OBDService,
-    public dashboardService: DashboardService, 
+    public dashboardService: DashboardService,
     public display: DisplayService
   ) { }
-
 
   ngOnInit(): void {
     this.curveData.addCurve(this.card.command);
 
     if (this.curveOptions.lines) {
       this.curveOptions.lines[0].color = this.display.defaultColor;
-        this.curveOptions.lines[0].areaColor = this.display.defaultColor;
+      this.curveOptions.lines[0].areaColor = this.display.defaultColor;
     }
 
 
@@ -59,6 +57,10 @@ export class CurveComponent implements OnInit {
 
     this.live$ = this.obd.getWatching().pipe(pluck(this.card.command));
 
+  }
+
+  ngOnDestroy(): void {
+    this.curveData.unsubscribeFromCurveData();
   }
 
 }
