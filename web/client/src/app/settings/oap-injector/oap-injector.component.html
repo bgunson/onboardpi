@@ -3,7 +3,8 @@
         <mat-list-item>
             Enabled
             <span style="flex: 1 1 auto"></span>
-            <mat-slide-toggle (change)="toggleInjector($event)" [(ngModel)]="injectorSettings.enabled"></mat-slide-toggle>
+            <mat-slide-toggle (change)="toggleInjector($event)"
+                [(ngModel)]="injectorSettings.enabled"></mat-slide-toggle>
         </mat-list-item>
     </mat-card>
 
@@ -24,7 +25,8 @@
         <mat-list-item>
             Commands
             <span style="flex: 1 1 auto"></span>
-            <span style="color: grey">{{ state.commands ? 'Injecting ' + state.commands.length + ' commands' : 'None' }}</span>
+            <span style="color: grey">{{ state.commands ? 'Injecting ' + state.commands.length + ' commands' : 'None'
+                }}</span>
         </mat-list-item>
     </mat-card>
     <ng-template #waiting>
@@ -35,10 +37,21 @@
         </mat-card>
     </ng-template>
 
+    <div mat-subheader><mat-icon>square_foot</mat-icon>&nbsp;Units</div>
+    <mat-card class="settings-card">
+        <mat-list-item>
+            Imperial
+            <span style="flex: 1 1 auto"></span>
+            <div>
+                <mat-slide-toggle [(ngModel)]="injectorSettings.parameters.imperial_units"></mat-slide-toggle>
+            </div>
+        </mat-list-item>
+    </mat-card>
+
     <!-- Add abilitiy to change injector's log level -->
     <div mat-subheader>
         <mat-icon>description</mat-icon>&nbsp;Logging
     </div>
     <settings-log-level [name]="name" [(level)]="injectorSettings.log_level"></settings-log-level>
-    
+
 </mat-list>
