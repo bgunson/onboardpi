@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { share, shareReplay, takeWhile, timeout } from 'rxjs/operators';
+import { scan, share, shareReplay, takeWhile, tap, timeout } from 'rxjs/operators';
 import { OBDSocket } from 'src/app/app.module';
 import { SettingsService } from 'src/app/settings/settings.service';
 import { OBDCommand, OBDResponse, Protocol, ResponseSet } from '../models/obd.model';
@@ -16,7 +16,7 @@ import { OBDCommand, OBDResponse, Protocol, ResponseSet } from '../models/obd.mo
 })
 export class OBDService {
 
-  private _watching$: Observable<any>;
+  private _watching$: Observable<ResponseSet>;
 
   /** Active set of watched commands by name */
   private _watchList: Set<string> = new Set<string>();
@@ -115,7 +115,15 @@ export class OBDService {
 
   getWatching(): Observable<ResponseSet> {
     if (!this._watching$) {
-      this._watching$ = this.socket.fromEvent<any>('watching').pipe(share());
+      this._watching$ = this.socket.fromEvent<OBDResponse>('watching').pipe(
+        scan((acc: ResponseSet, val: OBDResponse) => {
+          var responseValue: ResponseSet = {
+            [val.command.name]: val
+          }
+          return { ...acc, ...responseValue };
+        }),
+        share()
+      );
     }
     return this._watching$;
   }

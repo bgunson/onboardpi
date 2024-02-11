@@ -1,6 +1,6 @@
-from abc import ABC, abstractmethod, abstractproperty
+from abc import ABC, abstractmethod
 
-class Injector(ABC):
+class InjectorBase(ABC):
     """
     Injector template class. To provide a basis and structure for OnBoardPi's ability to export 
     OBD values to external services.

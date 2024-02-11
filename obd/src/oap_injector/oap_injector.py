@@ -6,8 +6,8 @@
 """
 from .event_handler import EventHandler
 from .Message import Message, QueuedMessage
-from src.injector import Injector
 from src.unit_systems import imperial
+from src.injector_base import InjectorBase
 from .Api_pb2 import ObdInjectGaugeFormulaValue, MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE, MESSAGE_BYEBYE
 from .Client import Client
 import configparser
@@ -19,7 +19,7 @@ import time
 MAX_RESTARTS = 10
 
 
-class OAPInjector(Injector):
+class OAPInjector(InjectorBase):
 
     """Conrols data injection and connection to the OpenAuto Pro protobuf API (obd gauges, notifications, status icon)
     """
