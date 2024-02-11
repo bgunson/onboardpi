@@ -1,4 +1,4 @@
 export SETTINGS_DIR=obd/tests/test_configs
-python obd/server.py & 
+python obd & 
 unset SETTINGS_DIR
 npm run test-obd --prefix web
