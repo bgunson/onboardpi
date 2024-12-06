@@ -1,4 +1,5 @@
 from .configuration import Configuration
+from .unit_systems import imperial
 
 class Watch():
     """ 
@@ -16,7 +17,10 @@ class Watch():
     def cache(self, response):
         """ Every response from obd-async will be cached in this object's watching dictionary keyed by the OBDCommand name """
         if not response.is_null():
-            self.watching[response.command.name] = response
+            if self.config.use_imperial_units and (response.command.mode == 1 or response.command.mode == 2):
+                self.watching[response.command.name] = imperial.convert(response)
+            else:
+                self.watching[response.command.name] = response
 
     async def emit_loop(self, socket):
         """ 

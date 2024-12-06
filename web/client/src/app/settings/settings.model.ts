@@ -2,7 +2,8 @@
 export interface Settings {
     vehicle: Vehicle;
     connection: Connection;
-    injectors: Injectors
+    injectors: Injectors;
+    imperial_units: boolean;
 }
 
 export interface Vehicle {
@@ -19,7 +20,7 @@ export interface Connection {
         baudrate: number | null;
         protocol: string | null;
     },
-    log_level: string; 
+    log_level: string;
     force_cmds: boolean;
 }
 

@@ -21,14 +21,13 @@ import { MaintenanceModule } from './maintenance/maintenance.module';
 // import { ServiceWorkerModule } from '@angular/service-worker';
 
 
-
 @Injectable()
 export class OBDSocket extends environment.obdSocket {
   constructor() {
-    super({ 
+    super({
       url: `http://${window.location.hostname}:60000`,
-      options: { 
-        transports: ['websocket'] ,
+      options: {
+        transports: ['websocket'],
         timeout: 30000
       }
     });
@@ -79,7 +78,7 @@ export class AppSocket extends environment.appSocket {
     //   // or after 30 seconds (whichever comes first).
     //   registrationStrategy: 'registerImmediately'
     // }),
-    
+
   ],
   providers: [OBDSocket, AppSocket],
   bootstrap: [AppComponent]

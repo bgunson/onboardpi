@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RealtimeChartData } from 'ngx-graph';
+import { Subscription } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
 import { OBDService } from 'src/app/shared/services/obd.service';
 
@@ -15,14 +16,15 @@ export class CurveDataService {
   MAX_SIZE = 200;
   private _curves: Set<string> = new Set<string>();
   private _curveData: Curves = {};
+  private _curveDataSubscription: Subscription;
 
 
-  constructor(private obd: OBDService) { 
+  constructor(private obd: OBDService) {
     this.pushData();
   }
 
   pushData() {
-    this.obd.getWatching().pipe(throttleTime(250)).subscribe(data => {
+    this._curveDataSubscription = this.obd.getWatching().pipe(throttleTime(250)).subscribe(data => {
       // console.log(this._curveData);
       [...this._curves].forEach((cmd: string) => {
 
@@ -51,6 +53,10 @@ export class CurveDataService {
         }
       });
     });
+  }
+
+  unsubscribeFromCurveData() {
+    this._curveDataSubscription.unsubscribe();
   }
 
   addCurve(command: string) {

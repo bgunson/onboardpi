@@ -14,14 +14,24 @@ jobs:
     steps:
     -
       name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     -
-      name: Angular Deploy gh-pages Actions
-      uses: AhsanAyaz/angular-deploy-gh-pages-actions@v1.3.2
+      name: Setup Node
+      uses: actions/setup-node@v2
       with:
-        github_access_token: ${{ secrets.GITHUB_TOKEN }} # see the Configuration section for how you can create secrets
-        angular_project_dir: ./web/client
-        build_configuration: demo # The build environment for the app. please look configurations in your angular.json
-        base_href: /onboardpi/   # make sure this corresponds to https://<your_username>.github.io/<base_href>/
-        deploy_branch: gh-pages # The branch the action should deploy to.
-        angular_dist_build_folder: web/public # The folder where your project is supposed to be after running ng build by the action.
+        node-version: 16
+    - 
+      name: Install Node Modules (client)
+      run: npm install
+      working-directory: ./web/client
+    - 
+      name: Build Client
+      run: npm run build-demo
+      working-directory: ./web/client
+    - 
+      name: Publish to gh-pages
+      run: npx angular-cli-ghpages --dir=../public --no-silent --name=${{ github.actor }} --email=${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com --repo=https://github.com/bgunson/onboardpi.git
+      working-directory: ./web/client
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    

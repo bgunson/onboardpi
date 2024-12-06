@@ -1,10 +1,9 @@
-import { HttpClient, HttpHandler, HttpXhrBackend } from "@angular/common/http";
-import { Injector } from "@angular/core";
-import { BehaviorSubject, from, interval, Observable, of } from "rxjs";
-import { delay, map, shareReplay, switchMap, take } from "rxjs/operators";
+import { BehaviorSubject, interval, Observable } from "rxjs";
+import { map, shareReplay, switchMap } from "rxjs/operators";
 import { OBDCommand, ResponseSet } from "src/app/shared/models/obd.model";
 import { environment } from "src/environments/environment";
 import { DemoSocket } from "./demo-socket";
+import { Settings } from "src/app/settings/settings.model";
 
 export class DemoOBDSocket extends DemoSocket {
 
@@ -19,21 +18,23 @@ export class DemoOBDSocket extends DemoSocket {
     private _status$: BehaviorSubject<string> = new BehaviorSubject<string>('Car Connected');
 
     private _watch$: Observable<ResponseSet> = interval(500).pipe(
-        switchMap(() => this.getSnapshot()), 
-        map((snapshot) => {
-            var response: ResponseSet = {};
-            [...this._watchList].forEach((cmd: string) => {
-                if (snapshot[cmd]) {
-                    response[cmd] = {
-                        value: !cmd.startsWith('DTC') ? this.generateValue(snapshot[cmd].value) : snapshot[cmd].value,
-                        time: Date.now(),
-                        command: snapshot[cmd].command,
-                        unit: snapshot[cmd].unit
+        switchMap(_ => this.getSnapshot().pipe(
+            map(snapshot => {
+                const settings = this.getSettings();
+                var response: ResponseSet = {};
+                [...this._watchList].forEach((cmd: string) => {
+                    if (snapshot[cmd]) {
+                        response[cmd] = {
+                            value: !cmd.startsWith('DTC') ? this.generateValue(snapshot[cmd].value) : snapshot[cmd].value,
+                            time: Date.now(),
+                            command: snapshot[cmd].command,
+                            unit: settings?.imperial_units === true ? this.imperialUnit(snapshot[cmd].unit) : snapshot[cmd].unit
+                        }
                     }
-                }
-            });
-            return response;
-        })
+                });
+                return response;
+            })
+        ))
     );
 
     oneTimeEvents: { [event: string]: Promise<any> } = {
@@ -59,8 +60,8 @@ export class DemoOBDSocket extends DemoSocket {
         'connect_obd': () => {
             this._isConnected$.next(true);
             this._status$.next('Car Connected');
-        }, 
-        'close': () =>  {
+        },
+        'close': () => {
             this._isConnected$.next(false);
             this._status$.next('Not Connected');
         }
@@ -76,6 +77,36 @@ export class DemoOBDSocket extends DemoSocket {
             this._snapshot$ = this.get<ResponseSet>(environment.dataURL + '/obd/snapshot.json').pipe(shareReplay());
         }
         return this._snapshot$;
+    }
+
+    private getSettings(): Settings | null {
+        const localSettings = sessionStorage.getItem("settings");
+        return localSettings ? JSON.parse(localSettings) : null;
+    }
+
+    private imperialUnit = (metricUnit: string): string => {
+        switch (metricUnit) {
+            case "degree_Fahrenheit":
+            case "degC":
+                return "°F"
+
+            case "gps":
+                return "lb/min";
+
+            case "kilopascal":
+                return "psi";
+
+            case "kilometers":
+            case "kilometer":
+                return "miles";
+
+            case "kilometer_per_hour":
+            case "kph":
+                return "mph";
+
+            default:
+                return metricUnit;
+        }
     }
 
 }

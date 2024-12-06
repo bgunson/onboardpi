@@ -7,6 +7,7 @@
 from .event_handler import EventHandler
 from .Message import Message, QueuedMessage
 from src.injector import Injector
+from src.unit_systems import imperial
 from .Api_pb2 import ObdInjectGaugeFormulaValue, MESSAGE_OBD_INJECT_GAUGE_FORMULA_VALUE, MESSAGE_BYEBYE
 from .Client import Client
 import configparser
@@ -28,7 +29,10 @@ class OAPInjector(Injector):
         self.logger = logger
         self.logger.info(
             "======================================================")
-        self.logger.info("Initializing an OpenAuto Pro injector.")
+        self.logger.info("Initializing an OpenAuto Pro injector." + str(args) + str(kwargs))
+
+        self._use_imperial_units = bool(kwargs.get("imperial_units"))
+        self.logger.debug("Using imperial unit system: " + str(self._use_imperial_units))
 
         self.__last_values = dict()
         self.__init_cmds()
@@ -159,6 +163,9 @@ class OAPInjector(Injector):
             self.__oap_inject.formula = "getPidValue({})".format(cmd_index)
             # may raise a KeyError
             self.__oap_inject.value = obd_response.value.magnitude
+
+            if self._use_imperial_units:
+                obd_response = imperial.convert(obd_response)
 
             if self.__last_values[obd_response.command.name] != obd_response.value.magnitude:
                 # only queue inject msg if value has changed
