@@ -4,7 +4,7 @@ conversions = {
     "kilometer": obd.Unit.mile,
     "kilometer_per_hour": obd.Unit.mile_per_hour,
     "kilopascal": obd.Unit.psi,
-    "gps": obd.Unit.pound / obd.Unit.minute,            # grams per second
+    "gps": obd.Unit.pound / obd.Unit.minute, # grams per second
     "degree_Celsius": obd.Unit.degree_Fahrenheit
 }
 

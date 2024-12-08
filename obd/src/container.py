@@ -10,7 +10,7 @@ class Container(containers.DeclarativeContainer):
     
     sio_server = providers.Object(socketio.AsyncServer(cors_allowed_origins='*', json=obdio, async_mode='asgi'))
 
-    config_service = providers.Singleton(ConfigurationService, sio_server)
+    config_service = providers.Singleton(ConfigurationService)
 
     obd_service = providers.Singleton(OBDService, sio_server, config_service)
 
