@@ -8,7 +8,7 @@ from dependency_injector.wiring import Provide, inject
 from src.configuration_service import ConfigurationService
 from src.obd_service import OBDService
 from src.injector_service import InjectorService
-from src.ioc_container import Container
+from src.container import Container
 
 static_files = {
     '/view/obd.log': {'filename': 'obd.log', 'content_type': 'text/plain'},
@@ -23,10 +23,12 @@ def on_startup():
     # API(sio).mount()
 
 
-def on_shutdown():
+def on_shutdown(obd):
     # config.obd_io.close()
     print("========== OnBoardPi OBD Server Shutdown - {} ===========".format(
         datetime.now().strftime("%m/%d/%Y, %H:%M:%S")))
+    obd.stop()
+    obd.disconnect()
 
 @inject
 def main(
@@ -35,7 +37,7 @@ def main(
     injector_service: InjectorService = Provide[Container.injector_service],
     sio: socketio.AsyncServer = Provide[Container.sio_server]):
 
-    app = socketio.ASGIApp(sio, static_files=static_files, on_startup=on_startup, on_shutdown=on_shutdown)
+    app = socketio.ASGIApp(sio, static_files=static_files, on_startup=on_startup, on_shutdown=on_shutdown(obd_serivice))
     uvicorn.run(app, host='0.0.0.0', port=60000, log_level="info")
 
 if __name__ == "__main__":

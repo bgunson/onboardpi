@@ -44,3 +44,8 @@ class InjectorBase(ABC):
     def inject(self, obd_response):
         """ Export an OBDCommand reponse. The wath loop in watch.py will call this for any enabled and configured injector. """
         pass
+
+    @property
+    @abstractmethod
+    def id(self) -> str:
+        pass

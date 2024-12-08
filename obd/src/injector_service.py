@@ -1,7 +1,10 @@
 import uuid
 
+import obd.commands
+
 import obd
 
+from .response_callback import ResponseCallback
 from .injector_base import InjectorBase
 from .logger import register_logger
 from .oap_injector import OAPInjector
@@ -14,24 +17,40 @@ injector_map = {
 
 class InjectorService():
 
-    def __init__(self, sio, config, obd):
+    def __init__(self, sio, config: ConfigurationService, obd_service: OBDService):
         self.__register_events(sio)
         self.logger = register_logger(__name__)
         """ Init injectors defined in the settings file which are enabled """
         self.config: ConfigurationService = config
-        self.obd: OBDService = obd
-        self.__injectors = {}
+        self.obd: OBDService = obd_service
+        self.__injectors: dict[str, InjectorBase] = {}
         self.logger.info("Initializing OnBoardPi data injectors")
         if not 'injectors' in self.config.settings:
             return
+        
+        connect_obd = False
         self.__injector_settings = self.config.settings['injectors']
         for injector_type, injector_config in self.__injector_settings.items():
             # If the injector is to be enabled at startup (enabled == True in settings file) cache it
             if injector_config['enabled'] == True:
+                connect_obd = True
                 self.register_injector(injector_type)
 
+        # TODO: test this
+        if connect_obd and not obd_service.connection.is_connected():
+            obd_service.connect(None)
+            for injector in self.__injectors.values():
+                if not injector.is_enabled():
+                    continue
+                for cmd in injector.get_commands():
+                    if obd.commands.has_name(cmd):
+                        obd_service.watch_command(obd.commands[cmd], ResponseCallback(injector.id, injector.inject))
 
-    def register_injector(self, injector_type):
+
+        
+
+
+    def register_injector(self, injector_type) -> InjectorBase:
         """ Create and cache a new injector instance of type. The new injectgor is assumed to be enabled """
         injector_config = self.config.settings['injectors'][injector_type]
         # create a logger for this injector
@@ -46,7 +65,7 @@ class InjectorService():
         # cache the instance with self
         self.__injectors[injector_id] = injector
 
-        return injector_id
+        return injector
     
 
     def handle_injector_event(self, event, injector: InjectorBase):
@@ -54,13 +73,13 @@ class InjectorService():
         for cmd in injector.get_commands():
             if cmd is not None and obd.commands.has_name(cmd):
                 if event == 'connected' or event == 'watch':
-                    self.obd.watch_command(obd.commands[cmd], (injector.inject, None))
+                    self.obd.watch_command(obd.commands[cmd], ResponseCallback(injector.id, injector.inject))
                 elif event == 'disconnected' or event == 'stop' or event == 'unwatch':
-                    self.obd.unwatch_command(obd.commands[cmd], callback=injector.inject)
+                    self.obd.unwatch_command(obd.commands[cmd], injector.id)
         self.obd.start()
 
 
-    def get_injectors(self):
+    def get_injectors(self) -> dict[str, InjectorBase]:
         return self.__injectors
     
     

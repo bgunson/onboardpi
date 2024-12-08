@@ -1,18 +1,20 @@
+import os
 import obd
 import elm
-import sys
+import signal
 import threading
 
 from collections import defaultdict
 
-from .logger import register_logger
+from .response_callback import ResponseCallback
 from .configuration_service import ConfigurationService
+from .logger import register_logger
+from .unit_systems import imperial
 
-class OBDService(obd.OBD):
+class OBDService():
 
     def __init__(self, sio, config):
         register_logger(obd.__name__, config.settings["connection"]["log_level"], file_logger=True)
-        super().__init__()  
 
         self.__register_events(sio)
 
@@ -24,53 +26,68 @@ class OBDService(obd.OBD):
         self.__loop = None
         self.__commands = defaultdict(obd.OBDResponse)   # key = OBDCommand, value = Response
         self.__callbacks = defaultdict(dict)  # key = OBDCommand, value = list of Functions
-        self.__async_callbacks = defaultdict(dict)
-        self.__running = False
+        self.__is_running = threading.Event()
+        self.__is_connecting_now = threading.Event()
+        self.connection = obd.OBD("fake")
 
 
     def connect(self, portstr):
         with self.__lock:
-            if self.is_connected():
+            if self.connection.is_connected() or self.__is_connecting_now.is_set():
                 return
             
             if portstr is None:
                 params = self.config.load_connection_params()
             else:
                 params = { "portstr": portstr }
-                
-            self._OBD__connect(params.get("portstr"), params.get("baudrate"), params.get("protocol"), check_voltage=True, start_low_power=False)
-            self._OBD__load_commands()
+
+            self.__is_connecting_now.set()
+            attempts = 0
+            connected = False
+            while not connected and attempts < 2:    
+                self.connection = obd.OBD(params.get("portstr"), params.get("baudrate"), params.get("protocol"), check_voltage=True, start_low_power=False)
+                connected = self.connection.is_connected()
+                attempts += 1
+
+            self.__is_connecting_now.clear()
+
+
+    def disconnect(self):
+        self.connection.close()
 
 
     async def start(self):
         with self.__lock:
-            if not self.is_connected() or len(self.__commands) == 0:
+            if not self.connection.is_connected() or len(self.__commands) == 0:
                 return
 
-            if self.__loop is None and not self.__running:
-                self.__running = True
+            if self.__loop is None and not self.__is_running.is_set():
+                self.__is_running.set()
                 self.__loop = await self.sio.start_background_task(self.__watch_loop)
 
 
     def stop(self):
         with self.__lock:
-            if self.__running:
-                self.__running = False
+            if self.__is_running.is_set():
+                self.__is_running.clear()
                 self.__loop = None
 
 
-    def unwatch_all(self, client_id):
+    def unwatch_all(self, client_id: str):
         with self.__lock:
             for c in list(self.__commands):
                 self.unwatch_command(c, client_id)
 
 
-    def watch_command(self, c: obd.OBDCommand, callback: tuple, client_id: str, force=False):
+    def watch_command(self, c: obd.OBDCommand, callback: ResponseCallback, force=False):
         with self.__lock:
-            if self.__running:
-                return
+            if self.__is_running.is_set():
+                raise Exception("watch_command called while loop is running.")
+            
+            if not self.connection.is_connected():
+                self.connect(None)
            
-            if not force and not self.test_cmd(c):
+            if not force and not self.connection.test_cmd(c):
                 # self.test_cmd() will print warnings
                 return
 
@@ -78,62 +95,47 @@ class OBDService(obd.OBD):
             if c not in self.__commands:
                 self.__commands[c] = obd.OBDResponse()  # give it an initial value
 
-            match callback:
-                case (callback, None):
-                    pass
-                case (None, async_callback):
-                    self.__async_callbacks[c][client_id] = async_callback
-                case (a, b):
-                    raise Exception("Cannot specifiy both sync/async callbacks")
-                case _:
-                    raise Exception("Neither a syncronous or async callback were specified to watch.")
+            if callback not in self.__callbacks[c]:
+                self.__callbacks[c][callback.client_id] = callback
 
 
-    def unwatch_command(self, c: obd.OBDCommand, client_id: tuple):
+    def unwatch_command(self, c: obd.OBDCommand, client_id: str):
         with self.__lock:
-            if self.__running:
+            if self.__is_running.is_set():
                 return
-            if c in self.__commands:
-                match client_id:
-                    case (cid, None):
-                        pass
-                    case (None, cid):
-                        if cid in self.__async_callbacks[c]:
-                            self.__async_callbacks[c].pop(cid)
-                    case (a, b):
-                        raise Exception("Cannot specifiy both sync/async callbacks")
-                    case _:
-                        raise Exception("Neither a syncronous or async callback were specified to unwatch.")
+            if c in self.__commands and client_id in self.__callbacks[c]:
+                self.__callbacks[c].pop(client_id)
 
-                if len(self.__async_callbacks[c]) == 0 and len(self.__callbacks[c]) == 0:
+                if len(self.__callbacks[c]) == 0:
                     self.__commands.pop(c)
                         
 
     async def __watch_loop(self):
-        while self.__running:
+        self.__is_running.wait()
+        while self.__is_running.is_set():
             if len(self.__commands) > 0:
                 # loop over the requested commands, send, and collect the response
                 for c in list(self.__commands):
-                    if not self.is_connected():
-                        # logger.info("Async thread terminated because device disconnected")
-                        self.stop()
-                        return
-
                     # force, since commands are checked for support in watch()
-                    r = self.query(c, force=True)
+                    r = self.connection.query(c, force=True)
 
-                    # check empty response or if valus has changed
-                    if r.is_null() or self.__commands[c].value == r.value:
+                    # check empty response
+                    if r.is_null():
+                        continue
+
+                    if self.config.use_imperial_units and (r.command.mode == 1 or 2):
+                        r = imperial.convert(r)
+
+                    # check if value has changed
+                    if self.__commands[c].value == r.value:
                         continue
 
                     # store the response
                     self.__commands[c] = r
 
-                    # # fire the callbacks, if there are any
+                    # fire the callbacks, if there are any
                     for callback in list(self.__callbacks[c].values()):
-                        callback(r)
-                    for callback in list(self.__async_callbacks[c].values()):
-                        await callback(r)
+                        await callback.run(r)
                         
                 await self.sio.sleep(self.config.delay)
 
@@ -147,18 +149,17 @@ class OBDService(obd.OBD):
         async def disconnect(sid):
             self.stop()
             self.unwatch_all((None, sid))
-            await self.start()
 
         @sio.event
         async def watch(sid, commands):
             self.stop()
             for cmd in commands:
-                if obd.commands.has_name(cmd):
+                if cmd is not None and obd.commands.has_name(cmd):
 
                     async def sid_emit(r):
                         await sio.emit("watching", r, to=sid)
 
-                    self.watch_command(obd.commands[cmd], (None, sid_emit), sid)
+                    self.watch_command(obd.commands[cmd], ResponseCallback(sid, sid_emit, is_async=True))
                     
             await self.start()
 
@@ -167,8 +168,8 @@ class OBDService(obd.OBD):
         async def unwatch(sid, commands):
             self.stop()
             for cmd in commands:
-                if obd.commands.has_name(cmd):
-                    self.unwatch_command(obd.commands[cmd], (None, sid))
+                if cmd is not None and obd.commands.has_name(cmd):
+                    self.unwatch_command(obd.commands[cmd], sid)
 
             await self.start()
 
@@ -176,53 +177,53 @@ class OBDService(obd.OBD):
         @sio.event
         async def unwatch_all(sid):
             self.stop()
-            self.unwatch_all((None, sid))
+            self.unwatch_all(sid)
             await self.start()
         
         
         @sio.event
         async def status(sid):
-            await sio.emit('status', self.status(), room=sid)
+            await sio.emit('status', self.connection.status(), room=sid)
 
 
         @sio.event
         async def is_connected(sid):
-            await sio.emit('is_connected', self.is_connected(), room=sid)
+            await sio.emit('is_connected', self.connection.is_connected(), room=sid)
 
 
         @sio.event
         async def port_name(sid):
-            await sio.emit('port_name', self.port_name(), room=sid)
+            await sio.emit('port_name', self.connection.port_name(), room=sid)
 
 
         @sio.event
         async def supports(sid, cmd):
             if obd.commands.has_name(cmd):
-                await sio.emit('supports', self.supports(obd.commands[cmd]), room=sid)
+                await sio.emit('supports', self.connection.supports(obd.commands[cmd]), room=sid)
             else:
                 await sio.emit('supports', False, room=sid)
 
 
         @sio.event
         async def protocol_id(sid):
-            await sio.emit('protocol_id', self.protocol_id(), room=sid)
+            await sio.emit('protocol_id', self.connection.protocol_id(), room=sid)
 
 
         @sio.event
         async def protocol_name(sid):
-            await sio.emit('protocol_name', self.protocol_name(), room=sid)
+            await sio.emit('protocol_name', self.connection.protocol_name(), room=sid)
 
 
         @sio.event
         async def supported_commands(sid):
-            await sio.emit('supported_commands', self.supported_commands, room=sid)
+            await sio.emit('supported_commands', self.connection.supported_commands, room=sid)
 
 
         @sio.event
         async def query(sid, cmd):
             if obd.commands.has_name(cmd):
                 self.stop()
-                await sio.emit('query', self.query(obd.commands[cmd]), room=sid)
+                await sio.emit('query', self.connection.query(obd.commands[cmd]), room=sid)
                 await self.start()
             else:
                 await sio.emit('query', None, room=sid)
@@ -236,7 +237,7 @@ class OBDService(obd.OBD):
         @sio.event
         async def close(sid):
             self.stop()
-            self.close()
+            self.connection.close()
             await sio.emit('obd_closed')
 
 
@@ -270,7 +271,7 @@ class OBDService(obd.OBD):
         @sio.event
         async def clear_dtc(sid):
             self.stop()
-            res = self.query(obd.commands['CLEAR_DTC'])
+            res = self.connection.query(obd.commands['CLEAR_DTC'])
             await self.start()
             return res
 
@@ -293,7 +294,7 @@ class OBDService(obd.OBD):
         @sio.event
         async def connect_obd(sid, portstr=None):
             self.connect(portstr)  
-            await sio.emit("connect_obd", self.is_connected())
+            await sio.emit("connect_obd", self.connection.is_connected())
 
 
         @sio.event
@@ -314,4 +315,4 @@ class OBDService(obd.OBD):
 
         @sio.event
         async def kill(sid):
-            sys.exit(0)
+            os.kill(os.getpid(), signal.SIGTERM)
