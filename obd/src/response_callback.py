@@ -2,6 +2,8 @@ from typing import Callable, Any
 
 import obd
 
+from obd import OBDResponse
+
 class ResponseCallback():
 
     def __init__(self, client_id: str, callback: Callable, is_async: bool = False):

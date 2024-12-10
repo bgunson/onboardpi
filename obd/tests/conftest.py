@@ -1,6 +1,7 @@
 import pytest
 import os
-from obd.src.container import Container
+
+from src.container import Container
 
 @pytest.fixture(scope="session")
 def container():
