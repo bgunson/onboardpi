@@ -13,7 +13,7 @@ class InjectorBase(ABC):
     """
 
     @abstractmethod
-    def start(self):
+    async def start(self):
         """ Enable the data injection """
         pass
     

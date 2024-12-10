@@ -1,7 +1,5 @@
 import uuid
 
-import obd.commands
-
 import obd
 
 from .response_callback import ResponseCallback
@@ -19,8 +17,9 @@ class InjectorService():
 
     def __init__(self, sio, config: ConfigurationService, obd_service: OBDService):
         self.__register_events(sio)
-        self.logger = register_logger(__name__)
+        self.logger = register_logger(__name__, file_logger=False)
         """ Init injectors defined in the settings file which are enabled """
+        self.sio = sio
         self.config: ConfigurationService = config
         self.obd: OBDService = obd_service
         self.__injectors: dict[str, InjectorBase] = {}
@@ -28,25 +27,21 @@ class InjectorService():
         if not 'injectors' in self.config.settings:
             return
         
-        connect_obd = False
+        self.connect_obd_on_start = False
         self.__injector_settings = self.config.settings['injectors']
         for injector_type, injector_config in self.__injector_settings.items():
             # If the injector is to be enabled at startup (enabled == True in settings file) cache it
             if injector_config['enabled'] == True:
-                connect_obd = True
+                self.connect_obd_on_start = True
                 self.register_injector(injector_type)
 
-        # TODO: test this
-        if connect_obd and not obd_service.connection.is_connected():
-            obd_service.connect(None)
+
+    async def startup(self):
+        if self.connect_obd_on_start and not self.obd.connection.is_connected():
+            self.obd_service.connect(None)
             for injector in self.__injectors.values():
-                if not injector.is_enabled():
-                    continue
-                for cmd in injector.get_commands():
-                    if obd.commands.has_name(cmd):
-                        obd_service.watch_command(obd.commands[cmd], ResponseCallback(injector.id, injector.inject))
-
-
+                if injector.is_enabled():
+                    await self.sio.start_background_task(injector.start)
         
 
 
@@ -73,9 +68,9 @@ class InjectorService():
         for cmd in injector.get_commands():
             if cmd is not None and obd.commands.has_name(cmd):
                 if event == 'connected' or event == 'watch':
-                    self.obd.watch_command(obd.commands[cmd], ResponseCallback(injector.id, injector.inject))
+                    self.obd.watch_commands(obd.commands[cmd], ResponseCallback(injector.id, injector.inject))
                 elif event == 'disconnected' or event == 'stop' or event == 'unwatch':
-                    self.obd.unwatch_command(obd.commands[cmd], injector.id)
+                    self.obd.unwatch_commands(obd.commands[cmd], injector.id)
         self.obd.start()
 
 

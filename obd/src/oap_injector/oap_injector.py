@@ -88,7 +88,7 @@ class OAPInjector(InjectorBase):
             self.logger.info(
                 "OAP injector exceeded maxmium number of restarts. Make sure OpenAuto Pro is running and manually disable/enable me")
 
-    def start(self):
+    async def start(self):
         """Start the injector from a disabled state. Not called on __init__, called at some point during runtime usually from an async event 
         """
         self.logger.info("OAP injector starting...")
@@ -144,6 +144,10 @@ class OAPInjector(InjectorBase):
                     Note: some commands may be None if the injector could not cross reference it with python-obd.
         """
         return self.__commands
+    
+    @property
+    def id(self):
+        pass
 
     def inject(self, obd_response):
         """Inject an obd response value to its OAP gauge

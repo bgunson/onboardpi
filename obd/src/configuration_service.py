@@ -7,8 +7,9 @@ from .logger import register_logger
 
 class ConfigurationService():
 
-    def __init__(self):
-        self.logger = register_logger(__name__)
+    def __init__(self, sio):
+        self.__register_events(sio)
+        self.logger = register_logger(__name__, file_logger=False)
         self.logger.setLevel(logging.INFO)
         self.load_connection_params()
 
@@ -55,3 +56,11 @@ class ConfigurationService():
                 self.__settings = json.load(settings_file)
         except FileNotFoundError:
             self.__settings = {}
+
+
+    def __register_events(self, sio):
+
+        @sio.event
+        async def set_logger_level(sid, logger_name, level):
+            logger = logging.getLogger(logger_name)
+            logger.setLevel(level)

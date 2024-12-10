@@ -17,18 +17,30 @@ static_files = {
     '/download/oap.log': 'oap.log'
 }
 
-def on_startup():
+
+@inject
+async def on_startup(
+    config_service: ConfigurationService = Provide[Container.config_service],
+    obd_serivice: OBDService = Provide[Container.obd_service],
+    injector_service: InjectorService = Provide[Container.injector_service],
+    sio: socketio.AsyncServer = Provide[Container.sio_server]):
     print("========== OnBoardPi OBD Server Startup - {} ===========".format(
         datetime.now().strftime("%m/%d/%Y, %H:%M:%S")))
-    # API(sio).mount()
+    await injector_service.startup()
 
 
-def on_shutdown(obd):
+@inject
+async def on_shutdown(
+    config_service: ConfigurationService = Provide[Container.config_service],
+    obd_serivice: OBDService = Provide[Container.obd_service],
+    injector_service: InjectorService = Provide[Container.injector_service],
+    sio: socketio.AsyncServer = Provide[Container.sio_server]):
     # config.obd_io.close()
     print("========== OnBoardPi OBD Server Shutdown - {} ===========".format(
         datetime.now().strftime("%m/%d/%Y, %H:%M:%S")))
-    obd.stop()
-    obd.disconnect()
+    obd_serivice.stop()
+    obd_serivice.disconnect()
+
 
 @inject
 def main(
@@ -37,7 +49,7 @@ def main(
     injector_service: InjectorService = Provide[Container.injector_service],
     sio: socketio.AsyncServer = Provide[Container.sio_server]):
 
-    app = socketio.ASGIApp(sio, static_files=static_files, on_startup=on_startup, on_shutdown=on_shutdown(obd_serivice))
+    app = socketio.ASGIApp(sio, static_files=static_files, on_startup=on_startup, on_shutdown=on_shutdown)
     uvicorn.run(app, host='0.0.0.0', port=60000, log_level="info")
 
 if __name__ == "__main__":
