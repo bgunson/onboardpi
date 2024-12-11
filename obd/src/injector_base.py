@@ -18,7 +18,7 @@ class InjectorBase(ABC):
         pass
     
     @abstractmethod
-    def stop(self):
+    async def stop(self):
         """ Disable an already running injector """
         pass
 
@@ -28,11 +28,6 @@ class InjectorBase(ABC):
 
     @abstractmethod
     def is_active(self):
-        pass
-
-    @abstractmethod
-    def status(self):
-        """ Give the current status of the injector. Such as: connected, disabled, errors, etc """
         pass
 
     @abstractmethod

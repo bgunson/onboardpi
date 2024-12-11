@@ -1,10 +1,12 @@
 import os
-import obd
-import elm
 import signal
+import asyncio
 import threading
-
 from collections import defaultdict
+
+import elm
+import obd
+from obd import OBDResponse, OBDCommand
 
 from .response_callback import ResponseCallback
 from .configuration_service import ConfigurationService
@@ -14,110 +16,129 @@ from .unit_systems import imperial
 class OBDService():
 
     def __init__(self, sio, config):
-        register_logger(obd.__name__, config.settings["connection"]["log_level"], file_logger=True)
+        self.logger = register_logger(obd.__name__, config.settings["connection"]["log_level"], file_logger=True)
 
         self.__register_events(sio)
 
         self.sio = sio
         self.__emulator = None
-        self.__lock = threading.RLock()
+        self.__lock = asyncio.Lock()
         self.config: ConfigurationService = config
-        self.__commands = defaultdict(obd.OBDResponse)   # key = OBDCommand, value = Response
+        self.__commands = defaultdict(OBDResponse)   # key = OBDCommand, value = Response
         self.__callbacks = defaultdict(dict)  # key = OBDCommand, value = list of Functions
-        self.__is_running = threading.Event()
-        self.__is_connecting_now = threading.Event()
+        self.__is_running = asyncio.Event()
+        self.__is_connecting_now = asyncio.Event()
         self.connection = obd.OBD("fake") # a temp connection to nowhere so self.connection instantiated
 
 
-    def connect(self, portstr: str = None):
-        with self.__lock:
+    async def connect(self, portstr: str = None):
+        async with self.__lock:
             if self.connection.is_connected() or self.__is_connecting_now.is_set():
                 return
-            
             self.__is_connecting_now.set()
             if portstr is None:
                 params = self.config.load_connection_params()
             else:
-                params = { "portstr": portstr }
+                params = {"portstr": portstr}
 
-            attempts = 0
-            connected = False
-            while not connected and attempts < 2:  
-                self.connection = obd.OBD(
-                    params.get("portstr"),
-                    params.get("baudrate"),
-                    params.get("protocol"), 
-                    timeout=0.01,
-                    check_voltage=True, 
-                    start_low_power=False)
-                connected = self.connection.is_connected()
-                attempts += 1
-
+            self.connection = obd.OBD(
+                params.get("portstr"),
+                params.get("baudrate"),
+                params.get("protocol"),
+                timeout=0.01,
+                check_voltage=True,
+                start_low_power=False)
             self.__is_connecting_now.clear()
 
 
-    def disconnect(self):
+
+    async def disconnect(self):
+        async with self.__lock:
+            await self.__disconnect()
+
+
+    async def __disconnect(self):
         self.connection.close()
+        self.__commands.clear()
+        self.__callbacks.clear()
+
+
+    async def shutdown(self):
+        async with self.__lock:
+            await self.__stop()
+            await self.__disconnect()
 
 
     async def start(self):
-        with self.__lock:
-            if not self.connection.is_connected() or len(self.__commands) == 0:
-                return
-
-            if not self.__is_running.is_set():
-                self.__is_running.set()
-                await self.sio.start_background_task(self.__watch_loop)
+        async with self.__lock:
+            await self.__start()
 
 
-    def stop(self):
-        with self.__lock:
-            if self.__is_running.is_set():
-                self.__is_running.clear()
+    async def __start(self):
+        if not self.connection.is_connected() or len(self.__commands) == 0:
+            return
+
+        if not self.__is_running.is_set():
+            self.__is_running.set()
+            self.sio.start_background_task(self.__watch_loop)
+
+
+    async def stop(self):
+        async with self.__lock:
+            await self.__stop()
+
+
+    async def __stop(self):
+        if self.__is_running.is_set():
+            self.__is_running.clear()
 
 
     async def unwatch_all(self, client_id: str):
-        with self.__lock:
-            await self.unwatch_commands(list(self.__commands.keys()), client_id)
+        async with self.__lock:
+            await self.__unwatch_commands(list(self.__commands.keys()), client_id)
 
 
-    async def watch_commands(self, commands: list, callback: ResponseCallback, force=False):
-        with self.__lock:
-            self.stop()
-            if not self.connection.is_connected():
-                self.connect(None)
+    async def watch_commands(self, commands: list[OBDCommand], callback: ResponseCallback, force=False):
+        async with self.__lock:
+            await self.__watch_commands(list(commands), callback, force)
 
-            for cmd in commands:
-                if not force and not self.connection.test_cmd(cmd):
-                    # self.test_cmd() will print warnings
-                    return
 
-                # new command being watched, store the command
-                if cmd not in self.__commands:
-                    self.__commands[cmd] = obd.OBDResponse()  # give it an initial value
-
-                if callback not in self.__callbacks[cmd]:
-                    self.__callbacks[cmd][callback.client_id] = callback
+    async def __watch_commands(self, commands: list[OBDCommand], callback: ResponseCallback, force=False):
+        await self.__stop()
+        for cmd in commands:
+            if not force and not self.connection.test_cmd(cmd):
+                # `test_cmd()` will print warnings
+                continue
             
-            await self.start()
+            # New command being watched, store the command
+            if cmd not in self.__commands:
+                self.__commands[cmd] = OBDResponse()  # Initialize with a default value
+
+            if callback.client_id not in self.__callbacks[cmd]:
+                self.__callbacks[cmd][callback.client_id] = callback
+
+        await self.__start()
 
 
-    async def unwatch_commands(self, commands: list, client_id: str):
-        with self.__lock:
-            self.stop()
-            for cmd in commands:
-                if cmd in self.__commands and client_id in self.__callbacks[cmd]:
-                    self.__callbacks[cmd].pop(client_id)
+    async def unwatch_commands(self, commands: list[OBDCommand], client_id: str):
+        async with self.__lock:
+            await self.__unwatch_commands(commands, client_id)
 
-                if len(self.__callbacks[cmd]) == 0:
-                    self.__commands.pop(cmd)
-            
-            await self.start()
+
+    async def __unwatch_commands(self, commands: list[OBDCommand], client_id: str):
+        await self.__stop()
+        for cmd in commands:
+            if cmd in self.__commands and client_id in self.__callbacks[cmd]:
+                del self.__callbacks[cmd][client_id]
+
+            if not self.__callbacks[cmd] and cmd in self.__commands:
+                del self.__commands[cmd]
+
+        await self.__start()
                         
 
     async def __watch_loop(self):
-        self.__is_running.wait()
-        while self.__is_running.is_set():
+        while self.__is_running.is_set() and self.connection.is_connected():
             if len(self.__commands) > 0:
                 # loop over the requested commands, send, and collect the response
                 for c in list(self.__commands):
@@ -216,7 +237,7 @@ class OBDService():
         @sio.event
         async def query(sid, cmd):
             if obd.commands.has_name(cmd):
-                self.stop()
+                await self.stop()
                 await sio.emit('query', self.connection.query(obd.commands[cmd]), to=sid)
                 await self.start()
             else:
@@ -230,7 +251,7 @@ class OBDService():
 
         @sio.event
         async def close(sid):
-            self.stop()
+            await self.stop()
             self.connection.close()
             await sio.emit('obd_closed')
 
@@ -264,7 +285,7 @@ class OBDService():
 
         @sio.event
         async def clear_dtc(sid):
-            self.stop()
+            await self.stop()
             res = self.connection.query(obd.commands['CLEAR_DTC'])
             await self.start()
             return res
@@ -287,7 +308,7 @@ class OBDService():
 
         @sio.event
         async def connect_obd(sid, portstr=None):
-            self.connect(portstr)  
+            await self.connect(portstr)  
             await sio.emit("connect_obd", self.connection.is_connected())
 
 

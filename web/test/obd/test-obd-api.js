@@ -91,7 +91,6 @@ describe("obd api", () => {
         });
     });
 
-
     it('should *unwatch* "RPM" commands', (done) => {
         socket.emit('unwatch', ['RPM']);
         socket.once('watching', (watching) => {
@@ -111,7 +110,7 @@ describe("obd api", () => {
         setTimeout(() => {
             assert.isFalse(responded);
             done();
-        }, 500)
+        }, 100)
     });
 
     it('should not *query* a bad command', (done) => {

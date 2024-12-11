@@ -1,7 +1,5 @@
 from typing import Callable, Any
 
-import obd
-
 from obd import OBDResponse
 
 class ResponseCallback():
@@ -22,7 +20,7 @@ class ResponseCallback():
         self.is_async = is_async
 
 
-    async def run(self, response: obd.OBDResponse) -> Any:
+    async def run(self, response: OBDResponse) -> Any:
         """
         Execute the callback. If it's async, await it. If it's sync, execute normally.
         """
