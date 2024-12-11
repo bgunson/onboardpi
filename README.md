@@ -98,14 +98,15 @@ Thanks to [MockuPhone](https://mockuphone.com/) for the device mock-ups.
 <img src="https://user-images.githubusercontent.com/47361247/213034191-eaf2bb7c-0689-4dbd-89ef-a484eeda91e2.png">
 
 ## Roadmap
-- Datalogging using [TimescaleDB](https://www.timescale.com/)
+- [ ] Datalogging using [TimescaleDB](https://www.timescale.com/)
     - Log sys info
     - Log OBD commands
-    - Client-side visualization, leaning toward Highcharts
-- Clear diagnostic codes - I currently do not have any CEL to test this on ;)
-- Multiple dashboards
-- Imperial unit conversion support
-- Cloud backups somewhere down the line
+    - Client-side visualization, leaning toward Highcharts. Optionally, could use Grafana or similar.
+- [x] Clear diagnostic codes - I currently do not have any CEL to test this on ;)
+- [ ] Multiple dashboards
+- [x] Imperial unit conversion support
+- [ ] Cloud backups somewhere down the line
+- [ ] MQTT publish support 
 
 
 ## Related Projects and Thanks to
