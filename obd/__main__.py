@@ -24,6 +24,8 @@ async def on_startup(
     obd_serivice: OBDService = Provide[Container.obd_service],
     injector_service: InjectorService = Provide[Container.injector_service],
     sio: socketio.AsyncServer = Provide[Container.sio_server]):
+    
+    print("")
     print("========== OnBoardPi OBD Server Startup - {} ===========".format(
         datetime.now().strftime("%m/%d/%Y, %H:%M:%S")))
     await injector_service.startup()
@@ -35,11 +37,14 @@ async def on_shutdown(
     obd_serivice: OBDService = Provide[Container.obd_service],
     injector_service: InjectorService = Provide[Container.injector_service],
     sio: socketio.AsyncServer = Provide[Container.sio_server]):
-    # config.obd_io.close()
+    
+    await injector_service.shutdown()
+    await obd_serivice.shutdown()
+    await sio.shutdown()
+
+    print("")
     print("========== OnBoardPi OBD Server Shutdown - {} ===========".format(
         datetime.now().strftime("%m/%d/%Y, %H:%M:%S")))
-    obd_serivice.stop()
-    obd_serivice.disconnect()
 
 
 @inject

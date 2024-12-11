@@ -1,19 +1,16 @@
 from src.oap_injector import OAPInjector
-import logging
 
-logger = logging.getLogger()
-
-oap_injector = OAPInjector(logger)
-
-def test_oap_api_port():
+def test_oap_api_port(container):
+    oap_injector = container.injector_service().register_injector('oap')
     assert oap_injector._oap_api_port == 44405
 
-def test_get_commands():
+def test_get_commands(container):
+    oap_injector = container.injector_service().register_injector('oap')
     oap_cmds = oap_injector.get_commands()
     assert len(oap_cmds) == 6
-    assert oap_cmds[0] == 'ENGINE_LOAD'
-    assert oap_cmds[1] == 'COOLANT_TEMP'
-    assert oap_cmds[2] == 'FUEL_PRESSURE'
-    assert oap_cmds[3] == 'INTAKE_PRESSURE'
-    assert oap_cmds[4] == 'RPM'
-    assert oap_cmds[5] == 'ELM_VOLTAGE'
+    assert oap_cmds[0].name == 'ENGINE_LOAD'
+    assert oap_cmds[1].name == 'COOLANT_TEMP'
+    assert oap_cmds[2].name == 'FUEL_PRESSURE'
+    assert oap_cmds[3].name == 'INTAKE_PRESSURE'
+    assert oap_cmds[4].name == 'RPM'
+    assert oap_cmds[5].name == 'ELM_VOLTAGE'

@@ -1,7 +1,7 @@
 obd==0.7.2
 protobuf~=3.19
 uvicorn
+asyncio
 obd-socketio
-python-socketio [client]
 ELM327-Emulator
 dependency-injector
