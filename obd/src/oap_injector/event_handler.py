@@ -50,7 +50,7 @@ class EventHandler():
     async def on_ping(self, client):
         logger.debug("OAP server pinged us.")
         if not self.obd.connection.is_connected():
-            await self.obd.connect(None)
+            await self.obd.connect()
             await self.obd.watch_commands(self.injector.get_commands(), ResponseCallback(self.injector.id, self.injector.inject))
 
     async def on_register_status_icon_response(self, client, message):
@@ -137,6 +137,10 @@ class EventHandler():
             show_notification.icon = icon_file.read()
         msg = Message(oap_api.MESSAGE_SHOW_NOTIFICATION, 0, show_notification.SerializeToString())
         await client.message_queue.put((1, msg))
+
+
+    async def on_disconnect(self, restart):
+        await self.injector.on_disconnect(restart)
 
 
     async def handle_message(self, client, message):

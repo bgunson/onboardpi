@@ -1,7 +1,6 @@
 import os
 import logging
 import json
-import obd
 
 from .logger import register_logger
 
@@ -15,7 +14,9 @@ class ConfigurationService():
 
 
     def load_connection_params(self):
-        """ Configure the OBD connection parameters given in settings.json file and set the logger. """
+        """
+          Configure the OBD connection parameters given in settings.json file and set the logger. 
+        """
         params = {}
         self.__read_settings()
 

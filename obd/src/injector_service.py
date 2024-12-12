@@ -1,10 +1,5 @@
-import uuid
-
 import socketio
 
-import obd
-
-from .response_callback import ResponseCallback
 from .injector_base import InjectorBase
 from .logger import register_logger
 from .oap_injector import OAPInjector
