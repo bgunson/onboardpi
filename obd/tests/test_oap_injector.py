@@ -1,11 +1,13 @@
-from src.oap_injector import OAPInjector
 
-def test_oap_api_port(container):
-    oap_injector = container.injector_service().register_injector('oap')
+from src.injector_service import InjectorService
+
+
+def test_oap_api_port(injector_service: InjectorService):
+    oap_injector = injector_service.register_injector('oap')
     assert oap_injector._oap_api_port == 44405
 
-def test_get_commands(container):
-    oap_injector = container.injector_service().register_injector('oap')
+def test_get_commands(injector_service: InjectorService):
+    oap_injector = injector_service.register_injector('oap')
     oap_cmds = oap_injector.get_commands()
     assert len(oap_cmds) == 6
     assert oap_cmds[0].name == 'ENGINE_LOAD'

@@ -25,10 +25,10 @@ class OBDService():
         self.__lock = asyncio.Lock()
         self.config: ConfigurationService = config
         self.__commands = defaultdict(OBDResponse)   # key = OBDCommand, value = Response
-        self.__callbacks = defaultdict(dict)  # key = OBDCommand, value = list of Functions
+        self.__callbacks = defaultdict(dict[ResponseCallback])  # key = OBDCommand, value = list of Functions
         self.__is_running = asyncio.Event()
         self.__is_connecting_now = asyncio.Event()
-        self.connection = obd.OBD("fake") # a temp connection to nowhere so self.connection instantiated
+        self.connection = obd.OBD("init") # a temp connection to nowhere so self.connection instantiated
 
 
     async def connect(self, portstr: str = None):
@@ -96,11 +96,6 @@ class OBDService():
             self.__is_running.clear()
 
 
-    async def unwatch_all(self, client_id: str):
-        async with self.__lock:
-            await self.__unwatch_commands(list(self.__commands.keys()), client_id)
-
-
     async def watch_commands(self, commands: list[OBDCommand], callback: ResponseCallback, force=False):
         async with self.__lock:
             await self.__watch_commands(list(commands), callback, force)
@@ -123,6 +118,11 @@ class OBDService():
         await self.__start()
 
 
+    async def unwatch_all(self, client_id: str):
+        async with self.__lock:
+            await self.__unwatch_commands(list(self.__commands.keys()), client_id)
+
+
     async def unwatch_commands(self, commands: list[OBDCommand], client_id: str):
         async with self.__lock:
             await self.__unwatch_commands(commands, client_id)
@@ -132,10 +132,10 @@ class OBDService():
         await self.__stop()
         for cmd in commands:
             if cmd in self.__commands and client_id in self.__callbacks[cmd]:
-                del self.__callbacks[cmd][client_id]
+                self.__callbacks[cmd].pop(client_id)
 
             if not self.__callbacks[cmd] and cmd in self.__commands:
-                del self.__commands[cmd]
+                self.__commands.pop(cmd)
 
         await self.__start()
                         
@@ -146,6 +146,9 @@ class OBDService():
                 await self.sio.sleep(self.config.delay)
                 # loop over the requested commands, send, and collect the response
                 for c in list(self.__commands):
+                    # re-check invariant in case a client acts between command iterations
+                    if not self.__is_running.is_set() or not self.connection.is_connected():
+                        break
                     # force, since commands are checked for support in watch()
                     r = self.connection.query(c, force=True)
 
@@ -157,11 +160,11 @@ class OBDService():
                         r = imperial.convert(r)
 
                     # check if value has changed
-                    if hasattr(r.value, "magnitude") and self.__commands[c] == r.value.magnitude:
+                    if self.__commands[c] == r.value:
                         continue
 
                     # store the response
-                    self.__commands[c] = r.value.magnitude
+                    self.__commands[c] = r.value
 
                     # fire the callbacks, if there are any
                     for callback in list(self.__callbacks[c].values()):

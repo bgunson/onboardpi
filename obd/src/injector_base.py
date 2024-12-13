@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from obd import OBDCommand
+
 class InjectorBase(ABC):
     """
     Injector template class. To provide a basis and structure for OnBoardPi's ability to export 
@@ -23,15 +25,15 @@ class InjectorBase(ABC):
         pass
 
     @abstractmethod
-    def is_enabled(self):
+    def is_enabled(self) -> bool:
         pass
 
     @abstractmethod
-    def is_active(self):
+    def is_active(self) -> bool:
         pass
 
     @abstractmethod
-    def get_commands(self):
+    def get_commands(self) -> list[OBDCommand]:
         """ Return a list of OBDCommands by name which are to be exported """
         pass
     

@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 COPY requirements.txt .
-RUN python3 -m pip install -r requirements.txt
+RUN python3 -m pip install -U -r requirements.txt
 
 EXPOSE 60000
-CMD ["python3", "obd"]
+CMD ["python3", "main.py"]

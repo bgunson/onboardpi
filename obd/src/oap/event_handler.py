@@ -6,9 +6,6 @@ import logging
 from .Message import Message
 from . import Api_pb2 as oap_api
 
-from src.response_callback import ResponseCallback
-from src.obd_service import OBDService
-
 logger = logging.getLogger('oap')
 
 
@@ -17,11 +14,25 @@ class EventHandler():
     The event handler manages OpenAuto Pro injection of status icon, notifications, obd values to the protobuf api.
     """
 
-    def __init__(self, obd: OBDService, injector):
-        self.obd = obd
-        self.injector = injector
+    def __init__(self):
         self._notification_channel_id = None
         self.running = asyncio.Event()
+        self._handlers = {}
+
+    
+    def event(self, func):
+        event_name = func.__name__
+        if event_name not in self._handlers:
+            self._handlers[event_name] = []
+        self._handlers[event_name].append(func)
+        return func
+    
+
+    async def trigger(self, event_name, *args, **kwargs):
+        if event_name in self._handlers:
+            for handler in self._handlers[event_name]:
+                await handler(*args, **kwargs)
+    
 
     async def on_hello_response(self, client, message):
         logger.debug("Received hello response, result: {}, oap version: {}.{}, api version: {}.{}"
@@ -47,15 +58,8 @@ class EventHandler():
         await client.message_queue.put((1, msg))
 
 
-    async def on_ping(self, client):
-        logger.debug("OAP server pinged us.")
-        if not self.obd.connection.is_connected():
-            await self.obd.connect()
-            await self.obd.watch_commands(self.injector.get_commands(), ResponseCallback(self.injector.id, self.injector.inject))
-
     async def on_register_status_icon_response(self, client, message):
-        logger.debug("register status icon response, result: {}, icon id: {}".format(
-            message.result, message.id))
+        logger.debug(f"register status icon response, result: {message.result}, icon id: {message.id}")
         self._icon_id = message.id
 
         if message.result == oap_api.RegisterStatusIconResponse.REGISTER_STATUS_ICON_RESULT_OK:
@@ -131,7 +135,7 @@ class EventHandler():
         show_notification.channel_id = self._notification_channel_id
         show_notification.title = "OnBoardPi"
         show_notification.description = message
-        show_notification.single_line = "OnBoardPi - {}".format(message)
+        show_notification.single_line = f"OnBoardPi - {message}"
 
         with open(os.path.join(os.path.dirname(__file__), "assets/car.svg"), 'rb') as icon_file:
             show_notification.icon = icon_file.read()
@@ -139,12 +143,8 @@ class EventHandler():
         await client.message_queue.put((1, msg))
 
 
-    async def on_disconnect(self, restart):
-        await self.injector.on_disconnect(restart)
-
-
     async def handle_message(self, client, message):
-        can_continue = True
+        can_continue = True            
 
         if message is None:
             return can_continue
@@ -152,6 +152,7 @@ class EventHandler():
         if message.id == oap_api.MESSAGE_PING:
             pong = (0, Message(oap_api.MESSAGE_PONG, 0, bytes()))
             await client.message_queue.put(pong)
+            await self.trigger("ping")
         elif message.id == oap_api.MESSAGE_BYEBYE:
             can_continue = False
 
@@ -160,9 +161,6 @@ class EventHandler():
                 hello_response = oap_api.HelloResponse()
                 hello_response.ParseFromString(message.payload)
                 await self.on_hello_response(client, hello_response)
-
-            case oap_api.MESSAGE_PING:
-                await self.on_ping(client)
 
             case oap_api.MESSAGE_REGISTER_STATUS_ICON_RESPONSE:
                 register_status_icon_response = oap_api.RegisterStatusIconResponse()

@@ -2,7 +2,7 @@ import socketio
 
 from .injector_base import InjectorBase
 from .logger import register_logger
-from .oap_injector import OAPInjector
+from .oap import OAPInjector
 from .obd_service import OBDService
 from .configuration_service import ConfigurationService
 
@@ -66,12 +66,13 @@ class InjectorService():
         return [i for i in self.__injectors.values() if i.is_enabled()]
     
     
-    def __register_events(self, sio):
+    def __register_events(self, sio: socketio.AsyncServer):
 
         @sio.event
         async def enable_injector(sid, injector_type):
             if injector_type in self.get_injectors():
-                injector = self.get_injectors()[injector_type] # this injector is already registered with configuration so start it up again
+                # this injector is already registered with configuration so start it up again
+                injector = self.get_injectors()[injector_type] 
             else:
                 injector = self.register_injector(injector_type)
             sio.start_background_task(injector.start)

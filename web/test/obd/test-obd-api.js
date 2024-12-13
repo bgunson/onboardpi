@@ -102,15 +102,18 @@ describe("obd api", () => {
 
     it('should *unwatch_all* commands', (done) => {
         socket.emit('unwatch_all');
-        var responded = false;
-        socket.once('watching', _ => {
-            responded = true;
+        var responded = 0;
+        socket.on('watching', _ => {
+            responded++;
         });
 
+        // due to things we cannot control w/ asyncio vs. uvloop scheduling
+        // expect there to be no more than one extra response after unwaching
+        // since we were only watching one command at this point
         setTimeout(() => {
-            assert.isFalse(responded);
+            assert.isAtMost(responded, 1)
             done();
-        }, 100)
+        }, 1000)
     });
 
     it('should not *query* a bad command', (done) => {

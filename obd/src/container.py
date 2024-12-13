@@ -1,30 +1,83 @@
+import functools
+import inspect
 import socketio
-from dependency_injector import containers, providers
 import obdio
 
-from .configuration_service import ConfigurationService
-from .obd_service import OBDService
-from .injector_service import InjectorService
+from src.configuration_service import ConfigurationService
+from src.obd_service import OBDService
+from src.injector_service import InjectorService
 
+class Container():
 
-def create_async_server() -> socketio.AsyncServer:
-    """
-    Factory function to create and return an instance of socketio.AsyncServer.
-    """
-    return socketio.AsyncServer(
-        cors_allowed_origins='*',
-        json=obdio,
-        async_mode='asgi'
-    )
+    def __init__(self):
+        self.sio_server = socketio.AsyncServer(cors_allowed_origins='*',json=obdio,async_mode='asgi')
+        self.config_service = ConfigurationService(self.sio_server)
+        self.obd_service = OBDService(self.sio_server, self.config_service)
+        self.injector_service = InjectorService(self.sio_server, self.config_service, self.obd_service)
 
+        self.instance_map = {
+            ConfigurationService: self.config_service,
+            OBDService: self.obd_service,
+            InjectorService: self.injector_service,
+            socketio.AsyncServer: self.sio_server,
+        }
 
-class Container(containers.DeclarativeContainer):
+    def get(self, cls):
+        """
+        Retrieve an instance of the given class from the container.
+
+        Args:
+            cls (Type): The class type of the service.
+
+        Returns:
+            Instance of the requested service.
+
+        Raises:
+            ValueError: If the service is not found in the container.
+        """
+        if cls in self.instance_map:
+            return self.instance_map[cls]
+        raise ValueError(f"Dependency for {cls} not found")
     
-    sio_server = providers.Singleton(create_async_server)
 
-    config_service = providers.Singleton(ConfigurationService, sio_server)
+def inject(func):
+    """
+    A decorator to inject dependencies into functions based on type annotations.
 
-    obd_service = providers.Singleton(OBDService, sio_server, config_service)
+    Args:
+        func (Callable): The function to decorate.
 
-    injector_service = providers.Singleton(InjectorService, sio_server, config_service, obd_service)
+    Returns:
+        Callable: The wrapped function with dependencies injected.
+    """
+    if inspect.iscoroutinefunction(func):
+        @functools.wraps(func)
+        async def async_wrapper(*args, **kwargs):
+            sig = inspect.signature(func)
+            bound = sig.bind_partial(*args, **kwargs)
+            bound.apply_defaults()
+            
+            for name, param in sig.parameters.items():
+                if name not in bound.arguments:
+                    if param.annotation != inspect.Parameter.empty:
+                        dependency = container.get(param.annotation)
+                        kwargs[name] = dependency
+            return await func(*args, **kwargs)
+        return async_wrapper
+    else:
+        @functools.wraps(func)
+        def sync_wrapper(*args, **kwargs):
+            sig = inspect.signature(func)
+            bound = sig.bind_partial(*args, **kwargs)
+            bound.apply_defaults()
+            
+            for name, param in sig.parameters.items():
+                if name not in bound.arguments:
+                    if param.annotation != inspect.Parameter.empty:
+                        dependency = container.get(param.annotation)
+                        kwargs[name] = dependency
+            return func(*args, **kwargs)
+        return sync_wrapper
+    
 
+container = Container()

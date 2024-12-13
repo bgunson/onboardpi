@@ -4,4 +4,3 @@ uvicorn
 asyncio
 obd-socketio
 ELM327-Emulator
-dependency-injector

@@ -1,8 +1,11 @@
 import asyncio
+import logging
 import struct
 
 from . import Api_pb2 as oap_api
 from .Message import Message
+
+logger = logging.getLogger("oap")
 
 class OAPClient:
 
@@ -11,10 +14,12 @@ class OAPClient:
         self.event_handler = event_handler
         self.is_connected = asyncio.Event()
         self.message_queue = asyncio.PriorityQueue()
+        
 
     async def connect(self, hostname, port):
+        logger.debug("OAP Client connecting")
         if self.is_connected.is_set():
-            await self.disconnect()
+            return
         self.reader, self.writer = await asyncio.open_connection(hostname, port)
         self.is_connected.set()
         await self._send_hello()
@@ -23,16 +28,23 @@ class OAPClient:
         asyncio.create_task(self.receive_messages())
         asyncio.create_task(self.send_messages())
 
+        await self.event_handler.trigger("connected")
+
 
     async def disconnect(self, restart = False):
         self.is_connected.clear()
-        while not self.message_queue.empty():
-            _ = await self.message_queue.get()
-        if self.writer:
+        try:
             self.writer.close()
             await self.writer.wait_closed()
+        except Exception:
+            pass
 
-        await self.event_handler.on_disconnect(restart)
+        # empty the current messgae queue
+        while not self.message_queue.empty():
+            _ = await self.message_queue.get()
+
+        await self.event_handler.trigger("disconnect", restart)
+        logger.info("OAP Client disconnected")
 
 
     async def _send(self, id, flags, payload):
@@ -47,10 +59,13 @@ class OAPClient:
             try:
                 await self._send(msg.id, msg.flags, msg.payload)
                 if msg.id == oap_api.MESSAGE_BYEBYE:
+                    logger.error("OAP Client disconnecting willingly")
                     await self.disconnect(restart=False)
             except ConnectionResetError:
+                logger.error("OAP Client ConnectionResetError")
                 await self.disconnect(restart=True)
             except Exception as e:
+                logger.error(f"OAP Client Write error: {e}")
                 await self.disconnect(restart=True)
 
 
@@ -65,20 +80,21 @@ class OAPClient:
     async def _receive(self):
         header_data = await self.reader.readexactly(12)
         payload_size, id, flags = struct.unpack('<III', header_data)
-        payload = await asyncio.wait_for(self.reader.readexactly(payload_size), 5)
+        payload = await self.reader.readexactly(payload_size)
         message = Message(id, flags, payload)
-        await self.event_handler.handle_message(self, message)
+        if not await self.event_handler.handle_message(self, message):
+            await self.disconnect(restart=False)
 
 
     async def receive_messages(self):
         while self.is_connected.is_set():
             try:
                 await self._receive()
-            except asyncio.TimeoutError:
-                await self.disconnect(restart=True)
             except asyncio.IncompleteReadError:
-                await self.disconnect(restart=True)
+                logger.error("OAP Client IncompleteReadError")
+                break
             except Exception as e:
-                await self.disconnect(restart=True)
+                logger.error(f"OAP Client read error: {e}")
+                break
                 
     

@@ -98,13 +98,11 @@ export class OBDService {
 
   watch(cmds: string[]): void {
     cmds.forEach(c => this._watchList.add(c));
-    this.socket.emit('join_watch');
     this.socket.emit('watch', cmds);
   }
 
   unwatch(cmds: string[]): void {
     cmds.forEach(c => this._watchList.delete(c));
-    this.socket.emit('leave_watch');
     this.socket.emit('unwatch', cmds);
   }
 

@@ -1,17 +1,23 @@
 import pytest
-import os
 
+from src.injector_service import InjectorService
+from src.obd_service import OBDService
+from src.configuration_service import ConfigurationService
 from src.container import Container
 
-@pytest.fixture(scope="session")
-def container():
-    # Initialize the container
-    container = Container()
-    container.init_resources()
-    # Wire the container to the test modules if necessary
-    container.wire(modules=["tests"])
-    return container
 
-# test evn vars set here
-os.environ['SETTINGS_DIR'] = os.getcwd() + "/tests/test_configs"
-os.environ['OAP_CONFIG_DIR'] = os.getcwd() + "/tests/test_configs"
+@pytest.fixture(scope='session')
+def container():
+    return Container()
+
+@pytest.fixture
+def config_service(container):
+    return container.get(ConfigurationService)
+
+@pytest.fixture
+def obd_service(container):
+    return container.get(OBDService)
+
+@pytest.fixture
+def injector_service(container):
+    return container.get(InjectorService)
