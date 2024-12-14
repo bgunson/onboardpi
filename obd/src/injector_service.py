@@ -45,10 +45,9 @@ class InjectorService():
         """ Create and cache a new injector instance of type. The new injector is assumed to be enabled """
         injector_config = self.config.settings['injectors'][injector_type]
         # create a logger for this injector
-        logger = register_logger(injector_type, injector_config['log_level'])
+        logger = register_logger(injector_type, injector_config['log_level'], file_logger=True)
         # create a new instance of this injector type via the injector map
         injector = injector_map[injector_type](
-            sio=self.sio,
             obd=self.obd,
             logger=logger,
             **injector_config['parameters'])

@@ -1,7 +1,8 @@
 import functools
 import inspect
-import socketio
 import obdio
+
+from socketio import AsyncServer
 
 from src.configuration_service import ConfigurationService
 from src.obd_service import OBDService
@@ -10,7 +11,7 @@ from src.injector_service import InjectorService
 class Container():
 
     def __init__(self):
-        self.sio_server = socketio.AsyncServer(cors_allowed_origins='*',json=obdio,async_mode='asgi')
+        self.sio_server = AsyncServer(cors_allowed_origins='*',json=obdio,async_mode='asgi')
         self.config_service = ConfigurationService(self.sio_server)
         self.obd_service = OBDService(self.sio_server, self.config_service)
         self.injector_service = InjectorService(self.sio_server, self.config_service, self.obd_service)
@@ -19,7 +20,7 @@ class Container():
             ConfigurationService: self.config_service,
             OBDService: self.obd_service,
             InjectorService: self.injector_service,
-            socketio.AsyncServer: self.sio_server,
+            AsyncServer: self.sio_server,
         }
 
     def get(self, cls):

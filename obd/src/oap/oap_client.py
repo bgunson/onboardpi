@@ -21,13 +21,13 @@ class OAPClient:
         if self.is_connected.is_set():
             return
         self.reader, self.writer = await asyncio.open_connection(hostname, port)
-        self.is_connected.set()
         await self._send_hello()
 
         # Start background tasks for sending and receiving
         asyncio.create_task(self.receive_messages())
         asyncio.create_task(self.send_messages())
 
+        self.is_connected.set()
         await self.event_handler.trigger("connected")
 
 

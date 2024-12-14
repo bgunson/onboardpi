@@ -48,10 +48,7 @@ class OBDService():
         self.connection = obd.OBD(
             params.get("portstr"),
             params.get("baudrate"),
-            params.get("protocol"),
-            timeout=0.01,
-            check_voltage=True,
-            start_low_power=False)
+            params.get("protocol"))
         self.__is_connecting_now.clear()
 
 
