@@ -1,6 +1,8 @@
-from abc import ABC, abstractmethod, abstractproperty
+from abc import ABC, abstractmethod
 
-class Injector(ABC):
+from obd import OBDCommand
+
+class InjectorBase(ABC):
     """
     Injector template class. To provide a basis and structure for OnBoardPi's ability to export 
     OBD values to external services.
@@ -13,34 +15,34 @@ class Injector(ABC):
     """
 
     @abstractmethod
-    def start(self):
+    async def start(self):
         """ Enable the data injection """
         pass
     
     @abstractmethod
-    def stop(self):
+    async def stop(self):
         """ Disable an already running injector """
         pass
 
     @abstractmethod
-    def is_enabled(self):
+    def is_enabled(self) -> bool:
         pass
 
     @abstractmethod
-    def is_active(self):
+    def is_active(self) -> bool:
         pass
 
     @abstractmethod
-    def status(self):
-        """ Give the current status of the injector. Such as: connected, disabled, errors, etc """
-        pass
-
-    @abstractmethod
-    def get_commands(self):
+    def get_commands(self) -> list[OBDCommand]:
         """ Return a list of OBDCommands by name which are to be exported """
         pass
     
     @abstractmethod
     def inject(self, obd_response):
         """ Export an OBDCommand reponse. The wath loop in watch.py will call this for any enabled and configured injector. """
+        pass
+
+    @property
+    @abstractmethod
+    def id(self) -> str:
         pass

@@ -11,12 +11,6 @@
     <div mat-subheader><mat-icon>online_prediction</mat-icon>&nbsp;Status</div>
     <mat-card class="settings-card" *ngIf="injectorState$ | async as state else waiting">
         <mat-list-item>
-            Connected
-            <span style="flex: 1 1 auto"></span>
-            <span style="color: grey">{{ state.connected ? 'Yes' : 'No' }}</span>
-            <mat-divider class="app-divider"></mat-divider>
-        </mat-list-item>
-        <mat-list-item>
             Active
             <span style="flex: 1 1 auto"></span>
             <mat-divider class="app-divider"></mat-divider>
@@ -25,8 +19,9 @@
         <mat-list-item>
             Commands
             <span style="flex: 1 1 auto"></span>
-            <span style="color: grey">{{ state.commands ? 'Injecting ' + state.commands.length + ' commands' : 'None'
-                }}</span>
+            <span style="color: grey">
+                {{ state.commands ? 'Injecting ' + state.commands.length + ' commands' : 'None' }}
+            </span>
         </mat-list-item>
     </mat-card>
     <ng-template #waiting>

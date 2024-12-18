@@ -78,30 +78,42 @@ describe("obd api", () => {
         });
     });
 
-    it('should *watch* "RPM" command', (done) => {
-        socket.emit("join_watch");
-        socket.emit('watch', ['RPM']);
-        socket.once('watching', (watching) => {
-            assert.exists(watching['RPM']);
-            done();
+    it('should *watch* "RPM/SPEED" commands', (done) => {
+        var received = [];
+        socket.emit('watch', ['RPM', 'SPEED']);
+        socket.on('watching', (watching) => {
+            received.push(watching.command.name);
+            if (received.length == 2) {
+                assert.notEqual(received.indexOf("RPM"), -1);
+                assert.notEqual(received.indexOf("SPEED"), -1)
+                done();
+            }
         });
     });
 
-
-    it('should *unwatch* "RPM" command', (done) => {
-        socket.emit('unwatch', ['RPM', 'SPEED']);
+    it('should *unwatch* "RPM" commands', (done) => {
+        socket.emit('unwatch', ['RPM']);
         socket.once('watching', (watching) => {
-            assert.notExists(watching['RPM']);
+            assert.notEqual(watching.command.name, "RPM");
+            assert.equal(watching.command.name, "SPEED")
             done();
-        })
+        });
     });
 
     it('should *unwatch_all* commands', (done) => {
         socket.emit('unwatch_all');
-        socket.once('watching', (watching) => {
-            assert.notExists(watching['SPEED']);
-            done();
+        var responded = 0;
+        socket.on('watching', _ => {
+            responded++;
         });
+
+        // due to things we cannot control w/ asyncio vs. uvloop scheduling
+        // expect there to be no more than one extra response after unwaching
+        // since we were only watching one command at this point
+        setTimeout(() => {
+            assert.isAtMost(responded, 1)
+            done();
+        }, 1000)
     });
 
     it('should not *query* a bad command', (done) => {

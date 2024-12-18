@@ -1,6 +1,6 @@
 import { BehaviorSubject, interval, Observable } from "rxjs";
-import { map, shareReplay, switchMap } from "rxjs/operators";
-import { OBDCommand, ResponseSet } from "src/app/shared/models/obd.model";
+import { concatMap, filter, flatMap, map, mergeMap, shareReplay, switchMap } from "rxjs/operators";
+import { OBDCommand, OBDResponse, ResponseSet } from "src/app/shared/models/obd.model";
 import { environment } from "src/environments/environment";
 import { DemoSocket } from "./demo-socket";
 import { Settings } from "src/app/settings/settings.model";
@@ -17,22 +17,23 @@ export class DemoOBDSocket extends DemoSocket {
     private _isConnected$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
     private _status$: BehaviorSubject<string> = new BehaviorSubject<string>('Car Connected');
 
-    private _watch$: Observable<ResponseSet> = interval(500).pipe(
-        switchMap(_ => this.getSnapshot().pipe(
-            map(snapshot => {
+    private _watch$: Observable<OBDResponse> = interval(500).pipe(
+        switchMap(() => this.getSnapshot().pipe(
+            mergeMap(snapshot => {
                 const settings = this.getSettings();
-                var response: ResponseSet = {};
-                [...this._watchList].forEach((cmd: string) => {
-                    if (snapshot[cmd]) {
-                        response[cmd] = {
-                            value: !cmd.startsWith('DTC') ? this.generateValue(snapshot[cmd].value) : snapshot[cmd].value,
+                const watchedKeys = Object.keys(snapshot).filter(cmd => this._watchList.has(cmd));
+
+                return watchedKeys
+                    .map(cmd => snapshot[cmd])
+                    .filter(response => response?.command?.name != null)
+                    .map(response => {
+                        return {
+                            ...response,
+                            value: !response.command.name.startsWith('DTC') ? this.generateValue(response?.value) : response?.value,
                             time: Date.now(),
-                            command: snapshot[cmd].command,
-                            unit: settings?.imperial_units === true ? this.imperialUnit(snapshot[cmd].unit) : snapshot[cmd].unit
-                        }
-                    }
-                });
-                return response;
+                            unit: settings?.imperial_units === true ? this.imperialUnit(response?.unit) : response?.unit
+                        };
+                    });
             })
         ))
     );
